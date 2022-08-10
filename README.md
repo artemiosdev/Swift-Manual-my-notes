@@ -1102,7 +1102,7 @@ print("unusualMenagerie has \(unusualMenagerie.count) characters")
 ```
 
 Literal (Буквенный) – литеральное значение вводится или вставляется непосредственно в код без инициализаторов. Литеральная строка будет "hello", а литеральный массив будет [1, 2, 3]. Не литеральная строка может быть инициализирована с помощью String( ), а не литеральное целое число может быть инициализировано с homeTeamPoints + awayTeamPoints
- 
+
 Если не задать ясно Character, то автоматически будет тип String
 
 #Инициализатор — это специальный метод, встроенный в тип данных, в данном случае в String, который позволяет создать хранилище нужного нам типа. 
@@ -1119,8 +1119,288 @@ var anotherEmptyString = String()
 ```
 
 ### Многострочные строковые литералы. Multi-line strings
-58
-<img alt="image" src="images/.jpg"/>
+В Swift можно писать строковые литералы в несколько строк, разделяя их символом переноса (нажатием клавиши Enter). В этом случае текст нужно обрамить с обеих сторон тремя двойными кавычками. При этом: открывающие и закрывающие тройки кавычек должны находиться на строке, не содержащей текст литерала: 
+
+```swift
+let bigString = """
+  You can have a string
+  that contains multiple
+  lines
+  by
+  doing this.
+  """
+print(bigString)
+```
+Пробелы в таких строках сохраняются и можно делать свои отступы
+```swift
+let greeting = """
+  It is traditional in programming to print "Hello, world!"
+  """
+```
+Or escape character (\)
+
+```swift
+let greeting = "It is traditional in programming to print \"Hello, world!\ ""
+```
+
+You can use the escape character with other letters and symbols to produce specific results:
+
+Double quote: `\"`
+
+Single quote: `\’`
+
+Backslash: `\\`
+
+Tab: `\t`
+
+Newline (go to the next line как Return): `\n`
+
+<img alt="image" src="images/escape character.jpg"/>
+
+#`lowercased()` приводит к строчному виду
+#`uppercased()` приводит к заглавному виду
+
+```swift
+let name = “Johnny Appleseed”
+if name.lowercased() == “joHnnY aPPleseeD”.lowercased() {
+  print(”The two names are equal.”)
+}
+```
+Console Output: `The two names are equal.`
+ 
+Чтобы проверить, имеет ли строка конкретный префикс или суффикс строки, оба из которых принимают один аргумент типа String и возвращают логическое значение.
+
+#`hasPrefix(_:)` проверяет начало строки 
+#`hasSuffix(_:)` проверяет конец строки 
+
+```swift
+let greeting = “Hello, world!”
+print(greeting.hasPrefix(”Hello”))
+print(greeting.hasSuffix(”world!”))
+print(greeting.hasSuffix(”World!”))
+Console Output: true true false
+```
+
+```swift
+let romeoAndJuliet = [ 
+"Act 1 Scene 1: Verona, A public place", 
+"Act 1 Scene 2: Capulet's mansion", 
+"Act 1 Scene 3: A room in Capulet's mansion", 
+"Act 1 Scene 4: A street outside Capulet's mansion", 
+"Act 1 Scene 5: The Great Hall in Capulet's mansion", 
+"Act 2 Scene 1: Outside Capulet's mansion", 
+"Act 2 Scene 2: Capulet's orchard", 
+"Act 2 Scene 3: Outside Friar Lawrence's cell", 
+"Act 2 Scene 4: A street in Verona", 
+"Act 2 Scene 5: Capulet's mansion", 
+"Act 2 Scene 6: Friar Lawrence's cell" 
+] 
+```
+
+You can use the `hasPrefix(_:)`
+
+```swift
+var act1SceneCount = 0 
+   for scene in romeoAndJuliet { 
+      if scene.hasPrefix("Act 1 ") { 
+        act1SceneCount += 1 
+      } 
+   } 
+print("There are \(act1SceneCount) scenes in Act 1") 
+// Prints "There are 5 scenes in Act 1" 
+```
+
+Similarly, use the `hasSuffix(_:)`
+
+```swift
+var mansionCount = 0 
+var cellCount = 0 
+   for scene in romeoAndJuliet { 
+       if scene.hasSuffix("Capulet's mansion") { 
+          mansionCount += 1 
+       } else if scene.hasSuffix("Friar Lawrence's cell") { 
+          cellCount += 1 
+       } 
+   } 
+print("\(mansionCount) mansion scenes; \(cellCount) cell scenes") 
+// Prints "6 mansion scenes; 2 cell scenes"
+```
+
+***String and Character Equality***, “equal to” operator `== and the “not equal to” operator `!=`
+
+```swift
+let quotation = "We're a lot alike." 
+let sameQuotation = "We're a lot alike." 
+if quotation == sameQuotation { 
+print("These two strings are considered equal") 
+}
+```
+
+### Приведение к строковому типу данных
+Как уже неоднократно говорилось, помимо непосредственной передачи литерала вы можете использовать специальную функцию, в данном случае `String(_:)`, для инициализации значения строкового типа 
+
+```swift
+// инициализация строкового значения
+let notEmptyString = String("Hello, Troll!")
+
+// константа типа Double
+let someDoubleNumber = 74.22
+// строка, созданная на основе константы типа Double
+let someStringNumber = String(someDoubleNumber)  // "74.22"
+```
+
+### Объединение строк 
+При необходимости вы можете объединять несколько строк в одну более длинную. Для этого существует два механизма: интерполяция и конкатенация. 
+
+При #`интерполяции` происходит объединение строковых литералов, переменных, констант и выражений в едином строковом литерале `\(   )`
+
+#Interpolation – вставка `\(…)`
+
+Backslash  \ – обратная косая черта
+
+```swift
+var message = "Hello" + " my name is "
+let name = "Matt
+message = "Hello my name is \(name)!"    // "Hello my name is Matt!
+
+let oneThird = 1.0 / 3.0
+let oneThirdLongString = "One third is \(oneThird) as a decimal"
+
+let a = 4
+let b = 5
+print(”If a is \(a) and b is \(b), then a + b equals \(a+b)”)
+
+let listName = "Shopping"
+var items = 14
+myLabel.text = "There are \(items) items on your \(listName) list"
+// The label displays "There are 14 items on your Shopping list"
+ 
+func setLabel(_ label: UILabel, to text: String) {
+  label.text = text
+}
+ 
+setLabel(myLabel, to: "There are \(items) items on your \(listName) list")
+
+let multiplier = 3 
+let message = "\(multiplier) times 2.5 is \(Double(multiplier) * 2.5)" 
+// message is "3 times 2.5 is 7.5"
+
+print(#"Write an interpolated string in Swift using \(multiplier)."#) 
+// Prints "Write an interpolated string in Swift using \(multiplier)."
+
+// переменная типа String
+let name = "Дракон"
+// константа типа String c использованием интерполяции
+let hello = "Привет, меня зовут \(name)!"
+// интерполяция с использованием выражения
+let meters: Double = 10
+let text = "Моя длина \(meters * 3.28) фута"
+// выведем значения на консоль
+print(hello) // Привет, меня зовут Дракон!
+print(text) // Моя длина 32.8 фута
+```
+
+При #`конкатенации` происходит объединение нескольких строковых значений в одно с помощью оператора сложения `+`  
+
+#Concatenation – Сцепление, склеивание, сложение строк
+
+```swift
+var message = "Hello" + " my name is "
+let name = "Matt"
+message += name  // "Hello my name is Matt 
+```
+
+you convert the Character to a String before you add it to message
+
+```swift
+let exclamationMark: Character = "!"
+message += String(exclamationMark) // "Hello my name is Matt!
+```
+Or 
+#`append(_:)` Adds a new element at the end of the array.
+```swift
+message.append(exclamationMark)
+```
+
+```swift
+// константа типа String
+let firstText = "Мой вес "
+// переменная типа Double
+let weight = 12.4
+// константа типа String
+let secondText = " тонны"
+// конкатенация строк при инициализации значения новой переменной
+let resultText = firstText + String(weight) + secondText
+print(resultText) // Мой вес 12.4 тонны
+```
+
+В данном примере используется оператор сложения для объединения строковых значений. Тип данных константы weight не строковый, поэтому ее значение приводится к String с помощью соответствующей функции. 
+Значения типа Character при конкатенации также должны преобразовываться к типу String. 
+
+### Initializing an Empty String
+
+```swift
+var emptyString = ""                              // empty string literal 
+var anotherEmptyString = String()        // initializer syntax 
+// these two strings are both empty, and are equivalent to each other 
+```
+
+String value is empty by checking its Boolean #`isEmpty` property:
+
+```swift
+if emptyString.isEmpty { 
+print("Nothing to see here") 
+} 
+// Prints "Nothing to see here"
+```
+
+Используйте свойство #`startIndex` для доступа к позиции первого `Character` строки. Свойство #`endIndex` – это позиция после последнего символа в строке. В результате свойство `endIndex` не является допустимым аргументом для нижнего индекса строки. Если строка пуста, `startIndex` и `endIndex` равны. Вы получаете доступ к индексам до и после данного индекса, используя методы #`index(before :)` и #`index(after :)` класса String. Чтобы получить доступ к индексу, находящемуся дальше от данного индекса, вы можете использовать метод `index(_: offsetBy :)`
+
+```swift
+let greeting = "Guten Tag!" 
+greeting[greeting.startIndex]   // G 
+greeting[greeting.index(before: greeting.endIndex)]   // ! 
+greeting[greeting.index(after: greeting.startIndex)]  // u 
+let index = greeting.index(greeting.startIndex, offsetBy: 7) 
+greeting[index]  // a
+```
+
+Attempting to access an index outside of a string’s range or a Character at an index outside of a string’s range will trigger a runtime error.
+```swift
+greeting[greeting.endIndex] // Error 
+greeting.index(after: greeting.endIndex) // Error 
+```
+
+Используйте свойство #`indices`, чтобы получить доступ ко всем индексам отдельных символов в строке.
+
+```swift
+for index in greeting.indices { 
+print("\(greeting[index]) ", terminator: "") 
+}  // Prints "G u t e n T a g ! "
+```
+
+### Inserting and Removing – Вставка и удаление
+Чтобы вставить один символ в строку по указанному индексу, используйте метод #`insert(_: at :)`, а для вставки содержимого другой строки по указанному индексу используйте метод `insert (contentsOf: at :)`
+
+```swift
+var welcome = "hello" 
+welcome.insert("!", at: welcome.endIndex) 
+// welcome now equals "hello!" 
+
+welcome.insert(contentsOf: " there", at: welcome.index(before: welcome.endIndex)) 
+// welcome now equals "hello there!" 
+```
+
+Чтобы удалить один символ из строки по указанному индексу, используйте метод #`remove(at :)`, а для удаления подстроки в указанном диапазоне используйте метод `removeSubrange (_ :)`:
+```swift
+welcome.remove(at: welcome.index(before: welcome.endIndex)) 
+// welcome now equals "hello there" 
+let range = welcome.index(welcome.endIndex, offsetBy: -6)..<welcome.endIndex 
+welcome.removeSubrange(range) 
+// welcome now equals "hello"
+```
+
+### Юникод в строковых типах данных 
 
 <img alt="image" src="images/name.jpg"/>
 
