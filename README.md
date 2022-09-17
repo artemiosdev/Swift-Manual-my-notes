@@ -4811,7 +4811,7 @@ sequence – последовательность
    repeat {
         // тело оператора
    } while проверяемое_выражение
-``` 
+```
 
 `проверяемое_выражение -> Bool` — выражение, при истинности которого выполняется код из тела оператора. 
 Одно выполнение кода тела оператора называется итерацией. Итерации повторяются, пока выражение возвращает true. Его значение проверяется после каждой итерации; таким образом, **тело оператора будет выполнено не менее одного раза**
@@ -4877,7 +4877,7 @@ sum // 30
 The continue statement, который немедленно завершает текущую итерацию цикла и запускает следующую итерацию.
 Примечание. Во многих случаях вы можете использовать более простое where, о котором вы только что узнали. Оператор continue дает вам более высокий уровень контроля, позволяя вам решать, где и когда вы хотите пропустить итерацию.
 Возьмем пример сетки восемь на восемь, где каждая ячейка содержит значение строки, умноженное на столбец. Это очень похоже на таблицу умножения? Let’s say you wanted to calculate the sum of all cells but exclude all even rows, as shown below:
- 
+
 Using a for loop, you can achieve this as follows:
 
 <img alt="image" src="images/example continue operation1.jpg"/>
@@ -4979,6 +4979,505 @@ outerLoop: for option1 in options {
 ```
 
 После этого небольшого изменения эти три цикла перестают работать, как только будет найдена комбинация.
+
+### Использование оператора break, Breaking out of a loop
+Оператор `#break` предназначен для досрочного завершения работы цикла. При этом весь последующий код в теле цикла игнорируется. Ниже показано, как производится подсчет суммы всех чисел от 1 до 54. При этом если сумма достигает 450, то происходит выход из оператора и выводится соответствующее сообщение. 
+
+```swift
+let lastNum = 54
+var currentNum = 1
+var sumOfInts = 0
+while currentNum <= lastNum {
+    sumOfInts += currentNum
+    if sumOfInts > 450 {
+        print("Хранилище заполнено. Последнее обработанное число - \(currentNum)")
+        break
+} 
+    currentNum += 1
+}
+// Хранилище заполнено. Последнее обработанное число — 30
+```
+
+Sometimes you want to break out of a loop early. `break statement` – оператор разрыва, который немедленно останавливает выполнение цикла и продолжает выполнение кода который идет после цикла.
+
+```swift
+sum = 1
+while true {
+  sum = sum + (sum + 1)
+  if sum >= 1000 {
+    break
+  }
+}
+```
+
+Here, the loop condition is true, so the loop would normally iterate forever. However, the break means the while loop will exit once the sum is greater than or equal to 1000.
+
+Challenges:
+```swift
+var counter = 0
+while counter < 10 {
+  print("counter is \(counter)")
+  counter += 1
+}
+```
+
+Create a variable named counter and set it equal to 0. Create another variable named roll and set it equal to 0. Create a repeat-while loop. Inside the loop, set roll equal to Int.random(in: 0...5) which means to pick a random number between 0 and 5. Then increment counter by 1. Finally, print After X rolls, roll is Y where X is the value of counter and Y is the value of roll. Set the loop condition such that the loop finishes when the first 0 is rolled.
+Итерации будут до тех пор, пока рандомно не выпадет 0 в roll
+
+```swift
+var counter = 0
+var roll = 0
+repeat {
+  roll = Int.random(in: 0...5)
+  counter += 1
+  print("After \(counter) roll(s), roll is \(roll)")
+} while roll != 0
+```
+
+```
+After 1 roll(s), roll is 5
+After 2 roll(s), roll is 4
+After 3 roll(s), roll is 2
+After 4 roll(s), roll is 4
+After 5 roll(s), roll is 5
+After 6 roll(s), roll is 2
+After 7 roll(s), roll is 0
+```
+
+1.
+```swift
+let firstName = "Matt"
+var lastName = ""
+
+if firstName == "Matt" {
+  lastName = "Galloway"
+} else if firstName == "Ray" {
+  lastName = "Wenderlich"
+}
+
+let fullName = firstName + " " + lastName
+```
+
+3. Snakes and ladders
+Imagine you're playing a game of snakes & ladders that goes from position 1 to position 20. On it, there are ladders at position 3 and 7 which take you to 15 and 12 respectively. Then there are snakes at positions 11 and 17 which take you to 2 and 9 respectively.
+Create a constant called currentPosition which you can set to whatever position between 1 and 20 which you like. Then create a constant called diceRoll which you can set to whatever roll of the dice you want. Finally, calculate the final position taking into account the ladders and snakes, calling it nextPosition.
+
+```swift
+let currentPosition = 2
+let diceRoll = 5
+
+var nextPosition = currentPosition + diceRoll
+if nextPosition == 3 {
+  nextPosition = 15
+} else if nextPosition == 7 {
+  nextPosition = 12
+} else if nextPosition == 11 {
+  nextPosition = 2
+} else if nextPosition == 17 {
+  nextPosition = 9
+}
+print("Board position after \(currentPosition) is \(nextPosition)")
+```
+
+4. Number of days in a month
+Given a month (represented with a String in all lowercase) and the current year (represented with an Int), calculate the number of days in the month. Remember that because of leap (високосный год) years, "february" has 29 days when the year is a multiple of 4 but not a multiple of 100. February also has 29 days when the year is a multiple of 400.
+Given a year reprsented by an Int and a month represented by a String in all lowercase and using the first three letters, calculate the number of days in the month. You need to account for leap years remembering that February ("feb") has 29 days in a leap year and 28 otherwise. A leap year occurs every 4 years, unless the year is divisible by 100, but then if it's divisible by 400 then it is actually a leap year.
+
+```swift
+let month = "feb"
+let year = 2016
+
+var days = 0
+if month == "jan" || month == "mar" || month == "may" || month == "jul" || month == "aug" || month == "oct" || month == "dec" {
+  days = 31
+} 
+
+else if month == "apr" || month == "jun" || month == "sep" || month == "nov" {
+  days = 30
+} 
+
+else if month == "feb" {
+if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) {
+    days = 29
+  } else {
+    days = 28
+  }
+}
+
+if days > 0 {
+  print("\(month) has \(days) days")
+} else {
+  print("Invalid month!")
+}
+```
+
+6. https://ru.wikipedia.org/wiki/Треугольное_число
+Triangular number (Треугольное число) – фигурное многоугольное число, определяемое как число точек, которые могут быть расставлены в форме правильного треугольника. 
+
+```swift
+var depth = 5
+var count = 1
+var triangularNumber = 0
+while count <= depth {
+  triangularNumber += count
+  count += 1
+}
+print("Triangular number with depth \(depth) is \(triangularNumber)")
+```
+
+<img alt="image" src="images/Triangular number.jpg"/>
+
+7. Fibonacci 
+https://ru.wikipedia.org/wiki/%20%D0%A7%D0%B8%D1%81%D0%BB%D0%B0_%D0%A4%D0%B8%D0%B1%D0%BE%D0%BD%D0%B0%D1%87%D1%87%D0%B8
+
+Элементы числовой последовательности 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, …, в которой первые два числа равны 0 и 1, а каждое последующее число равно сумме двух предыдущих чисел.
+
+Помните, что номера Фибоначчи начинают его последовательность с 1 и 1
+
+```swift
+let n = 10
+var current = 1
+var previous = 1
+var done = 2 // уже имеются 2 первых числа последовательности т.е 1 и 1
+while done < n {
+  let next = current + previous
+  previous = current
+  current = next
+  done += 1
+}
+print("Fibonacci number \(n) is \(current)")
+```
+
+Более сложный рекурсивный вариант
+
+```swift
+func fibonacci(_ i: Int) -> Int {
+if i <= 2 { 
+    return 1 
+} else { 
+    return fibonacci(i - 1) + fibonacci(i - 2)}
+}
+// fibonacci(6) = 8
+```
+В репозитории [2017-2018 Алгоритмы и структуры данных на Python 3, all playlist](https://github.com/artemiosdev/Algorithms-and-Data-Structures-in-Python) есть примеры на Python с рекурсией и динамическим программированием
+
+Заходит число 6 в функцию.
+6 больше, чем 2 -> переходим в else, там будем находиться пока не будет fib(2) или fib(1), что будет единицей.
+
+1 итерация: return fib(6-1) + fib(6-2) -> fib(5) + fib(4), пошла рекурсия и снова заходим в функцию
+
+2 итерация: return fib(5-1) + fib(5-2) + fib(4-1) + fib(4-2) -> fib(4) + fib(3) + fib(3) + fib(2) -> fib(4) + fib(3) + fib(3) + 1, так как если i <= 2 будет 1
+
+3 итерация: return fib(4-1) + fib(4-2) + fib(3-1) + fib(3-2) + fib(3-1) + fib(3-2) + 1 -> fib(3) + fib(2) + fib(2) + fib(1) + fib(2) + fib(1) + 1 -> fib(3) + 1 + 1 + 1 + 1 + 1 + 1
+
+4 итерация: return fib(2) + fib(1) + 6 -> 1 + 1 + 6 -> 8
+
+
+8. Make a loop
+Use a loop to print out the times table up to 5 of a given factor
+
+```swift
+let factor = 7
+var i = 0
+var accumulator = 0
+while i <= 5 {
+  print("\(factor) x \(i) = \(accumulator)")
+  accumulator += 7
+  i += 1
+}
+```
+
+7 x 0 = 0
+7 x 1 = 7
+7 x 2 = 14
+7 x 3 = 21
+7 x 4 = 28
+7 x 5 = 35
+
+9. Стол для игры в кости
+Распечатайте таблицу, показывающую количество комбинаций для создания каждого числа от 2 до 12 при 2 бросках шестигранных игральных костей. Вам не следует использовать формулу, а лучше исчерпывающе вычислять количество комбинаций, рассматривая каждый возможный бросок кубиков.
+
+```swift
+var target = 2
+while target <= 12 {
+  var combinationsFound = 0
+  var valueOnFirstDice = 1
+  while valueOnFirstDice <= 6 {
+    var valueOnSecondDice = 1
+    while valueOnSecondDice <= 6 {
+      if valueOnFirstDice + valueOnSecondDice == target {
+        combinationsFound += 1
+      }
+      valueOnSecondDice += 1
+    }
+    valueOnFirstDice += 1
+  }
+
+  print("\(target):\t\(combinationsFound)")
+
+  target += 1
+}
+```
+
+### Оператор повторения for loop
+```swift
+for <CONSTANT> in <COUNTABLE RANGE> {
+  <LOOP CODE>
+}
+```
+
+```swift
+let count = 10
+var sum = 0
+for i in 1...count {
+    sum += i
+}
+```
+
+If you used a half-open range, the last iteration would see i equal to count - 1.
+
+Inside the loop, you add i to the sum variable; it runs 10 times to calculate the sequence 1 + 2 + 3 + 4 + 5 + ... all the way up to 10.
+Here are the values of the constant i and variable sum for each iteration:
+
+Start of iteration 1: i = 1, sum = 0
+Start of iteration 2: i = 2, sum = 1
+Start of iteration 3: i = 3, sum = 3
+Start of iteration 4: i = 4, sum = 6
+Start of iteration 5: i = 5, sum = 10
+Start of iteration 6: i = 6, sum = 15
+Start of iteration 7: i = 7, sum = 21
+Start of iteration 8: i = 8, sum = 28
+Start of iteration 9: i = 9, sum = 36
+Start of iteration 10: i = 10, sum = 45
+After iteration 10: sum = 55
+
+Можно не использовать constant i и заменить ее `_` (underscore)
+
+```swift
+sum = 1
+var lastSum = 0
+let count = 10
+
+for _ in 0..<count {
+    let temp = sum
+    sum = sum + lastSum
+    lastSum = temp
+}
+Sum  // 89
+```
+
+Ниже в коде, цикл будет выполняться, только когда  `#where i % 2 == 1`
+Найдем сумму, похожую на количество triangle numbers треугольных чисел, но только для нечетных чисел:
+
+```swift
+sum = 0
+let count = 10
+for i in 1...count where i % 2 == 1 {
+    sum += i
+}
+sum // 25
+```
+
+Оператор `for` предназначен для цикличного выполнения блока кода для каждого элемента некоторой последовательности (Sequence). Другими словами, для каждого элемента будет выполнен один и тот же блок кода. Данный оператор принимает на вход любую последовательность (включая коллекции). К примеру, с его помощью можно вывести все символы строки (String — это Collection) по одному на консоль, вызывая функцию print(_:) для каждого символа. И для реализации этой задачи потребуется всего несколько строк кода.
+
+```swift
+for связанный_параметр in последовательность {
+    // тело оператора
+}
+```
+
+`связанный_параметр` — это локальный для тела оператора параметр, которому будет инициализироваться значение очередного элемента последовательности. 
+
+`последовательность: Sequence` — итерируемая последовательность, элементы которой по одному будут доступны в теле оператора через связанный параметр. 
+
+Цикл `for-in` выполняет код, расположенный в теле оператора, для каждого элемента в переданной последовательности. При этом перебор элементов происходит последовательно и по порядку (от первого к последнему). 
+
+Перед каждой итерацией происходит связывание значения очередного элемента последовательности с параметром, объявленным после ключевого слова for. После этого в коде тела оператора это значение доступно через имя связанного параметра. Данный (связанный) параметр является локальным для конструкции for-in и недоступен за ее пределами. 
+
+После всех итераций (перебора всех элементов последовательности) цикл завершает свою работу, а связанный параметр уничтожается. 
+В качестве входной последовательности может быть передана любая Sequence (в том числе Collection): массив (Array), словарь (Dictionary), множество (Set), диапазон (Range) и т. д. 
+
+```swift
+for oneElementOfArray in [1,3,5,7,9] {
+    // тело оператора
+}
+```
+
+Ниже показан пример использования оператора `for`, в котором про- изводится подсчет суммы всех элементов массива, состоящего из целочисленных значений. 
+
+```swift
+// массив целых чисел
+let numArray: Array<Int> = [1, 2, 3, 4, 5]
+// в данной переменной будет храниться
+// сумма элементов массива numArray
+var result: Int = 0
+// цикл подсчета суммы
+for number in numArray {
+    result += number
+}
+result // 15 
+```
+
+В ходе первой итерации переменной number присваивается значение первого элемента массива, то есть 1, после чего выполняется код тела цикла. В следующей итерации переменной number присваивается значение второго элемента (2) и повторно выполняется код тела цикла. И так далее, пока не будет выполнена последняя итерация тела оператора со значением 5 в переменной number. 
+
+```swift
+for number in 1...5 {
+    print(number)
+}
+// 1
+// 2
+// 3
+// 4 
+// 5 
+
+for number in "Swift" {
+    print(number)
+}
+// S 
+// w
+// i
+// f
+// t 
+```
+
+Связанный параметр и все объявленные в теле цикла переменные и константы — локальные, то есть недоступны вне оператора for. Если существуют внешние (относительно тела оператора) одноименные переменные или константы, то их значение не будет пересекаться с локальными 
+
+```swift
+// внешняя переменная
+var myChar = "a"
+// внешняя константа
+let myString = "Swift"
+// цикл использует связанный параметр с именем,
+// уже используемым глобальной переменной
+for myChar in myString {
+    // локальная константа
+    // вне цикла уже существует константа с таким именем
+    let myString = "Char is"
+    print("\(myString) \(myChar)")
+}
+myChar // "a"
+myString // Swift
+```
+
+Запускаем цикл
+
+```
+// Char is S
+// Char is w
+// Char is i
+// Char is f
+// Char is t
+```
+
+Вне оператора for объявлены два параметра: переменная myChar и константа myString. В теле оператора объявляются параметры с теми же именами (myChar — связанный параметр, а myString — локальная константа). Несмотря на то, что внутри цикла локальным параметрам инициализируются значения, глобальные myChar и myString не изменились. 
+
+Порой может возникнуть задача, когда нет необходимости использовать значения элементов коллекции, к примеру, нужно просто трижды вывести некоторое сообщение на консоль. В этом случае для экономии памяти имя связанного параметра можно заменить на нижнее подчеркивание
+
+```swift
+for _ in 1...3 {
+    print("Повторяющаяся строка")
+}
+// Повторяющаяся строка
+// Повторяющаяся строка
+// Повторяющаяся строка
+```
+
+При итерации по элементам словаря `Dictionary` можно создать отдельные связанные параметры для ключей и значений элементов 
+
+```swift
+var countriesAndBlocks = ["Россия": "СНГ", "Франция": "ЕС"]
+for (countryName, orgName) in countriesAndBlocks {
+    print("\(countryName) вступила в \(orgName)")
+}
+// Франция вступила в ЕС
+// Россия вступила в СНГ
+```
+
+Как говорилось ранее, `Dictionary` — это неупорядоченная коллекция. Поэтому порядок следования элементов при инициализации значения отличается от того, как выводятся данные на консоль. 
+
+Если требуется получать только ключи или только значения элементов, то можно вновь воспользоваться нижним подчеркиванием (игнорирование)
+
+```swift
+var countriesAndBlocks = ["Россия": "СНГ", "Франция": "ЕС"]
+for (countryName, _) in countriesAndBlocks {
+    print("страна — \(countryName)")
+}
+for (_, orgName) in countriesAndBlocks{
+    print("организация — \(orgName)")
+}
+```
+
+Помимо этого, в случае, если требуется получить последовательность, состоящую только из ключей или значений словаря, можно воспользоваться свойствами `#keys` и `#values` и передать результат их работы в оператор
+
+```swift
+var countriesAndBlocks = ["Россия": "ЕАЭС", "Франция": "ЕС"]
+for countryName in countriesAndBlocks.keys {
+    print("страна — \(countryName)")
+}
+for orgName in countriesAndBlocks.values {
+    print("организация — \(orgName)")
+}
+```
+
+Если при работе с массивом для каждого элемента помимо значения требуется получить индекс, то можно воспользоваться методом #enumerated(), возвращающим последовательность кортежей, где первый элемент — индекс, а второй — значение.
+
+```swift
+let myMusicStyles = ["Rock", "Jazz", "Pop"]
+for (index, musicName) in myMusicStyles.enumerated() {
+    print("\(index+1). Я люблю \(musicName)")
+}
+// Несколько фактов обо мне:
+// 1. Я люблю Rock
+// 2. Я люблю Jazz
+// 3. Я люблю Pop
+```
+
+Вновь вернемся к работе с последовательностями, состоящими из чисел. 
+
+Предположим, что перед вами стоит задача обработать все числа от 1 до 10, идущие с шагом 3 (массив значений 1, 4, 7, 10). В этом случае вы можете «руками» создать коллекцию с необходимыми элементами и передать ее в конструкцию for-in 
+
+```swift
+// коллекция элементов от 1 до 10 с шагом 3
+let intNumbers = [1, 4, 7, 10]
+for element in intNumbers {
+    // код, обрабатывающий очередной элемент
+}
+```
+
+Если диапазон чисел будет не таким маленьким, а значительно шире (например, от 1 до 1000 с шагом 5), то самостоятельно описать его будет затруднительно. Также возможна ситуация, когда характеристики множества (начальное и конечное значение, а также шаг) заранее могут быть неизвестны. В этом случае удобнее всего воспользоваться специальными функциями `#stride(from: through: by: )` 
+или `stride(from: to: by: )`, формирующими последовательность (Sequence) элементов на основе указанных правил. 
+
+Функция `stride(from: through: by: )` возвращает последовательность числовых элементов, начиная с `from` до `through` с шагом `by`
+
+```swift
+for i in stride( from: 1, through: 10, by: 3 ) {
+    // тело оператора
+}
+```
+
+Параметр i будет последовательно принимать значения 1, 4, 7, 10. 
+
+Функция `stride(from: to: by: )` имеет лишь одно отличие — вместо входного параметра `through` используется `to`, который исключает указанное в нем значение из последовательности 
+
+```swift
+for i in stride( from: 1, to: 10, by:3 ) {
+    // тело оператора
+}
+```
+Параметр i будет получать значения 1, 4 и 7
+
+Ниже пример вычисления суммы всех нечетных чисел от 1 до 1000 с помощью функции `stride(from: through: by: )`.
+
+```swift
+var result = 0
+for i in stride( from: 1, through: 1000, by:2 ) {
+    result += i 
+} 
+result // 250000
+```
+
+Коллекции элементов, возвращаемые функциями `stride(from: through: by: )` и `stride(from: to: by: )`, представлены в виде значений специальных типов данных `StrideTo<T>` и `StrideThrough<T>`, где `T` — это тип данных элементов коллекции. 
+
 
 ---
 [К оглавлению](#contents)
