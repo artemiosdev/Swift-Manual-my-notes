@@ -6145,7 +6145,7 @@ if convertedNumber != nil {
 } 
 ```
 
-Убедившись, что optional параметр действительно содержит значение, вы можете получить доступ к его базовому значению, добавив восклицательный знак ( ! ) В конце имени optional элемента.
+Убедившись, что `optional` параметр действительно содержит значение, вы можете получить доступ к его базовому значению, добавив восклицательный знак ( `!` ) В конце имени optional элемента.
 
 Восклицательный знак говорит: «Я знаю, что этот optional параметр определенно имеет значение; пожалуйста, используйте это." Это называется принудительным разворачиванием (forced #unwrapping) значения optional  параметра:
 
@@ -6158,121 +6158,93 @@ if convertedNumber != nil {
 
 ### Косвенное извлечение значения – implicitly unwrapping. Implicitly Unwrapped Optionals – Неявно развернутые опционалы
 
+`#Implicitly Unwrapped Optionals`. Если вы уверены, что в момент проведения операции с опционалом в нем всегда будет значение (**не nil**), то **при явном указании типа данных знак вопроса может быть заменен на знак восклицания.** При этом все последующие обращения к параметру необходимо производить без принудительного извлечения, так как оно будет происходить автоматически 
 
-
-### Косвенное извлечение значения – implicitly unwrapping. Implicitly Unwrapped Optionals – Неявно развернутые опционалы
-
-​                               
-
-\#Implicitly Unwrapped Optionals. Если вы уверены, что в момент проведения операции с опционалом в нем всегда будет значение (**не nil**), то **при явном указании типа данных знак вопроса может быть заменен на знак восклицания.** При этом все последующие обращения к параметру необходимо производить без принудительного извлечения, так как оно будет происходить автоматически 
-
+```swift
 var wrapInt: Double! = 3.14
-
 // сложение со значением базового типа не вызовет ошибок
-
 // при этом не требуется использовать принудительное извлечение
-
 wrapInt + 0.12 // 3.26
-
- 
+```
 
 Как описано выше, optionals параметры указывают, что constant or variable разрешено «не иметь значения». Optionals параметры можно проверить с помощью оператора if, чтобы узнать, существует ли значение, и можно условно unwrapped размернуть с помощью optionals привязки для доступа к значению optionals элемента, если оно существует.
 
 Иногда из структуры программы ясно, что optionals параметр всегда будет иметь значение после того, как это значение будет установлено впервые. В этих случаях полезно избавиться от необходимости проверять и разворачивать значение optionals элемента каждый раз, когда к нему обращаются, поскольку можно с уверенностью предположить, что оно все время имеет значение. 
 
-Эти виды опций определяются как неявно развернутые опциональные опции – **implicitly unwrapped optionals**. Вы пишете implicitly unwrapped optionals, помещая восклицательный знак **(String!)**, а не вопросительный знак (String?). После типа, который вы хотите сделать optionals. Вместо того, чтобы помещать восклицательный знак после имени optionals элемента, когда вы его используете, вы помещаете восклицательный знак после типа optionals при его объявлении.
+Эти виды опций определяются как неявно развернутые опциональные опции – **implicitly unwrapped optionals**. Вы пишете implicitly unwrapped optionals, помещая восклицательный знак `(String!)`, а не вопросительный знак `(String?)`. После типа, который вы хотите сделать optionals. Вместо того, чтобы помещать восклицательный знак после имени optionals элемента, когда вы его используете, вы помещаете восклицательный знак после типа optionals при его объявлении.
 
 An implicitly unwrapped неявно развернутые optional параметры полезны, когда подтверждается существование значения optional параметра сразу после того, как оно было впервые определено, и можно определенно предположить, что оно существует в любой момент после этого. 
 
 Неявно развернутый optional параметр – это обычный optional параметр за кулисами, но его также можно использовать как optional значение, без необходимости развертывать optional значение при каждом обращении к нему. В следующем примере показано различие в поведении optional строки и неявно развернутой optional строки при доступе к их обернутому wrapped значению как явной строке:
 
+```swift
 let possibleString: String? = "An optional string." 
-
-let forcedString: String = possibleString!         // нужен ! 
-
- 
-
+let forcedString: String = possibleString! // нужен ! 
 let assumedString: String! = "An implicitly unwrapped optional string." 
-
-let implicitString: String = assumedString        // не нужен !
+let implicitString: String = assumedString // не нужен !
+```
 
 Вы можете думать о неявно развернутом optional (implicitly unwrapped optional) элементе как о разрешении для optional элемента принудительно развернуть его, если это необходимо. Когда вы используете неявно развернутое optional значение, Swift сначала пытается использовать его как обычное optional значение; если его нельзя использовать как optional, Swift принудительно разворачивает значение. В приведенном выше коде optional значение assumedString принудительно разворачивается перед присвоением его значения implicitString, поскольку implicitString имеет явный, optional тип String. В приведенном ниже коде optionalString не указан явный тип, поэтому он является обычным optional.
 
+```swift
 let optionalString = assumedString 
-
 // The type of optionalString is "String?" and assumedString isn't force-unwrapped. 
+```
 
-Если implicitly unwrapped optional равен nil и вы пытаетесь получить доступ к его обернутому (wrapped) значению, вы вызовете ошибку выполнения. Результат будет таким же, как если бы вы поместили восклицательный знак после обычного optional параметра, не содержащего значения. Вы можете проверить, является ли implicitly unwrapped optional параметр nil так же, как вы проверяете обычный optional параметр:
+Если implicitly unwrapped optional равен `nil` и вы пытаетесь получить доступ к его обернутому (wrapped) значению, вы вызовете ошибку выполнения. Результат будет таким же, как если бы вы поместили восклицательный знак после обычного optional параметра, не содержащего значения. Вы можете проверить, является ли implicitly unwrapped optional параметр `nil` так же, как вы проверяете обычный optional параметр:
 
+```swift
 if assumedString != nil { 
-
-print(assumedString!)
-
+    print(assumedString!)
 }
+// Prints "An implicitly unwrapped optional string."
+```
 
-// Prints "An implicitly unwrapped optional string." 
+You can also use an implicitly unwrapped optional with `optional #binding` (доп. привязка), to check and unwrap its value:
 
-You can also use an implicitly unwrapped optional with optional binding (доп. привязка), to check and unwrap its value:
-
+```swift
 if let definiteString = assumedString { 
-
-print(definiteString)
-
+    print(definiteString)
 }
-
 // Prints "An implicitly unwrapped optional string." 
+```
 
 Не используйте implicitly unwrapped optional (неявно развернутый optional параметр), если есть вероятность того, что переменная позже станет нулем. Всегда используйте обычный optional тип, если вам нужно проверить нулевое значение в течение времени существования переменной.
-
- 
 
 ### Проверка наличия значения в опционале 
 
 Для осуществления проверки наличия значения в опционале его можно сравнить с nil. При этом будет возвращено логическое true или false в зависимости от наличия значения 
 
+```swift
 let optOne: UInt? = nil
-
 let optTwo: UInt? = 32
-
 optOne != nil // false
-
 optTwo != nil // true
-
-or
-
+// or
 optOne == nil // true
-
 optTwo == nil // false
+```
 
 Подобное выражение можно использовать совместно с оператором условия if. Если в опционале имеется значение, то в теле оператора оно может быть извлечено без ошибок. 
 
 Пример, в котором определяется количество положительных оценок, а точнее пятерок. Если пятерки есть, то вычисляется количество пирожных, которые необходимо приобрести в награду за старания. 
 
+```swift
 var fiveMarkCount: Int? = 8
-
 var allCakesCount = 0;
-
 // определение наличия значения
-
 if fiveMarkCount != nil {
-
-  // количество пирожных за каждую пятерку
-
-  let cakeForEachFiveMark = 2
-
-  // общее количество пирожных
-
-  allCakesCount = cakeForEachFiveMark * fiveMarkCount**!**
-
+    // количество пирожных за каждую пятерку
+    let cakeForEachFiveMark = 2
+    // общее количество пирожных
+    allCakesCount = cakeForEachFiveMark * fiveMarkCount!
 }
-
 allCakesCount // 16
+```
 
 Обратите внимание на то, что при вычислении значения allCakesCount в теле конструкции if используется принудительное извлечение опционального значения переменной fiveMarkCount. 
 
-Данный способ проверки существования значения опционала работает исключительно при принудительном извлечении опционального значения, так как косвенно извлекаемое значение не может быть равно nil, а значит, и сравнивать его с nil не имеет смысла. 
-
- 
+Данный способ проверки существования значения опционала работает исключительно при принудительном извлечении опционального значения, так как косвенно извлекаемое значение не может быть равно `nil`, а значит, и сравнивать его с `nil` не имеет смысла. 
 
 ### Опциональное связывание if let связываемый_параметр = опционал{ } Optional Binding (привязка, связка)
 
@@ -6544,8 +6516,152 @@ if let coins = Int(coinsInNewChest) {
 
 }
 
- 
+Оператор объединения с nil (nil coalescing)
+Nil Coalescing Operator – Оператор нулевого слияния
+С помощью оператора ?? (называемого оператором объединения с nil) возвращается либо значение опционала, либо значение по умолчанию (если опционал равен nil). 
+let имя_параметра = имя_опционала ?? значение_по_умолчанию
+имя_параметра: T — имя нового параметра, в который будет извлекаться значение опционала. 
+имя_опционала: Optional<T> — имя параметра опционального типа, из которого извлекается значение. 
+значение_по-умолчанию: T — значение, инициализируемое новому параметру в случае, если опционал равен nil. 
+Если опционал не равен nil, то опциональное значение извлекается и инициализируется в объявленный параметр. 
+Если опционал равен nil, то в параметре инициализируется значение, расположенное справа от оператора ??. Для навигации( #?? ) #nil #coalescing
+Базовый тип опционала и тип значения по умолчанию должны быть одним и тем же типом данных. 
+Вместо оператора let может быть использован оператор var.
+let optionalInt: Int? = 20
+var mustHaveResult = optionalInt ?? 0    // 20
+Таким образом, константе mustHaveResult будет проинициализировано целочисленное значение. Так как в optionalInt есть значение, оно будет извлечено и присвоено константе mustHaveResult. Если бы optionalInt был равен nil, то mustHaveResult принял бы значение 0. 
+let optionalInt: Int? = 20
+var mustHaveResult: Int
+if let unwrapped = optionalInt {
+    mustHaveResult = unwrapped
+} else {
+    mustHaveResult = 0
+}
+Наиболее безопасными способами извлечения значений из опционалов являются опциональное связывание и nil coalescing. Старайтесь использовать именно их в своих приложениях. 
+The nil-coalescing operator (a ?? b) unwraps разворачивает an optional если он содержит значение, или возвращает значение по умолчанию b, если a равно nil. Выражение a всегда of an optional type. Выражение b должно соответствовать типу, хранящемуся внутри a. Оператор nil-coalescing является сокращением для приведенного ниже кода:
+a != nil ? a! : b
+В приведенном выше коде используется тернарный условный оператор и принудительное развертывание (forced unwrapping) (a!) Для доступа к значению, заключенному внутри a, когда a не равно nil, и для возврата b в противном случае. Оператор nil-coalescing предоставляет более элегантный способ инкапсулировать эту условную проверку и разворачивание в сжатой и удобочитаемой форме. 
+ПРИМЕЧАНИЕ. Если значение a не равно нулю, значение b не оценивается. Это известно как оценка короткого замыкания. В примере ниже оператор nil-coalescing используется для выбора между именем цвета по умолчанию и необязательным пользовательским именем цвета:
+let defaultColorName = "red" 
+var userDefinedColorName: String?           // defaults to nil 
 
+var colorNameToUse = userDefinedColorName ?? defaultColorName 
+// userDefinedColorName is nil, so colorNameToUse is set to the default of "red"
+
+Переменная userDefinedColorName определяется как необязательная строка со значением по умолчанию nil. Поскольку userDefinedColorName имеет необязательный тип, вы можете использовать оператор nil-coalescing, чтобы рассмотреть его значение. В приведенном выше примере оператор используется для определения начального значения для строковой переменной с именем colorNameToUse. Поскольку userDefinedColorName имеет значение nil, выражение userDefinedColorName ?? defaultColorName возвращает значение defaultColorName или «красный». Если вы присваиваете userDefinedColorName значение, отличное от nil, и снова выполняете проверку оператора nil-coalescing, вместо значения по умолчанию используется значение, заключенное внутри userDefinedColorName:
+userDefinedColorName = "green" 
+colorNameToUse = userDefinedColorName ?? defaultColorName 
+// userDefinedColorName isn't nil, so colorNameToUse is set to "green"
+
+Краткое содержание главы
+Опционалы 
+Используется, когда параметр может иметь некоторое значение или не иметь его вовсе. 
+Загрузка записи из базы данных по его ID может либо вернуть эту запись, либо вернуть nil, указывающий на то, что такой записи нет в базе. 
+   func getObjectBy(id: UInt) -> Object? {
+       // код загрузки данных из базы
+   }
+Получение файла по его имени. При отсутствии файла с таким именем возвращается nil. 
+   func getFileBy(name: UInt) -> File? {
+       // код загрузки файла
+   }
+Ресурс большого объема, который в будущем заменится на nil, чтобы освободить память. 
+Указатель на наличие/отсутствие ошибки в результате запроса на сервер. 
+   let error: Error? = getErrorFromServerQuery()
+   guard let error = error else {
+       print("Ошибок нет")
+   }
+   print("Ошибка \(error.code)")
+Свойства класса, которые будут установлены уже после его инициализации. К примеру, свойства класса ViewController будут связаны с элементами на сцене (IBOutlet) уже после того, как произойдет инициализация. 
+   class ViewController: UIViewController {
+       var textArea: UITextArea!
+       var button: UIButton!
+       // ...
+} 
+
+Challenges
+Challenge 2: Divide and conquer
+First, create a function that returns the number of times an integer can be divided by another integer without a remainder. The function should return nil if the division doesn’t produce a whole number. Name the function divideIfWhole.
+Then, write code that tries to unwrap the optional result of the function. There should be two cases: upon success, print "Yep, it divides \(answer) times", and upon failure, print "Not divisible :[".
+
+Finally, test your function:
+Divide 10 by 2. This should print "Yep, it divides 5 times."
+Divide 10 by 3. This should print "Not divisible :[."
+
+Hint 1: Use the following as the start of the function signature:
+You’ll need to add the return type, which will be an optional!
+
+Hint 2: You can use the modulo operator (%) to determine if a value is divisible by another; recall that this operation returns the remainder from the division of two numbers. 10 % 2 = 0 means that 10 is divisible by 2 with no remainder, whereas 10 % 3 = 1 means that 10 is divisible by 3 with a remainder of 1.
+func divideIfWhole(_ value: Int, by divisor: Int) -> Int? {
+  if value % divisor == 0 {
+    return value / divisor
+  } else {
+    return nil
+  }
+}
+
+if let answer = divideIfWhole(10, by: 2) {
+  print("Yep, it divides \(answer) times.")
+} else {
+  print("Not divisible :[.")
+}
+// Yep, it divides 5 times.
+
+if let answer = divideIfWhole(10, by: 3) {
+  print("Yep, it divides \(answer) times.")
+} else {
+  print("Not divisible :[.")
+}
+// Not divisible :[.
+
+Challenge 3: Refactor and reduce
+
+The code you wrote in the last challenge used if statements. In this challenge, refactor that code to use nil coalescing instead. This time, make it print "It divides X times" in all cases, but if the division doesn’t result in a whole number, then X should be 0.
+let answer1 = divideIfWhole(10, by: 2) ?? 0
+print("It divides \(answer1) times.")
+
+let answer2 = divideIfWhole(10, by: 3) ?? 0
+print("It divides \(answer2) times.")
+
+Challenge 4: Nested optionals
+Consider the following #nested optional. It corresponds to a number inside a box inside a box inside a box.
+let number: Int??? = 10
+If you print number you get the following:
+print(number)
+// Optional(Optional(Optional(10)))
+print(number!)
+// Optional(Optional(10))
+1/Fully force unwrap and print number.
+2/Optionally bind and print number with if let.
+3/Write a function printNumber(_ number: Int???) that uses guard to print the number only if it is bound.
+let number: Int??? = 10
+
+// 1
+print(number!!!)
+
+// 2
+if let number = number {
+  if let number = number {
+    if let number = number {
+      print(number)
+    }
+  }
+}
+
+// Better way of optionally binding without all the {}
+if let n1 = number,
+   let n2 = n1,
+   let n3 = n2 {
+  print(n3)
+}
+
+// 3
+func printNumber(_ number: Int???) {
+  guard let n1 = number, let n2 = n1, let n3 = n2 else {
+    return
+  }
+  print(n3)
+}
+printNumber(number)
 
 ---
 [К оглавлению](#contents)
