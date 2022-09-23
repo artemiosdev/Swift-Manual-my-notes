@@ -6242,294 +6242,239 @@ if fiveMarkCount != nil {
 allCakesCount // 16
 ```
 
-Обратите внимание на то, что при вычислении значения allCakesCount в теле конструкции if используется принудительное извлечение опционального значения переменной fiveMarkCount. 
+Обратите внимание на то, что при вычислении значения `allCakesCount` в теле конструкции if используется принудительное извлечение опционального значения переменной fiveMarkCount. 
 
 Данный способ проверки существования значения опционала работает исключительно при принудительном извлечении опционального значения, так как косвенно извлекаемое значение не может быть равно `nil`, а значит, и сравнивать его с `nil` не имеет смысла. 
 
-### Опциональное связывание if let связываемый_параметр = опционал{ } Optional Binding (привязка, связка)
+### Опциональное связывание `if let связываемый_параметр = опционал{ }` Optional Binding (привязка, связка)
+
+В ходе проверки наличия значения в опционале существует возможность одновременного извлечения значения (если оно не nil) и инициализации его во временный параметр. Этот способ носит название **опционального связывания (optional binding)** и является наиболее корректным способом работы с опционалами. 
+
+```swift
+  if let связываемый_параметр = опционал {
+    // тело оператора
+  }
+```
+
+В результате опционального связывания создается связанный параметр, в который при возможности извлекается значение опционала. Если опционал не равен `nil`, то будет выполнен код в теле оператора, в котором значение опционала будет доступно через связанный параметр. 
+
+```swift
+if let userName = userLogin {
+  print("Имя: \(userName)")
+} else { 
+  print("Имя не введено")
+}
+// userLogin - опционал
+type(of: userLogin) // Optional<String>.Type
+```
 
 Swift includes a feature known as optional binding, which lets you safely access the value inside an optional. Optional #Binding #привязка #связывание безопасная альтернатива вышеописанному принудительному извлечению (**If Statements and Forced Unwrapping** )
 
-Вы используете optional привязку, чтобы узнать, содержит ли optional параметр значение, и если да, то сделать это значение доступным как временную константу или переменную. Optional привязка может использоваться с операторами if и while для проверки значения внутри optional и для извлечения этого значения в constant or variable как часть одного действия.
+Вы используете optional привязку, чтобы узнать, содержит ли optional параметр значение, и если да, то сделать это значение доступным как временную константу или переменную. Optional привязка может использоваться с операторами `if` и `while` для проверки значения внутри `optional` и для извлечения этого значения в constant or variable как часть одного действия.
 
+```swift
 if let constantName = someOptional { 
-
-  statements 
-
+    // statements 
 }
-
- 
+```
 
 Если possibleNumber может быть приведено в Int, то выполнится if, если нет, будет содержать string, к примеру, то выполнится else
 
-**let** possibleNumber = "123"
-
-**if** **let** actualNumber = Int(possibleNumber) {
-
-  print("The string \"\(possibleNumber)\" has an integer value of \(actualNumber)")
-
-} **else** {
-
-  print("The string \"\(possibleNumber)\" couldn't be converted to an integer")
-
+```swift
+let possibleNumber = "123"
+if let actualNumber = Int(possibleNumber) {
+    print("The string \"\(possibleNumber)\" has an integer value of \(actualNumber)")
+} else {
+    print("The string \"\(possibleNumber)\" couldn't be converted to an integer")
 }
+```
 
 Этот код можно прочитать как: «Если optional Int, возвращаемый Int (possibleNumber), содержит значение, установите новую константу с именем actualNumber равной значению, содержащемуся в optional». Если преобразование прошло успешно, константа actualNumber становится доступной для использования в первой ветви оператора if. Он уже инициализирован значением, содержащимся в необязательном поле, поэтому вы не используете **!** суффикс для доступа к его значению. В этом примере actualNumber просто используется для печати результата преобразования. Вы можете использовать как let, так и var с optional привязкой. Если вы хотите манипулировать значением actualNumber в первой ветви оператора if, вы можете вместо этого написать if var actualNumber, и значение, содержащееся в optional элементе, будет доступно как переменная, а не как константа.
 
 Вы можете включить столько optional привязок и логических условий в один оператор if, сколько вам нужно, **разделив их запятыми**. Если какое-либо из значений в optional привязках равно нулю или какое-либо логическое условие оценивается как ложное, все условие оператора if считается ложным. Следующие операторы if эквивалентны:
 
-**if** **let** firstNumber = Int("4"), **let** secondNumber = Int("42"), firstNumber < secondNumber && secondNumber < 100 {
-
-  print("\(firstNumber) < \(secondNumber) < 100")
-
+```swift
+if let firstNumber = Int("4"), **let** secondNumber = Int("42"), firstNumber < secondNumber && secondNumber < 100 {
+    print("\(firstNumber) < \(secondNumber) < 100")
 }
-
 // Prints "4 < 42 < 100"
 
- 
-
-**if** **let** firstNumber = Int("4") {
-
-  **if** **let** secondNumber = Int("42") {
-
-   **if** firstNumber < secondNumber && secondNumber < 100 {
-
-​      print("\(firstNumber) < \(secondNumber) < 100")
-
-​    }
-
-  }
-
+if let firstNumber = Int("4") {
+    if let secondNumber = Int("42") {
+        if firstNumber < secondNumber && secondNumber < 100 {
+        print("\(firstNumber) < \(secondNumber) < 100")
+        }
+    }
 }
-
 // Prints "4 < 42 < 100"
+```
 
-**Константы и переменные, созданные с optional привязкой в операторе if, доступны только в теле оператора if**. Напротив, константы и переменные, созданные с помощью оператора **guard**, доступны в строках кода, следующих за оператором защиты, как описано в разделе «Early exit».
+**Константы и переменные, созданные с optional привязкой в операторе if, доступны только в теле оператора if**. Напротив, константы и переменные, созданные с помощью оператора `guard`, доступны в строках кода, следующих за оператором защиты, как описано в разделе «Early exit».
 
-В ходе проверки наличия значения в опционале существует возможность одновременного извлечения значения (если оно не nil) и инициализации его во временный параметр. Этот способ носит название **опционального связывания (optional binding)** и является наиболее корректным способом работы с опционалами. 
-
-​    
-
-  if let связываемый_параметр = опционал {
-
-​    // тело оператора
-
-  }
-
-В результате опционального связывания создается связанный параметр, в который при возможности извлекается значение опционала. Если опционал не равен nil, то будет выполнен код в теле оператора, в котором значение опционала будет доступно через связанный параметр. 
-
-if let userName = userLogin {
-
-  print("Имя: \(userName)")
-
-} else { 
-
-  print("Имя не введено")
-
-}
-
-// userLogin - опционал
-
-type(of: userLogin) // Optional<String>.Type
 
 Напомню, что область видимости определяет, где в коде доступен некоторый объект. Если этот объект является глобальным, то он доступен в любой точке программы (его область видимости не ограничена). Если объект является локальным, то он доступен только в том блоке кода (и во всех вложенных в него блоках), для которого является локальным. Вне этого блока объект просто не виден. 
 
+```swift
 let markCount: Int? = 8
-
 // определение наличия значения
-
 if let marks = markCount {
-
-  print("Всего \(marks) оценок")
-
+    print("Всего \(marks) оценок")
 }
-
-Консоль: Всего 8 оценок
+// Консоль: Всего 8 оценок
+```
 
 Так как опционал markCount не nil, в ходе опционального связывания происходит автоматическое извлечение его значения с последующей инициализацией в локальную константу marks. 
 
 Переменная, создаваемая при опциональном связывании, локальна для оператора условия, поэтому использовать ее можно только внутри данного оператора. Если бы в переменной markCount не существовало значения, то тело оператора условия было бы проигнорировано. Вы можете не ограничиваться одним опциональным связыванием в рамках одного оператора if 
 
+```swift
 var pointX: Int? = 10
-
 var pointY: Int? = 3
-
-if **let** x = pointX, **let** y = pointY {
-
-  print("Точка установлена на плоскости")
-
+if let x = pointX, let y = pointY 
+    print("Точка установлена на плоскости")
 }
-
-Консоль: Точка установлена на плоскости
+// Консоль: Точка установлена на плоскости
+```
 
 В этом примере проверяется наличие значений в обеих переменных. Если бы хоть одна из переменных соответствовала nil, то вывод на консоль оказался бы пуст. 
 
-Во время написания последнего листинга вы получили от Xcode уведомление (желтого цвета) о том, что объявленные в ходе опционального связывания **константы не используются в теле оператора, вследствие чего они могут быть заменены нижним подчеркиванием _** 
-
- 
+Xcode уведомляет о том, что объявленные в ходе опционального связывания **константы не используются в теле оператора, вследствие чего они могут быть заменены нижним подчеркиванием  `_`** 
 
 Ранее мы уже неоднократно встречались с **нижним подчеркиванием**, позволяющим игнорировать определенные элементы или значения. Напомню, **что оно может заменять имена параметров в тех случаях, когда в их объявлении нет необходимости**. В данном примере опциональное связывание требуется лишь с целью определения наличия значений в опционалах, при этом внутри блока кода оператора условия созданные параметры не используются. Поэтому можно последовать совету среды разработки и заменить имена констант на нижнее подчеркивание. 
 
+<img alt="image" src="images/нижним подчеркиванием _ .jpg"/>
+
+
+```swift
 if let _ = pointX, let _ = pointY {
-
-  print("Точка установлена на плоскости")
-
+    print("Точка установлена на плоскости")
 }
-
- 
-
 if let x = pointX, x > 5 {
-
-  print("Точка очень далеко от вас ")
-
+    print("Точка очень далеко от вас ")
 }
+// Консоль: Точка очень далеко от вас
+```
 
-Консоль: Точка очень далеко от вас
+Или же, можно использовать в качестве привязки **тоже самое имя** опционала, чтобы  не мучаться с придумыванием имени локальной переменной
 
- 
-
-Или же, можно использовать в качестве привязки **тоже самое имя** опционала, чтобы лишний раз не мучаться с придумыванием имени локальной переменной
-
+```swift
 if let authorName = authorName {
-
- print("Author is \(authorName)")
-
+    print("Author is \(authorName)")
 } else {
-
- print("No author.")
-
+    print("No author.")
 }
 
-or with two
-
-if let authorName = authorName,
-
-  let authorAge = authorAge {
-
- print("The author is \(authorName) who is \(authorAge) years old.")
-
+// or with two
+if let authorName = authorName, let authorAge = authorAge {
+    print("The author is \(authorName) who is \(authorAge) years old.")
 } else {
-
- print("No author or no age.")
-
+    print("No author or no age.")
 }
+```
 
 You can combine unwrapping multiple optionals with additional Boolean checks
 
 The expression in the if statement will only be true if name is non-nil, and age is non-nil, and age is greater than or equal to 40.
 
+```swift
 if let authorName = authorName,
-
-  let authorAge = authorAge,
-
-  authorAge >= 40 {
-
- print("The author is \(authorName) who is \(authorAge) years old.")
-
+    let authorAge = authorAge, authorAge >= 40 {
+    print("The author is \(authorName) who is \(authorAge) years old.")
 } else {
-
- print("No author or no age or age less than 40.")
-
+    print("No author or no age or age less than 40.")
 }
-
- 
+```
 
 ### Опциональное связывание как часть оптимизации кода
 
 Представьте, что у вас есть группа драконов, у большинства из которых есть свой сундук с золотом, а количество золотых монет в каждом из этих сундуков разное. В любой момент времени может потребоваться знать общее количество монет во всех сундуках. Внезапно к вам поступает новый дракон, его золото тоже должно быть учтено. 
 
-Напишем код, в котором определяется количество монет в сундуке нового дракона (если, конечно, у него есть сундук), после чего оно суммируется с общим количеством золота 
+Напишем код, в котором определяется количество монет в сундуке нового дракона (если, у него есть сундук), после чего оно суммируется с общим количеством золота 
 
+```swift
 /* переменная типа String, содержащая количество золотых монет в сундуке нового дракона */
-
 var coinsInNewChest = "140"
 
 /* переменная типа Int, в которой будет храниться общее количество монет у всех драконов */
-
 var allCoinsCount = 1301
 
 // проверяем существование значения
-
 if Int(coinsInNewChest) != nil {
-
-  allCoinsCount += Int(coinsInNewChest)!
-
+    allCoinsCount += Int(coinsInNewChest)!
 } else {
-
-  print("У нового дракона отсутствует золото")
-
+    print("У нового дракона отсутствует золото")
 }
+```
 
 У вас мог возникнуть вопрос, почему в качестве количества монет в сундуке не используется значение целочисленного типа.
 
--в интерфейсе мнимой программы, вполне вероятно, будет находиться текстовое поле, в котором будет вводиться строковое значение, содержащее количество монет; 
+- в интерфейсе мнимой программы, вполне вероятно, будет находиться текстовое поле, в котором будет вводиться строковое значение, содержащее количество монет; 
 
--монеты могут отсутствовать по причине отсутствия сундука, а 0 в качестве значения говорит о том, что сундук есть, но монет в нем нет. 
+- монеты могут отсутствовать по причине отсутствия сундука, а 0 в качестве значения говорит о том, что сундук есть, но монет в нем нет. 
 
- 
+На первый взгляд все очень просто и логично, и в результате значение переменной allCoinsCount станет равно 1441. Но обратите внимание, что Int(coinsInNewChest) используется дважды: 
 
-На первый взгляд все очень просто и логично, и в результате значение пе- ременной allCoinsCount станет равно 1441. Но обратите внимание, что Int(coinsInNewChest) используется дважды: 
+- при сравнении с nil; 
 
--при сравнении с nil; 
+- при сложении с переменной allCoinsCount. 
 
--при сложении с переменной allCoinsCount. 
+В результате происходит бесцельная трата процессорного времени, так как одна и та же функция выполняется дважды. Можно избежать такой ситуации, заранее создав переменную `coins`, в которую будет извлечено значение опционала. Данную переменную необходимо использовать в обоих случаях `вместо` вызова функции `Int(_:)` 
 
-В результате происходит бесцельная трата процессорного времени, так как одна и та же функция выполняется дважды. Можно избежать такой ситуации, заранее создав переменную **coins**, в которую будет извлечено значение опционала. Данную переменную необходимо использовать в обоих случаях **вместо** вызова функции **Int(_:)** 
-
+```swift
 let coinsInNewChest = "140"
-
 var allCoinsCount = 1301
-
 /* извлекаем значение опционала в новую переменную */
-
 var coins = Int(coinsInNewChest)
-
 //проверяем существов значения с использованием созданной переменной
-
 if coins != nil {
-
-  allCoinsCount += coins!
-
+    allCoinsCount += coins!
 } else {
-
-  print("У нового дракона отсутствует золото")
-
+    print("У нового дракона отсутствует золото")
 }
+```
 
-Код решает поставленную задачу, но у него есть один недостаток: созданная переменная coins будет существовать (и занимать оперативную память) даже после завершения работы условного оператора, хотя в ней нет необходимости. Необходимо всеми способами избегать бесполезного расходования ресурсов компьютера, к которым относится и процессорное время, и оперативная память. 
+Код решает поставленную задачу, но у него есть один недостаток: созданная переменная `coins` будет существовать (и занимать оперативную память) даже после завершения работы условного оператора, хотя в ней нет необходимости. Необходимо всеми способами избегать бесполезного расходования ресурсов компьютера, к которым относится и процессорное время, и оперативная память. 
 
 Чтобы избежать расходования памяти, **можно использовать опциональное связывание**, так как после выполнения оператора условия созданная при связывании переменная автоматически удалится 
 
+```swift
 let coinsInNewChest = "140"
-
 var allCoinsCount = 1301
-
 // проверяем существов значения с использованием опциональн связывания
-
 if let coins = Int(coinsInNewChest) {
-
-  allCoinsCount += coins
-
+    allCoinsCount += coins
 } else { 
-
-  print("У нового дракона отсутствует золото")
-
+    print("У нового дракона отсутствует золото")
 }
+```
 
-Оператор объединения с nil (nil coalescing)
+### Оператор объединения с nil (nil coalescing)
+
 Nil Coalescing Operator – Оператор нулевого слияния
-С помощью оператора ?? (называемого оператором объединения с nil) возвращается либо значение опционала, либо значение по умолчанию (если опционал равен nil). 
-let имя_параметра = имя_опционала ?? значение_по_умолчанию
-имя_параметра: T — имя нового параметра, в который будет извлекаться значение опционала. 
-имя_опционала: Optional<T> — имя параметра опционального типа, из которого извлекается значение. 
-значение_по-умолчанию: T — значение, инициализируемое новому параметру в случае, если опционал равен nil. 
+
+С помощью оператора `??` (называемого оператором объединения с nil) возвращается либо значение опционала, либо значение по умолчанию (если опционал равен nil). 
+
+`let имя_параметра = имя_опционала ?? значение_по_умолчанию`
+
+`имя_параметра: T` — имя нового параметра, в который будет извлекаться значение опционала. 
+
+`имя_опционала: Optional<T>` — имя параметра опционального типа, из которого извлекается значение. 
+
+`значение_по-умолчанию: T` — значение, инициализируемое новому параметру в случае, если опционал равен `nil`. 
+
 Если опционал не равен nil, то опциональное значение извлекается и инициализируется в объявленный параметр. 
-Если опционал равен nil, то в параметре инициализируется значение, расположенное справа от оператора ??. Для навигации( #?? ) #nil #coalescing
+Если опционал равен nil, то в параметре инициализируется значение, расположенное справа от оператора `??`. Для навигации( #?? ) #nil #coalescing.
+
 Базовый тип опционала и тип значения по умолчанию должны быть одним и тем же типом данных. 
 Вместо оператора let может быть использован оператор var.
-let optionalInt: Int? = 20
-var mustHaveResult = optionalInt ?? 0    // 20
+
+`let optionalInt: Int? = 20`
+
+`var mustHaveResult = optionalInt ?? 0  // 20`
+
 Таким образом, константе mustHaveResult будет проинициализировано целочисленное значение. Так как в optionalInt есть значение, оно будет извлечено и присвоено константе mustHaveResult. Если бы optionalInt был равен nil, то mustHaveResult принял бы значение 0. 
+
+```swift
 let optionalInt: Int? = 20
 var mustHaveResult: Int
 if let unwrapped = optionalInt {
@@ -6537,49 +6482,78 @@ if let unwrapped = optionalInt {
 } else {
     mustHaveResult = 0
 }
-Наиболее безопасными способами извлечения значений из опционалов являются опциональное связывание и nil coalescing. Старайтесь использовать именно их в своих приложениях. 
-The nil-coalescing operator (a ?? b) unwraps разворачивает an optional если он содержит значение, или возвращает значение по умолчанию b, если a равно nil. Выражение a всегда of an optional type. Выражение b должно соответствовать типу, хранящемуся внутри a. Оператор nil-coalescing является сокращением для приведенного ниже кода:
-a != nil ? a! : b
-В приведенном выше коде используется тернарный условный оператор и принудительное развертывание (forced unwrapping) (a!) Для доступа к значению, заключенному внутри a, когда a не равно nil, и для возврата b в противном случае. Оператор nil-coalescing предоставляет более элегантный способ инкапсулировать эту условную проверку и разворачивание в сжатой и удобочитаемой форме. 
-ПРИМЕЧАНИЕ. Если значение a не равно нулю, значение b не оценивается. Это известно как оценка короткого замыкания. В примере ниже оператор nil-coalescing используется для выбора между именем цвета по умолчанию и необязательным пользовательским именем цвета:
-let defaultColorName = "red" 
-var userDefinedColorName: String?           // defaults to nil 
+```
 
+**Наиболее безопасными способами извлечения значений из опционалов являются опциональное связывание и nil coalescing**. Старайтесь использовать именно их в своих приложениях. 
+
+The nil-coalescing operator (a ?? b) unwraps разворачивает an optional если он содержит значение, или возвращает значение по умолчанию b, если a равно nil. Выражение a всегда of an optional type. Выражение b должно соответствовать типу, хранящемуся внутри a. Оператор nil-coalescing является сокращением для приведенного ниже кода:
+
+`a != nil ? a! : b`
+
+В приведенном выше коде используется тернарный условный оператор и принудительное развертывание (forced unwrapping) (`a!`) Для доступа к значению, заключенному внутри `a`, когда `a` не равно nil, и для возврата `b` в противном случае. Оператор nil-coalescing предоставляет более элегантный способ инкапсулировать эту условную проверку и разворачивание в сжатой и удобочитаемой форме. 
+
+ПРИМЕЧАНИЕ. Если значение `a` не равно нулю, значение `b` не оценивается. Это известно как оценка короткого замыкания. В примере ниже оператор nil-coalescing используется для выбора между именем цвета по умолчанию и optional пользовательским именем цвета:
+
+```swift
+let defaultColorName = "red" 
+var userDefinedColorName: String? // defaults to nil 
 var colorNameToUse = userDefinedColorName ?? defaultColorName 
 // userDefinedColorName is nil, so colorNameToUse is set to the default of "red"
+```
 
-Переменная userDefinedColorName определяется как необязательная строка со значением по умолчанию nil. Поскольку userDefinedColorName имеет необязательный тип, вы можете использовать оператор nil-coalescing, чтобы рассмотреть его значение. В приведенном выше примере оператор используется для определения начального значения для строковой переменной с именем colorNameToUse. Поскольку userDefinedColorName имеет значение nil, выражение userDefinedColorName ?? defaultColorName возвращает значение defaultColorName или «красный». Если вы присваиваете userDefinedColorName значение, отличное от nil, и снова выполняете проверку оператора nil-coalescing, вместо значения по умолчанию используется значение, заключенное внутри userDefinedColorName:
+Переменная userDefinedColorName определяется как необязательная строка со значением по умолчанию `nil`. Поскольку userDefinedColorName имеет необязательный тип, вы можете использовать оператор nil-coalescing, чтобы рассмотреть его значение. В приведенном выше примере оператор используется для определения начального значения для строковой переменной с именем colorNameToUse. Поскольку userDefinedColorName имеет значение nil, выражение userDefinedColorName ?? defaultColorName возвращает значение defaultColorName или «красный». Если вы присваиваете userDefinedColorName значение, отличное от nil, и снова выполняете проверку оператора nil-coalescing, вместо значения по умолчанию используется значение, заключенное внутри userDefinedColorName:
+
+```swift
 userDefinedColorName = "green" 
-colorNameToUse = userDefinedColorName ?? defaultColorName 
-// userDefinedColorName isn't nil, so colorNameToUse is set to "green"
+colorNameToUse = userDefinedColorName ?? defaultColorName // userDefinedColorName isn't nil, so colorNameToUse is set to "green"
+```
 
-Краткое содержание главы
-Опционалы 
+### Краткое содержание главы Опционалы 
 Используется, когда параметр может иметь некоторое значение или не иметь его вовсе. 
-Загрузка записи из базы данных по его ID может либо вернуть эту запись, либо вернуть nil, указывающий на то, что такой записи нет в базе. 
+
+Загрузка записи из базы данных по его ID может либо вернуть эту запись, либо вернуть `nil`, указывающий на то, что такой записи нет в базе.
+
+```swift
    func getObjectBy(id: UInt) -> Object? {
        // код загрузки данных из базы
    }
+```
+
 Получение файла по его имени. При отсутствии файла с таким именем возвращается nil. 
+
+```swift
    func getFileBy(name: UInt) -> File? {
        // код загрузки файла
    }
+```
+
 Ресурс большого объема, который в будущем заменится на nil, чтобы освободить память. 
+
 Указатель на наличие/отсутствие ошибки в результате запроса на сервер. 
+
+```swift
    let error: Error? = getErrorFromServerQuery()
    guard let error = error else {
        print("Ошибок нет")
    }
    print("Ошибка \(error.code)")
-Свойства класса, которые будут установлены уже после его инициализации. К примеру, свойства класса ViewController будут связаны с элементами на сцене (IBOutlet) уже после того, как произойдет инициализация. 
-   class ViewController: UIViewController {
-       var textArea: UITextArea!
-       var button: UIButton!
-       // ...
-} 
+```
+Оператор `guard` - если условие true, то код выполняется дальше, если условие false то переходим к else
 
-Challenges
-Challenge 2: Divide and conquer
+Свойства класса, которые будут установлены уже после его инициализации. К примеру, свойства класса ViewController будут связаны с элементами на сцене (IBOutlet) уже после того, как произойдет инициализация. 
+
+```swift
+class ViewController: UIViewController {
+    var textArea: UITextArea!
+    var button: UIButton!
+    // ...
+} 
+```
+
+**Challenges**
+
+**Challenge 2: Divide and conquer**
+
 First, create a function that returns the number of times an integer can be divided by another integer without a remainder. The function should return nil if the division doesn’t produce a whole number. Name the function divideIfWhole.
 Then, write code that tries to unwrap the optional result of the function. There should be two cases: upon success, print "Yep, it divides \(answer) times", and upon failure, print "Not divisible :[".
 
@@ -6591,50 +6565,62 @@ Hint 1: Use the following as the start of the function signature:
 You’ll need to add the return type, which will be an optional!
 
 Hint 2: You can use the modulo operator (%) to determine if a value is divisible by another; recall that this operation returns the remainder from the division of two numbers. 10 % 2 = 0 means that 10 is divisible by 2 with no remainder, whereas 10 % 3 = 1 means that 10 is divisible by 3 with a remainder of 1.
+
+```swift
 func divideIfWhole(_ value: Int, by divisor: Int) -> Int? {
-  if value % divisor == 0 {
-    return value / divisor
-  } else {
-    return nil
-  }
+    if value % divisor == 0 {
+        return value / divisor
+    } else {
+        return nil
+    }
 }
 
 if let answer = divideIfWhole(10, by: 2) {
-  print("Yep, it divides \(answer) times.")
+    print("Yep, it divides \(answer) times.")
 } else {
-  print("Not divisible :[.")
+    print("Not divisible :[.")
 }
 // Yep, it divides 5 times.
 
 if let answer = divideIfWhole(10, by: 3) {
-  print("Yep, it divides \(answer) times.")
+    print("Yep, it divides \(answer) times.")
 } else {
-  print("Not divisible :[.")
+    print("Not divisible :[.")
 }
 // Not divisible :[.
+```
 
-Challenge 3: Refactor and reduce
+**Challenge 3: Refactor and reduce**
 
 The code you wrote in the last challenge used if statements. In this challenge, refactor that code to use nil coalescing instead. This time, make it print "It divides X times" in all cases, but if the division doesn’t result in a whole number, then X should be 0.
+
+```swift
 let answer1 = divideIfWhole(10, by: 2) ?? 0
 print("It divides \(answer1) times.")
 
 let answer2 = divideIfWhole(10, by: 3) ?? 0
 print("It divides \(answer2) times.")
+```
 
-Challenge 4: Nested optionals
+**Challenge 4: Nested optionals**
+
 Consider the following #nested optional. It corresponds to a number inside a box inside a box inside a box.
+
+```swift
 let number: Int??? = 10
 If you print number you get the following:
 print(number)
 // Optional(Optional(Optional(10)))
 print(number!)
 // Optional(Optional(10))
-1/Fully force unwrap and print number.
-2/Optionally bind and print number with if let.
-3/Write a function printNumber(_ number: Int???) that uses guard to print the number only if it is bound.
-let number: Int??? = 10
+```
 
+1. Fully force unwrap and print number.
+2. Optionally bind and print number with if let.
+3. Write a function printNumber(_ number: Int???) that uses guard to print the number only if it is bound.
+
+```swift
+let number: Int??? = 10
 // 1
 print(number!!!)
 
@@ -6662,6 +6648,7 @@ func printNumber(_ number: Int???) {
   print(n3)
 }
 printNumber(number)
+```
 
 ---
 [К оглавлению](#contents)
@@ -6771,7 +6758,7 @@ sumTwoInt(a: 10, b: 12) // Результат операции – 22
 Функция sumTwoInt(a:b:) имеет два входных параметра типа Int — a и b. 
 
 Внешние External и внутренние internal имена входных параметров. Argument labels 
- 
+
 Swift позволяет указать внешние имена ( #argument label ) параметров, которые будут использоваться при вызове функции. Они добавляют читаемости и ясности.
 func sayHello(to person: String, and anotherPerson: String) {
   print(”Hello \(person) and \(anotherPerson)”)
@@ -6783,7 +6770,7 @@ func printMultipleOf(multiplier: Int, and value: Int) {
   print("\(multiplier) * \(value) = \(multiplier * value)")
 }
 printMultipleOf(multiplier: 4, and: 2)
- 
+
 
 func sumTwoInt(num1 a: Int, num2 b: Int) {
     print("Результат операции - \(a+b)")
