@@ -7364,7 +7364,9 @@ let resultInt = cry() + 100 // 101
 ```
 
 ### Рекурсивный вызов функций 
-Функция может вызывать саму себя. Этот механизм называется #рекурсией. Очень многие алгоритмы могут быть реализованы с помощью данной техники. Однако, по невнимательности можно создать «бесконечную петлю», в которой функция будет постоянно вызывать саму себя. При корректном использовании рекурсий функция всегда будет завершать свою работу. 
+Функция может вызывать саму себя. Этот механизм называется `#рекурсией`. Очень многие алгоритмы могут быть реализованы с помощью данной техники. Однако, по невнимательности можно создать «бесконечную петлю», в которой функция будет постоянно вызывать саму себя. При корректном использовании рекурсий функция всегда будет завершать свою работу. 
+
+```swift
 func countdown(firstNum num: Int) -> Void {
     print(num)
     if num > 0 {
@@ -7373,44 +7375,25 @@ func countdown(firstNum num: Int) -> Void {
     }
 }
 countdown(firstNum: 20)
-Функция countdown(firstNum:) делает обратный отчет, начиная от переданного параметра firstNum и заканчивая нулем. Этот алгоритм реализуется рекурсивным вызовом функции. 
-Функции – используются, когда необходимо сгруппировать блок кода для его многократного использования. 
-Подсчет суммы двух чисел. 
-   func sumOf(_ a: Int, and b: Int) -> Int {
-           return a+b 
-   } 
-   sumOf(2, and: 4)       // 6
-Получение имени пользователя из базы данных по его почтовому адресу. 
-   func getUserBy(email: String) ->  User {
-       // код загрузки пользователя из базы данных (или иного хранилища)
-   }
+```
 
-Challenges
-1.Looping with stride functions
-The Swift stride(from:to:by:) and stride(from:through:by:) functions let you loop much more flexibly. Разница в to исключает указанное в нем значение из последовательности, а through включает указанное в нем значение в последовательности.
-For example, if you wanted to loop from 10 to 20 by 4’s you can write:
-for index in stride(from: 10, to: 22, by: 4) {
-  print(index)
-}
-// prints 10, 14, 18
+Функция `countdown(firstNum:)` делает обратный отчет, начиная от переданного параметра `firstNum` и заканчивая нулем. Этот алгоритм реализуется рекурсивным вызовом функции. 
+**Функции – используются, когда необходимо сгруппировать блок кода для его многократного использования.**
 
-for index in stride(from: 10, through: 22, by: 4) {
-  print(index)
-}
-// prints 10, 14, 18, and 22
-
-for index in stride(from: 10, through: 9, by: -0.1) {
-  print(index)
-}
+**Challenges**
 
 2.It’s prime time
 Determine – дитёйман, определять, устанавливать
 Divisible – делить, разделить 
 Divisor – делитель 
-func isNumberDivisible определяет делится ли число без остатка на делитель. func isPrime определяет простое ли число или нет
+
+func `isNumberDivisible` определяет делится ли число без остатка на делитель. func `isPrime` определяет простое ли число или нет
+
 Hint 1: Numbers less than 0 should not be considered prime. Check for this case at the start of the function and return early if the number is less than 0.
 Hint 2: Use a for loop to find divisors. Если вы начнете с двух и заканчите самим числом, то как только вы найдете делитель, вы можете false.
 Hint 3: you can simply loop from 2 until you reach the square root of number, rather than going all the way up to number itself.
+
+```swift
 func isNumberDivisible(_ number: Int, by divisor: Int) -> Bool {
   number % divisor == 0
 }
@@ -7419,7 +7402,6 @@ func isPrime(_ number: Int) -> Bool {
   if number < 0 {
     return false
   }
-
   /* We handle these cases up front because we want to make sure the range 2...root (used below) is valid, which is the case only when root >= 2, so for numbers >= 4  */
   if number <= 3 {
     return true
@@ -7438,22 +7420,22 @@ isPrime(6)
 isPrime(13)
 isPrime(8893)
 
-Корень вычисляет только с типом числа Double
+// Корень вычисляет только с типом числа Double
 let name: Double = 64
 let root = name.squareRoot() // 8
+```
 
 3. Recursive functions
-    Вы собираетесь написать функцию, которая вычисляет значение из последовательности Фибоначчи. Любое значение в последовательности – это сумма двух предыдущих значений. Последовательность определена так, что первые два значения равны 1. То есть fibonacci(1) = 1 и fibonacci(2) = 1.
-    Напишите свою функцию, используя следующее объявление:
-    func fibonacci(_ number: Int) -> Int 
-    Подсказка 1: для значений числа меньше 0 вы должны вернуть 0.
-    Подсказка 2: чтобы начать последовательность, жестко запрограммируйте возвращаемое значение 1, когда число равно 1 или 2.
-    Подсказка 3. Для любого другого значения вам нужно будет вернуть сумму вызовов фибоначчи с числом - 1 и числом – 2
-    func fibonacci(_ number: Int) -> Int {
+Функция, которая вычисляет значение из последовательности Фибоначчи. Любое значение в последовательности – это сумма двух предыдущих значений. Последовательность определена так, что первые два значения равны 1. То есть `fibonacci(1) = 1 и fibonacci(2) = 1`.
+
+- для значений числа меньше 0 вы должны вернуть 0.
+- чтобы начать последовательность, жестко запрограммируйте возвращаемое значение 1, когда число равно 1 или 2. Для любого другого значения вам нужно будет вернуть сумму вызовов фибоначчи с числом 1 и числом 2
+    
+```swift
+func fibonacci(_ number: Int) -> Int {
     if number <= 0 { return 0 }
     if number == 1 || number == 2 { return 1 }
-
-  return fibonacci(number - 1) + fibonacci(number - 2)
+    return fibonacci(number - 1) + fibonacci(number - 2)
 }
 fibonacci(1)      // 1
 fibonacci(2)      // 1
@@ -7461,9 +7443,15 @@ fibonacci(3)      // 2
 fibonacci(4)      // 3
 fibonacci(5)      // 5
 fibonacci(10)    // 55
+```
 
-Apple. Challenges
+**Apple. Challenges**
+
+1. 
+
+```swift
 let goal = 10000
+var steps = 1000
 func progressUpdate() {
     let percent = Double(steps)/Double(goal)
     if percent < 0.1 {
@@ -7479,10 +7467,10 @@ func progressUpdate() {
     }
 }
 progressUpdate()
-or
+
+// or
 func progressUpdate(steps: Int, goal: Int) {
     let percent = Double(steps)/Double(goal)
-    
     if percent < 0.1 {
         print("You're off to a good start.")
     } else if percent < 0.5 {
@@ -7496,62 +7484,45 @@ func progressUpdate(steps: Int, goal: Int) {
     }
 }
 progressUpdate(steps: 5013, goal: 10000) // You're over halfway there!
+```
 
-1.Function progressUpdate, only this time give it two parameters of type Int called steps and goal, respectively. Like before, it should print "You're off to a good start." if steps is less than 10% of goal, "You're almost halfway there!" if steps is less than half of goal, "You're over halfway there!" if steps is less than 90% of goal, "You're almost there!" if steps is less than goal, and "You beat your goal!" otherwise. Call the function and observe the printout.
-Call the function a number of times, passing in different values of steps and goal. Observe the printouts and make sure what is printed to the console is what you would expect for the parameters passsed in.
-func progressUpdate(steps: Int, goal: Int) {
-    let percent = Double(steps)/Double(goal)
-    
-    if percent < 0.1 {
-        print("You're off to a good start.")
-    } else if percent < 0.5 {
-        print("You're almost halfway there!")
-    } else if percent < 0.9 {
-        print("You're over halfway there!")
-    } else if steps < goal {
-        print("You're almost there!")
-    } else {
-        print("You beat your goal!")
-    }
-}
+2. Your fitness tracking app is going to help runners stay on pace to reach their goals. Write a function called pacing that takes four Double parameters called currentDistance, totalDistance, currentTime, and goalTime. Your function should calculate whether or not the user is on pace to hit or beat goalTime. If yes, print "Keep it up!", otherwise print "You've got to push it just a bit harder!"
 
-progressUpdate(steps: 5013, goal: 10000)
-
-2.Your fitness tracking app is going to help runners stay on pace to reach their goals. Write a function called pacing that takes four Double parameters called currentDistance, totalDistance, currentTime, and goalTime. Your function should calculate whether or not the user is on pace to hit or beat goalTime. If yes, print "Keep it up!", otherwise print "You've got to push it just a bit harder!"
+```swift
 func pacing(currentDistance: Double, totalDistance: Double, currentTime: Double, goalTime: Double) {
     let pace = currentTime/(currentDistance/totalDistance)
-    
     if pace < goalTime {
         print("Keep it up!")
     } else {
         print("You've got to push it just a bit harder!")
     }
 }
-
 pacing(currentDistance: 100, totalDistance: 200, currentTime: 6.0, goalTime: 10.0)
+```
 
 3. Разделим функцию выше (2), которая выполняет 2 действия на две функции и тем самым оптимизируем ее на будущее. Функция всегда должна выполнять одну задачу
 As an example, write a function that only does a portion of what your previous pacing function did. This function will be called calculatePace. It should take three Double arguments called currentDistance, totalDistance, and currentTime, and should return a Double that will represent the time at which the user will finish the run based on the user's current distance and time. call the function and print the return value.
+
+```swift
 func calculatePace(currentDistance: Double, totalDistance: Double, currentTime: Double) -> Double {
     return currentTime/(currentDistance/totalDistance)
 }
 
 let pace = calculatePace(currentDistance: 50, totalDistance: 100, currentTime: 4.8)
 print(pace)
-затем
-Now write a function called pacing that takes four Double arguments called currentDistance, totalDistance, currentTime, and goalTime. The function should also return a String, which will be the message to show the user. The function should call calculatePace, passing in the appropriate values, and capture the return value. The function should then compare the returned value to goalTime and if the user is on pace return "Keep it up!", and return "You've got to push it just a bit harder!" otherwise. Call the function and print the return value.
+```
+
+Later. Now write a function called pacing that takes four Double arguments called currentDistance, totalDistance, currentTime, and goalTime. The function should also return a String, which will be the message to show the user. The function should call calculatePace, passing in the appropriate values, and capture the return value. The function should then compare the returned value to goalTime and if the user is on pace return "Keep it up!", and return "You've got to push it just a bit harder!" otherwise. Call the function and print the return value.
 
 ```swift
 func pacing(currentDistance: Double, totalDistance: Double, currentTime: Double, goalTime: Double) -> String {
     let pace = calculatePace(currentDistance: currentDistance, totalDistance: totalDistance, currentTime: currentTime)
-
     if pace <= goalTime {
         return "Keep it up!"
     } else {
         return "You've got to push it just a bit harder!"
     }
 }
-
 let motivation = pacing(currentDistance: 50, totalDistance: 100, currentTime: 4.8, goalTime: 10)
 print(motivation)
 ```
