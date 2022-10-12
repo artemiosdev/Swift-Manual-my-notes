@@ -1,6 +1,8 @@
 Вторая часть коспекта, из-за ограничей Github был разделен единый файл коспекта на части.
 [1 часть коспекта](https://github.com/artemiosdev/Swift-Manual-my-notes)
 
+<a id="contents" />Оглавление
+
 - [Глава  №13. Замыкания (closure). ](#chapter13)
 - [Глава  №14. Дополнительные возможности. Методы. ](#chapter14)
 - [Глава  №15. Ленивые вычисления. ](#chapter15)
@@ -782,9 +784,9 @@ Inspectors — панель настроек, отображающая свой�
 Project editor — редактор и основная рабочая площадка проекта.
 Debug area — панель отладки
 
-<img alt="image" src="/Users/flyboroda/Documents/MyGit/Swift-Manual-my-notes/images/view xcode.jpg"/>
+<img alt="image" src="images/view xcode.jpg"/>
 
-<img alt="image" src="/Users/flyboroda/Documents/MyGit/Swift-Manual-my-notes/images/Toolbar view.jpg"/>
+<img alt="image" src="images/Toolbar view.jpg"/>
 
 Для отображения области отладки (Debug Area) нажать CMD+SHIFT+C или View > Debug Area > Activate Console 
 
@@ -865,7 +867,7 @@ repeat {
     }
 } while randomNumber != UInt8(myNumber!)
 
-<img alt="image" src="/Users/flyboroda/Documents/MyGit/Swift-Manual-my-notes/images/Консольная игра Угадай число.jpg"/>
+<img alt="image" src="images/Консольная игра Угадай число.jpg"/>
 
 Устраняем ошибки приложения 
 Выделим основные проблемы программы: 
