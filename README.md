@@ -35,7 +35,7 @@
 - [Глава  №16. Консольные приложения. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter16)
 - [Глава  №17. Консольные приложение "Угадай число". ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter17)
 - [Глава  №18. Введение в объектно-ориентированное и протокол-ориентированное программирование. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter18)
-- [Глава  №19. . ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter19)
+- [Глава  №19. Перечисления. Синтаксис перечислений . ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter19)
 - [Глава  №20. . ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter20)
 - [Глава  №21. . ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter21)
 - [Глава  №22. . ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter22)
@@ -826,6 +826,15 @@ count = count - 3 */
 count %= 8 // 5
 /* эта операция аналогична выражению
 count = count % 8 */
+```
+
+Есть также крайне редкий оператор принадлежности числа к какому-либо диапазону. Сначала идет диапозон затем оператор и проверяемая переменная.
+```swift
+// ~= 
+let x: Int = 10
+if 1...11 ~= x {
+    print(x)
+}
 ```
 
 Важно помнить, что типы значений при этом должны быть одинаковыми. 
