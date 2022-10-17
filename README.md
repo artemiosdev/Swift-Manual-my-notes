@@ -4307,6 +4307,27 @@ print(message)
 Самое важное отличие конструкции switch-case от if-else заключается в том, что проверяемое выражение может возвращать значение совершенно любого типа, включая строки, числа, диапазоны и даже кортежи. 
 Обратите внимание, что переменная message объявляется вне конструкции switch-case. Это связано с тем, что если бы это делалось в каждом case-блоке, то ее область видимости была бы ограничена оператором ветвления и выражение print(message) вызвало бы ошибку. 
 
+В версии Swift 5 добавили новую функциональность, `@unknown` #@unknown, который сообщит нам ввиде предупреждения **«Switch must be exhaustive»**, что наш switch не исчерпывающий, т.е где-то выше добавились новые элементы, которых раньше не было, и он нас предупреждает об этом, мол пора бы обновить\переписать switch.
+
+```swift
+func readPost(_ post: BlogPost) -> String {
+  switch post {
+    case .tutorial:
+      return "You are reading a tutorial."
+    case .article:
+      return "You are reading an article."
+    @unknown default:
+      return "You are reading a blog post."
+  }
+}
+
+readPost(screencast) // "You are reading a blog post."
+readPost(course) // "You are reading a blog post."
+readPost(podcast) // "You are reading a blog post."
+```
+
+Подробнее https://stackoverflow.com/questions/55411382/difference-between-switch-cases-unknown-default-and-default-in-swift-5 
+
 ### Диапазоны в операторе switch 
 При этом используются операторы диапазона без использования метода `contains(_:)`, как было у оператора if. 
 
