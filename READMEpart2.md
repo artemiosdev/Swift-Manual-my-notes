@@ -2870,6 +2870,151 @@ otherSmile.descriptionRawValue() // ":)"
 -для доступа к свойствам и методам перечисления. 
 При этом, начиная со Swift 5.3, во втором случае использование self не яв- ляется обязательным и данный оператор может быть опущен. Мы видели это ранее в методе descriptionRawValue. Это правило актуально для перечислений, структур и классов. 
 
+Рекурсивные перечисления 
+Перечисления отлично справляются с моделированием ситуации, когда есть всего несколько вариантов ее развития. Но вы можете использовать их не только для того, чтобы хранить некоторые связанные и ассоциированные значения. Вы можете пойти дальше и наделить перечисление функциональностью анализа собственного значения и вычисления на его основе выражений. 
+Возьмем, к примеру, простейшие арифметические операции: сложение, вычитание, умножение и деление. Все они заранее известны, поэтому могут быть помещены в перечисление в качестве его членов. Для простоты оставим только две операции: сложение и вычитание. 
+enum ArithmeticExpression {
+    // операция сложения
+    case addition(Int, Int)
+    // операция вычитания
+    case substraction(Int, Int)
+}
+let expr = ArithmeticExpression.addition(10, 14)
+Каждый из членов перечисления соответствует операции с двумя операндами. В связи с этим они имеют по два ассоциированных параметра. 
+В результате выполнения кода в переменной expr будет храниться член перечисления ArithmeticExpression, определяющий арифметическую операцию сложения. 
+Объявленное перечисление не несет какой-либо функциональной нагрузки в вашем приложении. Но вы можете создать в его пределах метод, который определяет наименование члена и возвращает результат данной операции 
+enum ArithmeticExpression {
+    case addition(Int, Int)
+    case substraction(Int, Int)
+    func evaluate() -> Int {
+        switch self {
+        case .addition(let left, let right):
+            return left + right
+        case .substraction(let left, let right):
+            return left - right
+        }
+   } 
+} 
+var expr = ArithmeticExpression.addition(10, 14)
+expr.evaluate() // 24
+При вызове метода evaluate() происходит поиск определенного в данном экземпляре члена перечисления. Для этого используются операторы switch и self. Далее, после того как член определен, путем связывания значений возвращается результат требуемой арифметической операции. 
+Данный способ работает просто замечательно, но имеет серьезное ограничение: он способен моделировать только одноуровневые арифметические выражения: 1 + 5, 6 + 19 и т. д. В ситуации, когда выражение имеет вложенные выражения: 1 + (5 — 7), 6 — 5 + 4 и т. д., придется вычислять каждое отдельное действие с использованием собственного экземпляра типа ArithmeticExpression. 
+Для решения этой проблемы необходимо доработать перечисление ArithmeticExpression таким образом, чтобы оно давало возможность складывать не только значения типа Int, но и значения типа ArithmeticExpression. 
+Получается, что перечисление, описывающее выражение, должно давать возможность выполнять операции само с собой. Данный механизм реализуется в #рекурсивном перечислении. Для того чтобы разрешить членам перечисления обращаться к этому перечислению, используется ключевое слово #indirect, которое ставится: 
+-либо перед оператором enum — в этом случае каждый член перечисления может обратиться к данному перечислению; 
+-либо перед оператором case того члена, в котором необходимо обратиться к перечислению. 
+Если в качестве ассоциированных параметров перечисления указывать значения типа самого перечисления ArithmeticExpression, то возникает вопрос: а где же хранить числа, над которыми совершаются операции? Такие числа также необходимо хранить в самом перечислении, в его отдельном члене. 
+
+
+В данном примере вычисляется значение выражения 20 + 10 — 34. 
+enum ArithmeticExpression {
+    // указатель на конкретное значение
+    case number( Int )
+    // указатель на операцию сложения
+    indirect case addition( ArithmeticExpression, ArithmeticExpression )
+    // указатель на операцию вычитания
+    indirect case subtraction( ArithmeticExpression, ArithmeticExpression )
+    // метод, проводящий операцию
+    func evaluate( _ expression: ArithmeticExpression? = nil ) -> Int {
+        // определение типа операнда (значение или операция)
+        switch expression ?? self {
+            case let .number( value ):
+                return value
+            case let .addition( valueLeft, valueRight ):
+                return evaluate( valueLeft ) + evaluate( valueRight )
+            case .subtraction( let valueLeft, let valueRight ):
+                return evaluate( valueLeft ) - evaluate( valueRight )
+       } 
+    } 
+} 
+let hardExpr = ArithmeticExpression.addition( .number(20),
+              .subtraction( .number(10), .number(34) ) )
+hardExpr.evaluate() // -4
+У перечисления появился новый член number, который определяет целое число – операнд для проведения очередной операции. Для членов арифметических операций использовано ключевое слово indirect, позволяющее передать значение типа ArithmeticExpression в качестве ассоциированного параметра. 
+Метод evaluate принимает на вход опциональное значение типа ArithmeticExpression?. Опционал в данном случае позволяет вызвать метод, не передавая ему экземпляр, из которого этот метод был вызван. В противном случае последняя строка листинга выглядела бы следующим образом: 
+hardExpr.evaluate(hardExpr)
+Согласитесь, что существующий вариант значительно удобнее. 
+Оператор switch, используя принудительное извлечение, определяет, какой член перечисления передан, и возвращает соответствующее значение. 
+Обратите внимание, что обращение к методу evaluate внутри самого метода в приведенном примере происходит без использования ключевого слова self, но при желании вы всегда можете использовать его. 
+
+Перечисление – сгруппировать множество альтернативных взаимосвязанных значений. Перечисления позволяют значительно повысить безопасность вашего кода. 
+Выбор между мужским и женским полом. 
+   enum Gender {
+       case male
+       case female 
+} 
+Указатель на направление движения. 
+   enum Movement {
+       case left
+       case right
+       case up
+       case down
+} 
+Описание транзакции на бирже. 
+   enum TradeOperation {
+       case buy(name: String, amount: Decimal)
+       case sell(name: String, amount: Decimal)
+   }
+Физические константы. 
+   enum Constant: Double {
+       case π = 3.14159
+       case e = 2.71828
+       case λ = 1.30357
+} 
+
+Examples
+enum Movement: Int {
+  case forward = 10
+  case backward = 23
+  case left = 101
+  case right = 123
+}
+
+let movementDirection  = Movement.backward.rawValue
+
+enum Device {
+  case iPad(color: String), iPhone
+  
+  var year: Int {
+    switch self {
+      case .iPhone: return 2007
+      case .iPad(let color) where color == "black": return 2020
+      case .iPad: return 2010
+    }
+  }
+}
+
+let yearOfProduction = Device.iPad(color: "black").year
+
+
+enum Character {
+  enum Weapon: Int {
+    case sword = 4
+    case wand = 1
+    
+    var damage: Int {
+      return rawValue * 10
+    }
+  }
+  
+  enum CharacterType {
+    case knight
+    case mage
+  }
+}
+
+let charWeapon = Character.Weapon.sword.damage
+
+
+indirect enum Lunch {
+  case salad
+  case soup
+  case meal(Lunch, Lunch)
+}
+
+let myLunch = Lunch.meal(.salad, .soup)
+
+
 
 
 
