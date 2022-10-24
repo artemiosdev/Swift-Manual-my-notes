@@ -41,6 +41,6 @@ class ViewController: UIViewController {
     // keyboard setup hidden/show
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
-        resultLabel.text = ""
+//        resultLabel.text = ""
     }
 }
