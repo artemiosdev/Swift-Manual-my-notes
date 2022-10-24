@@ -1,4 +1,10 @@
 ### Swift Manual
+
+### [Small apps, examples](https://github.com/artemiosdev/Swift-Manual-my-notes/tree/main/small%20apps%2C%20examples)
+Здесь содержатся примеры маленьких приложений, с целью знакомства и изучения различной функциональности. В каждом из приложений есть готовые шаблоны/примеры использования
+
+
+
 Конспект из разных источников
 
 <a id="contents" />Оглавление
