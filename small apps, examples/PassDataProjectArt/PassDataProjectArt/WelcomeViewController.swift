@@ -8,12 +8,15 @@
 import UIKit
 
 class WelcomeViewController: UIViewController {
-
+    var login: String?
+    @IBOutlet weak var welcomeLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        guard let login = self.login else { return }
+        welcomeLabel.text = "Welcome \(login)"
     }
-
-    @IBOutlet weak var welcomeLabel: UILabel!
+    
     @IBAction func goBackTapped(_ sender: UIButton) {
     }
     
