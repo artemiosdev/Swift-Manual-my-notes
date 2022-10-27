@@ -8,7 +8,11 @@
 
 <img alt="gif" src="images/TemperatureConverter.gif" height = 510 width = 233 />
 
-- **[PassDataProjectArt]()** - UITextField c login и password, выбор segue  учитывая идентификатор [performSegue(withIdentifier: , sender: )](), возврат segue на другой экран с помощью  [unwindSegueToMainScreen(segue: UIStoryboardSegue)]() реализуется как к элементом, так и с View (предпочтительнее). Взаимодействие с [UIStoryboardSegue]() (destination, source, identifier). Передача данных с одного View на другой[prepare(for segue: UIStoryboardSegue, sender: )](). Взаимодействие с клавиатурой[touchesBegan()]()
+- **[PassDataProjectArt](https://github.com/artemiosdev/Swift-Manual-my-notes/tree/main/small%20apps%2C%20examples/PassDataProjectArt/PassDataProjectArt)** - UITextField c login и password, выбор segue  учитывая идентификатор [performSegue(withIdentifier: , sender: )](), возврат segue на другой экран с помощью  [unwindSegueToMainScreen(segue: UIStoryboardSegue)]() реализуется как к элементом, так и с View (предпочтительнее). Взаимодействие с [UIStoryboardSegue]() (destination, source, identifier). Передача данных с одного View на другой[prepare(for segue: UIStoryboardSegue, sender: )](). Взаимодействие с клавиатурой[touchesBegan()]()
 
 <img alt="gif" src="images/PassDataProjectArt.gif" height = 510 width = 233 />
+
+- [UILabelAndUIButton](), пример использования button и label, свойства элементов, верстка кодом
+
+<img alt="gif" src="images/UILabelAndUIButton.gif" height = 510 width = 233 />
 
