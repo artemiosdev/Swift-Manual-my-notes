@@ -8,10 +8,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Login View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="PassDataProjectArt" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="LoginViewController" customModule="PassDataProjectArt" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -50,12 +50,20 @@
                                     <action selector="loginTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="09B-xH-O7n"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mdv-El-ggY">
+                                <rect key="frame" x="195" y="737" width="0.0" height="0.0"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="5ff-h4-hu0" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="1hL-40-Rf1"/>
                             <constraint firstItem="B2M-6m-0hx" firstAttribute="top" secondItem="5ff-h4-hu0" secondAttribute="bottom" constant="156" id="4pE-Iv-SXL"/>
+                            <constraint firstItem="Mdv-El-ggY" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="9zU-hm-8zA"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Mdv-El-ggY" secondAttribute="bottom" constant="73" id="C0n-h6-BhH"/>
                             <constraint firstItem="B2M-6m-0hx" firstAttribute="top" secondItem="lxx-7P-r94" secondAttribute="bottom" constant="224" id="JMa-rl-O3s"/>
                             <constraint firstItem="KQG-oD-C4h" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="104" id="NDI-Gf-K5g"/>
                             <constraint firstItem="KQG-oD-C4h" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="QB3-no-7Dl"/>
@@ -67,7 +75,8 @@
                     <connections>
                         <outlet property="loginTF" destination="lxx-7P-r94" id="QpW-do-8a0"/>
                         <outlet property="passwordTF" destination="5ff-h4-hu0" id="1HP-Av-UvO"/>
-                        <segue destination="NRu-h1-YjU" kind="show" identifier=" " id="YB5-ug-nhY"/>
+                        <outlet property="resultLabel" destination="Mdv-El-ggY" id="rDT-0u-sSh"/>
+                        <segue destination="NRu-h1-YjU" kind="show" identifier="detailSegue" id="YB5-ug-nhY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -82,8 +91,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CEP-h8-8NU">
-                                <rect key="frame" x="16" y="150" width="358" height="36"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CEP-h8-8NU">
+                                <rect key="frame" x="16" y="150" width="358" height="0.0"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="358" id="0aY-TE-LMc"/>
                                 </constraints>
@@ -116,9 +125,11 @@
                     <navigationItem key="navigationItem" id="vof-M9-yGh"/>
                     <connections>
                         <outlet property="welcomeLabel" destination="CEP-h8-8NU" id="Twt-gl-LOF"/>
+                        <segue destination="frS-TB-Hhb" kind="unwind" identifier="unwindSegue" unwindAction="unwindSegueToMainScreenWithSegue:" id="mq1-l1-4cq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ola-OS-1go" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="frS-TB-Hhb" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="746" y="63"/>
         </scene>
