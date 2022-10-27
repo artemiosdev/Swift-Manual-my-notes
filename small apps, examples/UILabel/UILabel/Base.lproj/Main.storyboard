@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_0" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="UILabel" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0nh-oP-IO0">
+                                <rect key="frame" x="16" y="114" width="358" height="20.333333333333343"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="358" id="fqB-3V-YWO"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ql7-PF-9EW">
+                                <rect key="frame" x="140" y="666.66666666666663" width="110" height="34.333333333333371"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="110" id="0Wk-k3-xOV"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Button">
+                                    <fontDescription key="titleFontDescription" type="system" pointSize="17"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="pressedButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dUP-G2-OBq"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8hC-u1-kT2">
+                                <rect key="frame" x="140" y="624" width="110" height="34.333333333333371"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="110" id="LZg-tk-f2C"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Action 1">
+                                    <fontDescription key="titleFontDescription" type="system" pointSize="17"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="pressedButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lJb-FL-Ox9"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wYm-Z8-mxZ">
+                                <rect key="frame" x="140" y="581" width="110" height="34.333333333333371"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="110" id="0lN-ip-Fh8"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Action 2">
+                                    <fontDescription key="titleFontDescription" type="system" pointSize="17"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="pressedButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mW5-8d-frR"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Ql7-PF-9EW" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="6gS-dw-At7"/>
+                            <constraint firstItem="wYm-Z8-mxZ" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="FOY-Tf-nfs"/>
+                            <constraint firstItem="8hC-u1-kT2" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Jxv-7Z-WIa"/>
+                            <constraint firstItem="wYm-Z8-mxZ" firstAttribute="width" secondItem="8hC-u1-kT2" secondAttribute="width" id="YYX-jZ-WEs"/>
+                            <constraint firstItem="8hC-u1-kT2" firstAttribute="top" secondItem="wYm-Z8-mxZ" secondAttribute="bottom" constant="8.6666666666666288" id="YgB-t2-veB"/>
+                            <constraint firstItem="0nh-oP-IO0" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="f07-4v-85r"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Ql7-PF-9EW" secondAttribute="bottom" constant="109" id="i1Q-Qq-hF5"/>
+                            <constraint firstItem="0nh-oP-IO0" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="70" id="qGN-fN-a08"/>
+                            <constraint firstItem="8hC-u1-kT2" firstAttribute="width" secondItem="Ql7-PF-9EW" secondAttribute="width" id="sqg-ij-IGs"/>
+                            <constraint firstItem="Ql7-PF-9EW" firstAttribute="top" secondItem="8hC-u1-kT2" secondAttribute="bottom" constant="8.3333333333332575" id="ybd-Cv-OcQ"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="button" destination="Ql7-PF-9EW" id="Q5k-2H-8aE"/>
+                        <outlet property="label" destination="0nh-oP-IO0" id="QYH-Hm-ZoW"/>
+                        <outletCollection property="actionButtons" destination="wYm-Z8-mxZ" collectionClass="NSMutableArray" id="g4t-01-jpV"/>
+                        <outletCollection property="actionButtons" destination="8hC-u1-kT2" collectionClass="NSMutableArray" id="wC8-AX-PtA"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-24.615384615384613" y="67.535545023696685"/>
+        </scene>
+    </scenes>
+</document>
