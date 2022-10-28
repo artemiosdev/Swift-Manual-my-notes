@@ -48,9 +48,28 @@ if sender.titleLabel?.text == "Action 1" { }
 // тегирование элементов
 if sender.tag == 0 { }
 
+// тень
+label.shadowColor = UIColor.white
+
+// выравнивание центр, слева, справа
+label.textAlignment = .center
+
+// количество строк в label
+label.numberOfLines = 3
+
 ```
 
 
+### [UISegmentedControl](https://developer.apple.com/documentation/uikit/uisegmentedcontrol)
+`#UISegmentedControl`  - the segments can represent single or multiple selection, or a list of commands. Each segment can display text or an image, but not both.
+
+Добавить кодом segment, можно просто заголовок и текст; можно и с image, `at` это порядковый индекс элемента 
+
+```swift
+segmentedContol.insertSegment(withTitle: "Third", at: 2, animated: true)
+// or
+segmentedContol.insertSegment(with: UIImage?, at: Int, animated: <Bool)
+```
 
 
 
