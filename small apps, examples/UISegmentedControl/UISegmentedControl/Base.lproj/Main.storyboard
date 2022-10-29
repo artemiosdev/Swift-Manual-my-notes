@@ -44,25 +44,47 @@
                                     <action selector="sliderAction:" destination="BYZ-38-t0r" eventType="valueChanged" id="HEJ-l4-EqO"/>
                                 </connections>
                             </slider>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="YYE-Mh-trb">
+                                <rect key="frame" x="66" y="405" width="259" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oS1-Z9-6Ba">
+                                <rect key="frame" x="66" y="482" width="259" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                <connections>
+                                    <action selector="donePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pay-xP-EPh"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemGreenColor"/>
                         <constraints>
                             <constraint firstItem="AmL-Qt-izi" firstAttribute="top" secondItem="dJd-Lp-CcF" secondAttribute="bottom" constant="52" id="03y-br-O0e"/>
                             <constraint firstItem="k96-Qa-6Aa" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="66" id="0yU-LP-P6U"/>
+                            <constraint firstItem="oS1-Z9-6Ba" firstAttribute="top" secondItem="YYE-Mh-trb" secondAttribute="bottom" constant="43" id="2wS-yj-p6B"/>
                             <constraint firstItem="dJd-Lp-CcF" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="58" id="3hQ-jB-Pje"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="AmL-Qt-izi" secondAttribute="trailing" constant="65" id="7Ka-6m-N36"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="YYE-Mh-trb" secondAttribute="trailing" constant="65" id="Fyv-Pe-ULD"/>
                             <constraint firstItem="dJd-Lp-CcF" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="66" id="Gxq-cu-yga"/>
+                            <constraint firstItem="YYE-Mh-trb" firstAttribute="top" secondItem="k96-Qa-6Aa" secondAttribute="bottom" constant="58" id="Iyc-CA-X48"/>
                             <constraint firstItem="AmL-Qt-izi" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="66" id="K7m-yf-KE3"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="oS1-Z9-6Ba" secondAttribute="trailing" constant="65" id="LP0-j5-anN"/>
+                            <constraint firstItem="oS1-Z9-6Ba" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="66" id="Nwz-fG-aHC"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="k96-Qa-6Aa" secondAttribute="trailing" constant="65" id="pjn-Rf-KSw"/>
+                            <constraint firstItem="YYE-Mh-trb" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="66" id="tFk-gk-8te"/>
                             <constraint firstItem="k96-Qa-6Aa" firstAttribute="top" secondItem="AmL-Qt-izi" secondAttribute="bottom" constant="113.66666666666666" id="taG-Xc-gbP"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="dJd-Lp-CcF" secondAttribute="trailing" constant="65" id="xjd-iL-3qO"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="YYE-Mh-trb" secondAttribute="trailing" constant="65" id="yDF-hd-Fie"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="button" destination="oS1-Z9-6Ba" id="eI5-js-ClI"/>
                         <outlet property="label" destination="AmL-Qt-izi" id="wki-7C-Ouf"/>
                         <outlet property="segmentedContol" destination="dJd-Lp-CcF" id="qbT-uq-MFJ"/>
                         <outlet property="slider" destination="k96-Qa-6Aa" id="2PU-Pm-Xaa"/>
+                        <outlet property="textField" destination="YYE-Mh-trb" id="skh-UA-gpt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -11,6 +11,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var segmentedContol: UISegmentedControl!
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var slider: UISlider!
+    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var button: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +28,10 @@ class ViewController: UIViewController {
         slider.maximumTrackTintColor = .yellow
         slider.minimumTrackTintColor = .blue
         slider.thumbTintColor = .white
+        textField.placeholder = "Enter your name"
+        button.setTitle("Done", for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.backgroundColor = UIColor.systemBlue
     }
     
     @IBAction func choiceSegment(_ sender: UISegmentedControl) {
@@ -51,5 +57,20 @@ class ViewController: UIViewController {
         let backgroundColor = self.view.backgroundColor
         self.view.backgroundColor = backgroundColor?.withAlphaComponent(CGFloat(sender.value))
     }
+    
+    @IBAction func donePressed(_ sender: UIButton) {
+        guard textField.text?.isEmpty == false else { return }
+        
+        if let _ = Double(textField.text!) {
+            let alert = UIAlertController(title: "Name format is wrong", message: "Please, enter your name", preferredStyle: .alert)
+            let alertButton = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alert.addAction(alertButton)
+            present(alert, animated: true, completion: nil)
+        } else {
+            label.text = textField.text
+            textField.text = nil
+        }
+    }
+    
 }
 
