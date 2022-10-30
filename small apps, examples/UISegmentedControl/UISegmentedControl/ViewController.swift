@@ -13,10 +13,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var button: UIButton!
+    @IBOutlet weak var datePicker: UIDatePicker!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//      label.isHidden = true
+        //      label.isHidden = true
         slider.value = 0.5
         label.text = String(slider.value)
         label.font = label.font.withSize(35)
@@ -32,15 +33,16 @@ class ViewController: UIViewController {
         button.setTitle("Done", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
         button.backgroundColor = UIColor.systemBlue
+        // добавим отображение даты на русском, локализуем
+        datePicker.locale = Locale(identifier: "ru_RU")
     }
     
     @IBAction func choiceSegment(_ sender: UISegmentedControl) {
         label.isHidden = false
-        label.shadowColor = UIColor.white
         switch segmentedContol.selectedSegmentIndex {
         case 0:
             label.text = "The first segment is selected"
-            label.textColor = UIColor.red
+            label.textColor = UIColor.purple
         case 1:
             label.text = "The second segment is selected"
             label.textColor = UIColor.black
@@ -71,6 +73,13 @@ class ViewController: UIViewController {
             textField.text = nil
         }
     }
+    @IBAction func changeDate(_ sender: UIDatePicker) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .full
+        // явно локализуем формат даты для отображения на русском, может работать автоматически
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        let dateValue = dateFormatter.string(from: sender.date)
+        label.text = dateValue
+    }
     
 }
-
