@@ -14,27 +14,44 @@ class ViewController: UIViewController {
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var button: UIButton!
     @IBOutlet weak var datePicker: UIDatePicker!
+    @IBOutlet weak var switchLabel: UILabel!
+    @IBOutlet weak var switchElement: UISwitch!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         //      label.isHidden = true
         slider.value = 0.5
+        
         label.text = String(slider.value)
         label.font = label.font.withSize(35)
         label.textAlignment = .center
         label.numberOfLines = 3
+        
         segmentedContol.insertSegment(withTitle: "Third", at: 2, animated: true)
+        
         slider.minimumValue = 0
         slider.maximumValue = 1
         slider.maximumTrackTintColor = .yellow
         slider.minimumTrackTintColor = .blue
         slider.thumbTintColor = .white
+        
         textField.placeholder = "Enter your name"
+        
         button.setTitle("Done", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
         button.backgroundColor = UIColor.systemBlue
+        
         // добавим отображение даты на русском, локализуем
         datePicker.locale = Locale(identifier: "ru_RU")
+        
+        switchLabel.text = "Скрыть все элементы"
+        switchLabel.textColor = UIColor.white
+        
+        switchElement.isOn = false
+        switchElement.onTintColor = UIColor.blue
+        switchElement.thumbTintColor = UIColor.red
+        
     }
     
     @IBAction func choiceSegment(_ sender: UISegmentedControl) {
@@ -82,4 +99,19 @@ class ViewController: UIViewController {
         label.text = dateValue
     }
     
+    @IBAction func switchAction(_ sender: UISwitch) {
+        segmentedContol.isHidden = !segmentedContol.isHidden
+        label.isHidden = !label.isHidden
+        slider.isHidden = !slider.isHidden
+        textField.isHidden = !textField.isHidden
+        button.isHidden = !button.isHidden
+        datePicker.isHidden = !datePicker.isHidden
+        
+        if sender.isOn {
+            switchLabel.text = "Отображить все элементы"
+        } else {
+            switchLabel.text = "Скрыть все элементы"
+        }
+            
+    }
 }

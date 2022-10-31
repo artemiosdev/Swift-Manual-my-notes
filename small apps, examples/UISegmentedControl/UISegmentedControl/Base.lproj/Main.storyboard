@@ -74,16 +74,33 @@
                                             <action selector="changeDate:" destination="BYZ-38-t0r" eventType="valueChanged" id="u2c-r5-K5I"/>
                                         </connections>
                                     </datePicker>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ww0-Qb-ocS">
+                                        <rect key="frame" x="8" y="718" width="202" height="31"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N6F-AT-VuX">
+                                        <rect key="frame" x="232" y="718" width="51" height="31"/>
+                                        <connections>
+                                            <action selector="switchAction:" destination="BYZ-38-t0r" eventType="valueChanged" id="UFN-Je-9bA"/>
+                                        </connections>
+                                    </switch>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="k96-Qa-6Aa" firstAttribute="leading" secondItem="YYE-Mh-trb" secondAttribute="leading" id="29o-1k-zYI"/>
                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="AmL-Qt-izi" secondAttribute="trailing" id="6Ph-Nc-N5y"/>
                                     <constraint firstAttribute="bottom" secondItem="aw0-mL-GX3" secondAttribute="bottom" constant="420" id="6Qn-7b-q2W"/>
                                     <constraint firstItem="aw0-mL-GX3" firstAttribute="leading" secondItem="zeu-1h-Jk8" secondAttribute="leading" id="7bZ-RO-d2F"/>
+                                    <constraint firstAttribute="bottom" secondItem="Ww0-Qb-ocS" secondAttribute="bottom" constant="335" id="Hff-wE-WTp"/>
                                     <constraint firstItem="k96-Qa-6Aa" firstAttribute="trailing" secondItem="YYE-Mh-trb" secondAttribute="trailing" id="Io1-BV-iFY"/>
+                                    <constraint firstItem="N6F-AT-VuX" firstAttribute="top" secondItem="aw0-mL-GX3" secondAttribute="bottom" constant="54" id="W5M-Gr-S5v"/>
                                     <constraint firstItem="k96-Qa-6Aa" firstAttribute="top" secondItem="AmL-Qt-izi" secondAttribute="bottom" constant="113.66666666666666" id="XsL-kP-bEe"/>
                                     <constraint firstItem="AmL-Qt-izi" firstAttribute="top" secondItem="dJd-Lp-CcF" secondAttribute="bottom" constant="52" id="Y8C-c3-AcL"/>
+                                    <constraint firstItem="N6F-AT-VuX" firstAttribute="leading" secondItem="Ww0-Qb-ocS" secondAttribute="trailing" constant="22" id="YpR-jF-Ka0"/>
                                     <constraint firstAttribute="trailing" secondItem="aw0-mL-GX3" secondAttribute="trailing" id="aLv-TE-Jam"/>
+                                    <constraint firstItem="Ww0-Qb-ocS" firstAttribute="leading" secondItem="zeu-1h-Jk8" secondAttribute="leading" constant="8" id="acm-M2-nzk"/>
+                                    <constraint firstAttribute="bottom" secondItem="N6F-AT-VuX" secondAttribute="bottom" constant="335" id="dIh-1a-UCa"/>
                                     <constraint firstItem="aw0-mL-GX3" firstAttribute="top" secondItem="oS1-Z9-6Ba" secondAttribute="bottom" constant="33.333333333333314" id="ew7-vN-809"/>
                                     <constraint firstItem="dJd-Lp-CcF" firstAttribute="top" secondItem="Nqe-dk-biy" secondAttribute="top" constant="20" id="hL4-tH-BBE"/>
                                     <constraint firstItem="dJd-Lp-CcF" firstAttribute="top" secondItem="zeu-1h-Jk8" secondAttribute="top" constant="20" symbolic="YES" id="kBX-3V-VM5"/>
@@ -95,6 +112,8 @@
                                     <constraint firstItem="oS1-Z9-6Ba" firstAttribute="top" secondItem="YYE-Mh-trb" secondAttribute="bottom" constant="43" id="pja-j5-Q81"/>
                                     <constraint firstAttribute="trailing" secondItem="k96-Qa-6Aa" secondAttribute="trailing" id="rzi-Ni-f63"/>
                                     <constraint firstItem="AmL-Qt-izi" firstAttribute="centerX" secondItem="zeu-1h-Jk8" secondAttribute="centerX" id="t5L-ir-mAW"/>
+                                    <constraint firstItem="Ww0-Qb-ocS" firstAttribute="top" secondItem="aw0-mL-GX3" secondAttribute="bottom" constant="54" id="w1K-fb-7L3"/>
+                                    <constraint firstAttribute="trailing" secondItem="N6F-AT-VuX" secondAttribute="trailing" constant="17" id="wD3-4t-IcT"/>
                                     <constraint firstItem="AmL-Qt-izi" firstAttribute="centerX" secondItem="dJd-Lp-CcF" secondAttribute="centerX" id="wxG-vM-HZS"/>
                                     <constraint firstItem="k96-Qa-6Aa" firstAttribute="leading" secondItem="zeu-1h-Jk8" secondAttribute="leading" id="xaP-KR-1iu"/>
                                     <constraint firstItem="YYE-Mh-trb" firstAttribute="leading" secondItem="oS1-Z9-6Ba" secondAttribute="leading" id="z13-9j-NZJ"/>
@@ -119,6 +138,8 @@
                         <outlet property="label" destination="AmL-Qt-izi" id="wki-7C-Ouf"/>
                         <outlet property="segmentedContol" destination="dJd-Lp-CcF" id="qbT-uq-MFJ"/>
                         <outlet property="slider" destination="k96-Qa-6Aa" id="2PU-Pm-Xaa"/>
+                        <outlet property="switchElement" destination="N6F-AT-VuX" id="Y8E-Pb-V0L"/>
+                        <outlet property="switchLabel" destination="Ww0-Qb-ocS" id="UTk-U9-FCN"/>
                         <outlet property="textField" destination="YYE-Mh-trb" id="skh-UA-gpt"/>
                     </connections>
                 </viewController>
