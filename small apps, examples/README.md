@@ -16,3 +16,7 @@
 
 <img alt="gif" src="images/UILabelAndUIButton.gif" height = 510 width = 233 />
 
+- **[UISegmentedControl, UISlider, UITextField, UIScrollView, UIDatePicker, UISwitch, UIPickerView]()**, 
+
+<img alt="gif" src="images/UISegmentedControl.gif" height = 510 width = 233 />
+

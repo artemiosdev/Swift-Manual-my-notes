@@ -8,6 +8,14 @@
 import UIKit
 
 class ViewController: UIViewController {
+    var uiElements = ["UISegmentedControl",
+                      "UILabel",
+                      "UISlider",
+                      "UITextField",
+                      "UIButton",
+                      "UIDatePicker" ]
+    var selectedElement: String?
+    
     @IBOutlet weak var segmentedContol: UISegmentedControl!
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var slider: UISlider!
@@ -16,7 +24,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var switchLabel: UILabel!
     @IBOutlet weak var switchElement: UISwitch!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,6 +59,50 @@ class ViewController: UIViewController {
         switchElement.onTintColor = UIColor.blue
         switchElement.thumbTintColor = UIColor.red
         
+        choiceUiElements()
+        createToolbar()
+    }
+    
+    func hideAllElements() {
+        segmentedContol.isHidden = true
+        label.isHidden = true
+        slider.isHidden = true
+        button.isHidden = true
+        datePicker.isHidden = true
+    }
+    
+    func choiceUiElements() {
+        let elementPicker = UIPickerView()
+        elementPicker.delegate = self
+        textField.inputView = elementPicker
+        
+        // customization
+        elementPicker.backgroundColor = UIColor.brown
+    }
+    
+    func createToolbar() {
+        let toolbar = UIToolbar()
+        // встраиваем в нас View под размер
+        toolbar.sizeToFit()
+        let doneButton = UIBarButtonItem(title: "Done",
+                                         style: .plain,
+                                         target: self,
+                                         action: #selector(dismissKeyboard))
+        
+        // позволяет разместить несколько объектов, в данном случае кнопку Done
+        toolbar.setItems([doneButton], animated: true)
+        // мы разрешаем пользователю взаимодействовать с этим элементом
+        toolbar.isUserInteractionEnabled = true
+        textField.inputAccessoryView = toolbar
+        
+        // customization
+        toolbar.tintColor = UIColor.white
+        toolbar.barTintColor = UIColor.brown
+    }
+    
+    // закрываем клавиатуру
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     @IBAction func choiceSegment(_ sender: UISegmentedControl) {
@@ -90,6 +141,7 @@ class ViewController: UIViewController {
             textField.text = nil
         }
     }
+    
     @IBAction func changeDate(_ sender: UIDatePicker) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .full
@@ -112,6 +164,68 @@ class ViewController: UIViewController {
         } else {
             switchLabel.text = "Скрыть все элементы"
         }
-            
+        
     }
+}
+
+extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    // возвращает кол-во барабанов которое будем использовать
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    // кол-во доступных элементов из массива для барабана
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return uiElements.count
+    }
+    
+    // обображение элементов из массива, по индексу row
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return uiElements[row]
+    }
+    
+    // взаимодействие с выбранным элементом
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        selectedElement = uiElements[row]
+        textField.text = selectedElement
+        
+        switch row {
+        case 0:
+            hideAllElements()
+            segmentedContol.isHidden = false
+        case 1:
+            hideAllElements()
+            label.isHidden = false
+        case 2:
+            hideAllElements()
+            slider.isHidden = false
+        case 3:
+            hideAllElements()
+        case 4:
+            hideAllElements()
+            button.isHidden = false
+        case 5:
+            hideAllElements()
+            datePicker.isHidden = false
+        default:
+            hideAllElements()
+        }
+    }
+    
+    // позволяет работать со свойствами label внутри PickerView
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        var pickerViewLabel = UILabel()
+        if let currentLabel = view as? UILabel {
+            pickerViewLabel = currentLabel
+        } else {
+            pickerViewLabel = UILabel()
+        }
+        
+        pickerViewLabel.textColor = UIColor.white
+        pickerViewLabel.textAlignment = .center
+        pickerViewLabel.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 25)
+        pickerViewLabel.text = uiElements[row]
+        return pickerViewLabel
+    }
+    
 }
