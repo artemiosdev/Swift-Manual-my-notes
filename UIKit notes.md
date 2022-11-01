@@ -8,11 +8,13 @@
 
 ---
 
-### [UIButton](https://developer.apple.com/documentation/uikit/uibutton)
+### [#UIButton](https://developer.apple.com/documentation/uikit/uibutton)
 
-#Tint color – цвет оттенка кнопки
-#IBOutlet – кастомизация, обращение к свойствам элемента (к примеру кнопки, label и тп)
-#IBAction – будет выполнять все действия связанные с элементом  
+`#Tint color` – цвет оттенка кнопки
+
+`#IBOutlet` – кастомизация, обращение к свойствам элемента (к примеру кнопки, label и тп)
+
+`#IBAction` – будет выполнять все действия связанные с элементом  
 
 ```swift
 // скрываем - true, показываем - false
@@ -30,7 +32,7 @@ button.backgroundColor = UIColor.red
 
 ---
 
-### [UILabel](https://developer.apple.com/documentation/uikit/uilabel)
+### [#UILabel](https://developer.apple.com/documentation/uikit/uilabel)
 
 ```swift
 // скрываем - true, показываем - false
@@ -63,7 +65,7 @@ label.numberOfLines = 3
 
 ---
 
-### [UISegmentedControl](https://developer.apple.com/documentation/uikit/uisegmentedcontrol)
+### [#UISegmentedControl](https://developer.apple.com/documentation/uikit/uisegmentedcontrol)
 `#UISegmentedControl`  - the segments can represent single or multiple selection, or a list of commands. Each segment can display text or an image, but not both.
 
 Добавить кодом segment, можно просто заголовок и текст; можно и с image, `at` это порядковый индекс элемента 
@@ -76,7 +78,7 @@ segmentedContol.insertSegment(with: UIImage?, at: Int, animated: <Bool)
 
 ---
 
-### [UISlider](https://developer.apple.com/documentation/uikit/uislider)
+### [#UISlider](https://developer.apple.com/documentation/uikit/uislider)
 
 ```swift
 // значение
@@ -92,8 +94,8 @@ slider.thumbTintColor = .white
 
 ---
 
-### [UITextField ]( https://developer.apple.com/documentation/uikit/uitextfield) 
-У поля есть делегат  [#UITextFieldDelegate](https://developer.apple.com/documentation/uikit/uitextfielddelegate) с помощью которого можно отслеживать взаимодействия пользователя с текстовым полем в реальном времени (начал ввод, закончил, и тп)
+### [#UITextField ]( https://developer.apple.com/documentation/uikit/uitextfield) 
+Есть делегат  [#UITextFieldDelegate](https://developer.apple.com/documentation/uikit/uitextfielddelegate) с помощью которого можно отслеживать взаимодействия пользователя с текстовым полем в реальном времени (начал ввод, закончил, и тп)
 
 ```swift
 textField.placeholder = "Enter your name"
@@ -101,11 +103,11 @@ textField.placeholder = "Enter your name"
 
 ---
 
-### [UIAlertController](https://developer.apple.com/documentation/uikit/uialertcontroller/) 
+### [#UIAlertController](https://developer.apple.com/documentation/uikit/uialertcontroller/) 
 an object that displays an alert message.
 `let alert` – создаем само предупреждение
 
-### [UIAlertAction](https://developer.apple.com/documentation/uikit/uialertaction )
+### [#UIAlertAction](https://developer.apple.com/documentation/uikit/uialertaction )
 action that can be taken when the user taps a button in an alert.
 `let alertButton` – создаем кнопку в предупреждении (возможна функциональность при ее нажатии, замыкания, несколько кнопок и тп)
 
@@ -119,7 +121,8 @@ action that can be taken when the user taps a button in an alert.
         guard textField.text?.isEmpty == false else { return }
         
         if let _ = Double(textField.text!) {
-            let alert = UIAlertController(title: "Name format is wrong", message: "Please, enter your name", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Name format is wrong", message: "Please, enter your name", 
+            preferredStyle: .alert)
             let alertButton = UIAlertAction(title: "OK", style: .default, handler: nil)
             alert.addAction(alertButton)
             present(alert, animated: true, completion: nil)
@@ -132,7 +135,7 @@ action that can be taken when the user taps a button in an alert.
 
 ---
 
-### [UIScrollView](https://developer.apple.com/documentation/uikit/uiscrollview)
+### [#UIScrollView](https://developer.apple.com/documentation/uikit/uiscrollview)
 View, которое позволяет прокручивать и масштабировать содержащиеся в нем view. Вид прокрутки отслеживает движения пальцев и соответствующим образом корректирует начало координат. Задаем размер view.
 
 В самом контейнере UIScrollView можно размещать элементы, если мы знаем что нам нужна будет прокрутка. Или можно добавить UIScrollView на уже существующие элементы `editor -> embed in -> scroll view`
@@ -141,10 +144,10 @@ View, которое позволяет прокручивать и масшта
 
 ---
 
-### [UIDatePicker](https://developer.apple.com/documentation/uikit/uidatepicker)
-Барабан выбора, даты, времени.
+### [#UIDatePicker](https://developer.apple.com/documentation/uikit/uidatepicker)
+#Барабан выбора, даты, времени.
 
-[DateFormatter()](https://developer.apple.com/documentation/foundation/dateformatter/) - форматирование, которое преобразует даты в их текстовые представления. Так как у даты изначально значение вовсе не String. Поэтому нужен отдельный метод для преобразования в String, для вывода в label.
+[#DateFormatter()](https://developer.apple.com/documentation/foundation/dateformatter/) - форматирование, которое преобразует даты в их текстовые представления. Так как у даты изначально значение вовсе не String. Поэтому нужен отдельный метод для преобразования в String, для вывода в label.
 
 ```swift
 // добавим отображение даты на русском, локализуем
@@ -162,11 +165,9 @@ datePicker.locale = Locale(identifier: "ru_RU")
 
 ---
 
-### [UISwitch](https://developer.apple.com/documentation/uikit/uiswitch)
+### [#UISwitch](https://developer.apple.com/documentation/uikit/uiswitch)
 
 ```swift
-switchLabel.text = "Скрыть все элементы"
-switchLabel.textColor = UIColor.white
 switchElement.isOn = false
 switchElement.onTintColor = UIColor.blue
 switchElement.thumbTintColor = UIColor.red
@@ -188,7 +189,7 @@ switchElement.thumbTintColor = UIColor.red
 
 ---
 
-### [UIPickerView](https://developer.apple.com/documentation/uikit/uipickerview)
+### [#UIPickerView](https://developer.apple.com/documentation/uikit/uipickerview)
 Вращающийся барабан с возможностью выбора среди элементов, чем то похож на UIDatePicker.
 
 Необходимые протоколы (подпись extension) [#UIPickerViewDelegate](https://developer.apple.com/documentation/uikit/uipickerviewdelegate), и [#UIPickerViewDataSource](https://developer.apple.com/documentation/uikit/uipickerviewdatasource), и обязательные для них методы. 
@@ -280,7 +281,8 @@ extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
      }
      
      // позволяет работать со свойствами label внутри PickerView, и кастомизировать их
-    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, 
+    reusing view: UIView?) -> UIView {
         var pickerViewLabel = UILabel()
         if let currentLabel = view as? UILabel {
             pickerViewLabel = currentLabel
@@ -356,5 +358,4 @@ extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
 ```swift
 
 ```
-
 
