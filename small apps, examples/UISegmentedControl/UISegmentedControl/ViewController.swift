@@ -8,6 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController {
+    // элементы для выбора в PickerView
     var uiElements = ["UISegmentedControl",
                       "UILabel",
                       "UISlider",
@@ -59,6 +60,7 @@ class ViewController: UIViewController {
         switchElement.onTintColor = UIColor.blue
         switchElement.thumbTintColor = UIColor.red
         
+        // для PickerView
         choiceUiElements()
         createToolbar()
     }
@@ -73,6 +75,7 @@ class ViewController: UIViewController {
     
     func choiceUiElements() {
         let elementPicker = UIPickerView()
+        // скрываем клавиатуру при тапе в поле textField
         elementPicker.delegate = self
         textField.inputView = elementPicker
         
@@ -80,9 +83,10 @@ class ViewController: UIViewController {
         elementPicker.backgroundColor = UIColor.brown
     }
     
+//    кнопка для выхода из PickerView
     func createToolbar() {
         let toolbar = UIToolbar()
-        // встраиваем в нас View под размер
+        // встраиваем в наш View под размер
         toolbar.sizeToFit()
         let doneButton = UIBarButtonItem(title: "Done",
                                          style: .plain,
@@ -100,7 +104,7 @@ class ViewController: UIViewController {
         toolbar.barTintColor = UIColor.brown
     }
     
-    // закрываем клавиатуру
+    // скрываем клавиатуру
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
