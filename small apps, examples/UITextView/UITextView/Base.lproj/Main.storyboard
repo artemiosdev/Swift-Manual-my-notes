@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -13,24 +13,27 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="UITextView" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="428" height="926"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="wpT-UF-Teq">
-                                <rect key="frame" x="20" y="145" width="374" height="437"/>
+                                <rect key="frame" x="19.999999999999996" y="146.66666666666666" width="41.666666666666657" height="465.33333333333337"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <mutableString key="text">Manage the keyboard
+                                <string key="text">Manage the keyboard
 When the user taps in an editable text view, that text view becomes the first responder and automatically asks the system to display the associated keyboard. Because the appearance of the keyboard has the potential to obscure portions of your user interface, it’s up to you to make sure that doesn’t happen by repositioning any views that might be obscured. Some system views, like table views, help you by scrolling the first responder into view automatically. If the first responder is at the bottom of the scrolling region, however, you may still need to resize or reposition the scroll view itself to ensure the first responder is visible.
 
 It’s your application’s responsibility to dismiss the keyboard at the time of your choosing. You might dismiss the keyboard in response to a specific user action, such as the user tapping a particular button in your user interface. To dismiss the keyboard, send the resignFirstResponder() message to the text view that’s currently the first responder. Doing so causes the text view object to end the current editing session (with the delegate object’s consent) and hide the keyboard.
 
-The appearance of the keyboard itself can be customized using the properties provided by the UITextInputTraits protocol. Text view objects implement this protocol and support the properties it defines. You can use these properties to specify the type of keyboard (ASCII, Numbers, URL, Email, and others) to display. You can also configure the basic text entry behavior of the keyboard, such as whether it supports automatic capitalization and correction of the text.</mutableString>
+The appearance of the keyboard itself can be customized using the properties provided by the UITextInputTraits protocol. Text view objects implement this protocol and support the properties it defines. You can use these properties to specify the type of keyboard (ASCII, Numbers, URL, Email, and others) to display. You can also configure the basic text entry behavior of the keyboard, such as whether it supports automatic capitalization and correction of the text.</string>
                                 <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="alt-gp-6pa">
-                                <rect key="frame" x="20" y="91" width="42" height="20.5"/>
+                                <rect key="frame" x="22.000000000000004" y="92" width="41.333333333333343" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="386" id="3CL-QQ-xsZ"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -41,22 +44,25 @@ The appearance of the keyboard itself can be customized using the properties pro
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="wpT-UF-Teq" secondAttribute="trailing" constant="20" id="BKm-IY-ssd"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="wpT-UF-Teq" secondAttribute="bottom" constant="280" id="BYe-Rp-hk8"/>
-                            <constraint firstItem="alt-gp-6pa" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="47" id="PlV-Bm-obo"/>
-                            <constraint firstItem="alt-gp-6pa" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Sm7-eX-HDI"/>
+                            <constraint firstItem="alt-gp-6pa" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="22" id="HTR-1J-lL8"/>
+                            <constraint firstItem="alt-gp-6pa" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="48" id="PlV-Bm-obo"/>
+                            <constraint firstItem="alt-gp-6pa" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" symbolic="YES" id="Qep-O1-ZHd"/>
                             <constraint firstItem="wpT-UF-Teq" firstAttribute="top" secondItem="alt-gp-6pa" secondAttribute="bottom" constant="33.5" id="UwG-2s-eiG"/>
-                            <constraint firstItem="alt-gp-6pa" firstAttribute="width" secondItem="wpT-UF-Teq" secondAttribute="width" multiplier="0.112299" id="Wxv-eX-qaI"/>
                             <constraint firstItem="wpT-UF-Teq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Yu3-ZB-fKa"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="alt-gp-6pa" secondAttribute="trailing" constant="352" id="Z9X-EW-KyP"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="alt-gp-6pa" secondAttribute="trailing" constant="20" id="Z9X-EW-KyP"/>
+                            <constraint firstItem="alt-gp-6pa" firstAttribute="width" secondItem="wpT-UF-Teq" secondAttribute="width" multiplier="0.994845" id="bHk-Vi-U1x"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="alt-gp-6pa" secondAttribute="trailing" constant="20" id="p5j-1d-Nx8"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="bottomConstrait" destination="BYe-Rp-hk8" id="GOx-72-55q"/>
                         <outlet property="countLabel" destination="alt-gp-6pa" id="tUo-L7-aoK"/>
                         <outlet property="textView" destination="wpT-UF-Teq" id="bQl-pe-UmP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-23.188405797101453" y="67.633928571428569"/>
+            <point key="canvasLocation" x="-23.831775700934578" y="67.386609071274307"/>
         </scene>
     </scenes>
     <resources>
