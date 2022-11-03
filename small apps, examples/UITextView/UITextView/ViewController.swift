@@ -12,19 +12,47 @@ class ViewController: UIViewController {
     @IBOutlet weak var countLabel: UILabel!
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var bottomConstrait: NSLayoutConstraint!
+    @IBOutlet weak var stepper: UIStepper!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        textView.text = ""
+//        textView.text = ""
         textView.delegate = self
+        
+        // для примера работы UIActivityIndicatorView
+        textView.isHidden = true
+        // прозрачность текста
+        textView.alpha = 0
+        
         view.backgroundColor = UIColor.systemGreen
         countLabel.text = "0"
         textView.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 17)
         textView.backgroundColor = UIColor.systemGreen
         
+        stepper.value = 17
+        stepper.maximumValue = 10
+        stepper.maximumValue = 25
+        stepper.stepValue = 1
+        stepper.tintColor = .white
+        stepper.backgroundColor = .gray
+        // скругление углов у stepper
+        stepper.layer.cornerRadius = 5
+        
 //      или можно вот так, если цвет задали в storyboard
 //      textView.backgroundColor = self.view.backgroundColor
         
         textView.layer.cornerRadius = 10
+        
+        // отвечает за ActivityIndicator,
+        // когда он закончит свою анимацию действия, то исчезнет
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.color = UIColor.darkGray
+        activityIndicator.startAnimating()
+
+//      устарел
+//      UIApplication.shared.beginIgnoringInteractionEvents()
+//      заморозим view, с ним нельзя взаимодействовать
+        self.view.isUserInteractionEnabled = false
         
         // наблюдатель, будет следить за появлением клавиатуры
         // UIKeyboardWillChangeFrame, и запускать updateTextView
@@ -39,6 +67,18 @@ class ViewController: UIViewController {
                                                selector: #selector(updateTextView(notification:)),
                                                name: UIResponder.keyboardWillHideNotification,
                                                object: nil)
+        
+        // данный метод прекратит анимацию activityIndicator.startAnimating()
+        // которая объявлена выше
+        UIView.animate(withDuration: 0, delay: 5, options: .curveEaseIn) {
+            self.textView.alpha = 1
+        } completion: { finished in
+            self.activityIndicator.stopAnimating()
+            self.textView.isHidden = false
+            // оживим view для взаимодействия
+            self.view.isUserInteractionEnabled = true
+        }
+ 
     }
     
     // данный метод отслеживаем тапы
@@ -71,6 +111,13 @@ class ViewController: UIViewController {
         textView.scrollRangeToVisible(textView.selectedRange)
     }
     
+    @IBAction func sizeFont(_ sender: UIStepper) {
+        let font = textView.font?.fontName
+        let fontSize = CGFloat(sender.value)
+        textView.font = UIFont(name: font!, size: fontSize)
+    }
+    
+    
 }
 
 extension ViewController: UITextViewDelegate {
@@ -91,6 +138,6 @@ extension ViewController: UITextViewDelegate {
     // позволяет вводить в textView определенное кол-во символов
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         countLabel.text = "\(textView.text.count)"
-        return textView.text.count + (text.count - range.length) <= 60
+        return textView.text.count + (text.count - range.length) <= 6000
     }
 }

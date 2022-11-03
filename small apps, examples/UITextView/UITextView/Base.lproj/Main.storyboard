@@ -38,25 +38,41 @@ The appearance of the keyboard itself can be customized using the properties pro
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="17" minimumValue="10" maximumValue="25" translatesAutoresizingMaskIntoConstraints="NO" id="Ted-kh-oKh">
+                                <rect key="frame" x="258" y="44" width="94" height="32"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <action selector="sizeFont:" destination="BYZ-38-t0r" eventType="valueChanged" id="ld1-Qr-4hj"/>
+                                </connections>
+                            </stepper>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="qdp-jV-OFB">
+                                <rect key="frame" x="204" y="369" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemGreenColor"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="wpT-UF-Teq" secondAttribute="trailing" constant="20" id="BKm-IY-ssd"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="wpT-UF-Teq" secondAttribute="bottom" constant="280" id="BYe-Rp-hk8"/>
+                            <constraint firstItem="Ted-kh-oKh" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="FtM-u8-Vty"/>
                             <constraint firstItem="alt-gp-6pa" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="22" id="HTR-1J-lL8"/>
+                            <constraint firstItem="Ted-kh-oKh" firstAttribute="leading" secondItem="wpT-UF-Teq" secondAttribute="leading" constant="238" id="JGg-ud-exz"/>
                             <constraint firstItem="alt-gp-6pa" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="48" id="PlV-Bm-obo"/>
                             <constraint firstItem="alt-gp-6pa" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" symbolic="YES" id="Qep-O1-ZHd"/>
                             <constraint firstItem="wpT-UF-Teq" firstAttribute="top" secondItem="alt-gp-6pa" secondAttribute="bottom" constant="33.5" id="UwG-2s-eiG"/>
                             <constraint firstItem="wpT-UF-Teq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Yu3-ZB-fKa"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="alt-gp-6pa" secondAttribute="trailing" constant="20" id="Z9X-EW-KyP"/>
+                            <constraint firstItem="qdp-jV-OFB" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" constant="172.33333333333334" id="bEa-q5-cO2"/>
                             <constraint firstItem="alt-gp-6pa" firstAttribute="width" secondItem="wpT-UF-Teq" secondAttribute="width" multiplier="0.994845" id="bHk-Vi-U1x"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="alt-gp-6pa" secondAttribute="trailing" constant="20" id="p5j-1d-Nx8"/>
+                            <constraint firstItem="qdp-jV-OFB" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" constant="-89" id="y65-C4-fcm"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="qdp-jV-OFB" id="SkO-AZ-Hnm"/>
                         <outlet property="bottomConstrait" destination="BYe-Rp-hk8" id="GOx-72-55q"/>
                         <outlet property="countLabel" destination="alt-gp-6pa" id="tUo-L7-aoK"/>
+                        <outlet property="stepper" destination="Ted-kh-oKh" id="2UB-eU-vSy"/>
                         <outlet property="textView" destination="wpT-UF-Teq" id="bQl-pe-UmP"/>
                     </connections>
                 </viewController>
