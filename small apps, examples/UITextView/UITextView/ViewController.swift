@@ -60,13 +60,13 @@ class ViewController: UIViewController {
         
         // наблюдатель, будет следить за появлением клавиатуры
         // UIKeyboardWillChangeFrame, и запускать updateTextView
-        // UIKeyboardWillChangeFrame - когда клавиатура поменяет свой размер
+        // когда клавиатура поменяет свой размер
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(updateTextView(notification:)),
                                                name: UIResponder.keyboardWillChangeFrameNotification,
                                                object: nil)
         
-        // наблюдатель, будет следить за скрытием клавиатуры UIKeyboardWillHide
+        // наблюдатель, будет следить за скрытием клавиатуры
         // UIKeyboardWillHide, и запускать updateTextView
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(updateTextView(notification:)),

@@ -45,3 +45,17 @@ View, которое позволяет прокручивать и масшта
 
 <img alt="gif" src="images/UISegmentedControl.gif" height = 510 width = 233 />
 
+- **[UITextView, UIStepper, UIActivityIndicatorView, UIProgressView](https://github.com/artemiosdev/Swift-Manual-my-notes/tree/main/small%20apps%2C%20examples/UITextView/UITextView)**, пример использования [UITextView ](https://developer.apple.com/documentation/uikit/uitextview)
+
+[UITextViewDelegate](https://developer.apple.com/documentation/uikit/uitextviewdelegate) - протокол включающий в себя методы отслеживания тапов, и не только. 
+
+[UIStepper ](https://developer.apple.com/documentation/uikit/uistepper) - элемент управления, для увеличения или уменьшения значения.
+
+[UIActivityIndicatorView](https://developer.apple.com/documentation/uikit/uiactivityindicatorview) - анимация прогресса загрузки данных.
+
+[UIProgressView](https://developer.apple.com/documentation/uikit/uiprogressview) - индикатор прогресса загрузки.
+
+<img alt="gif" src="images/UITextView.gif" height = 510 width = 233 />
+
+
+

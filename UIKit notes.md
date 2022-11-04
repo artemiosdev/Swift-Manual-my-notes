@@ -477,7 +477,7 @@ override func viewDidLoad() {
 
 ---
 
-### [UIProgressView](https://developer.apple.com/documentation/uikit/uiprogressview)
+### [#UIProgressView](https://developer.apple.com/documentation/uikit/uiprogressview)
 Индикатор прогресса загрузки.
 
 ```swift
