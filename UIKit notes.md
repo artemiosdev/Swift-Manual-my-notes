@@ -17,6 +17,8 @@
 `#IBAction` – будет выполнять все действия связанные с элементом  
 
 ```swift
+override func viewDidLoad() {
+
 // скрываем - true, показываем - false
 button.isHidden = true
 
@@ -28,6 +30,8 @@ button.setTitleColor(UIColor.white, for: .normal)
 
 // фон
 button.backgroundColor = UIColor.red
+
+}
 ```
 
 ---
@@ -35,6 +39,7 @@ button.backgroundColor = UIColor.red
 ### [#UILabel](https://developer.apple.com/documentation/uikit/uilabel)
 
 ```swift
+override func viewDidLoad() {
 // скрываем - true, показываем - false
 label.isHidden = true
 
@@ -61,6 +66,8 @@ label.textAlignment = .center
 
 // количество строк в label
 label.numberOfLines = 3
+
+}
 ```
 
 ---
@@ -71,9 +78,13 @@ label.numberOfLines = 3
 Добавить кодом segment, можно просто заголовок и текст; можно и с image, `at` это порядковый индекс элемента 
 
 ```swift
+override func viewDidLoad() {
+
 segmentedContol.insertSegment(withTitle: "Third", at: 2, animated: true)
 // or
 segmentedContol.insertSegment(with: UIImage?, at: Int, animated: <Bool)
+
+}
 ```
 
 ---
@@ -81,6 +92,8 @@ segmentedContol.insertSegment(with: UIImage?, at: Int, animated: <Bool)
 ### [#UISlider](https://developer.apple.com/documentation/uikit/uislider)
 
 ```swift
+override func viewDidLoad() {
+
 // значение
 slider.value = 0.5
 slider.minimumValue = 0
@@ -90,6 +103,8 @@ slider.maximumValue = 1
 slider.maximumTrackTintColor = .yellow
 slider.minimumTrackTintColor = .blue
 slider.thumbTintColor = .white
+
+}
 ```
 
 ---
@@ -150,8 +165,11 @@ View, которое позволяет прокручивать и масшта
 [#DateFormatter()](https://developer.apple.com/documentation/foundation/dateformatter/) - форматирование, которое преобразует даты в их текстовые представления. Так как у даты изначально значение вовсе не String. Поэтому нужен отдельный метод для преобразования в String, для вывода в label.
 
 ```swift
+override func viewDidLoad() {
 // добавим отображение даты на русском, локализуем
 datePicker.locale = Locale(identifier: "ru_RU")
+
+}
 
     @IBAction func changeDate(_ sender: UIDatePicker) {
         let dateFormatter = DateFormatter()
@@ -168,9 +186,12 @@ datePicker.locale = Locale(identifier: "ru_RU")
 ### [#UISwitch](https://developer.apple.com/documentation/uikit/uiswitch)
 
 ```swift
+override func viewDidLoad() {
 switchElement.isOn = false
 switchElement.onTintColor = UIColor.blue
 switchElement.thumbTintColor = UIColor.red
+
+}
 ```
 
 Пример использования switch для скрытия/отображения элементов на экране
@@ -198,6 +219,7 @@ switchElement.thumbTintColor = UIColor.red
 
 ```swift
 class ViewController: UIViewController {
+
 	 // элементы для выбора в PickerView
     var uiElements = ["UISegmentedControl",
                       "UILabel",
@@ -301,50 +323,181 @@ extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
 
 ---
 
-### []()
+### [#UITextView ](https://developer.apple.com/documentation/uikit/uitextview)
+
+[#UITextViewDelegate](https://developer.apple.com/documentation/uikit/uitextviewdelegate) - протокол включающий в себя методы отслеживания тапов, и не только.
 
 ```swift
+override func viewDidLoad() {
 
+textView.text = ""
+textView.delegate = self
+textView.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 17)
+textView.backgroundColor = UIColor.systemGreen
+
+// округлим углы поля
+textView.layer.cornerRadius = 10
+
+}
+```
+
+Изменим фон textView при редактировании, и просто при просмотре
+
+```swift
+extension ViewController: UITextViewDelegate {
+    // срабатывает при тапе на область textView
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        textView.backgroundColor = UIColor.white
+        textView.textColor = UIColor.gray
+    }
+    // срабатываем при тапе за пределами textView
+    // при окончании работы с полем
+    func textViewDidEndEditing(_ textView: UITextView) {
+        textView.backgroundColor = UIColor.systemGreen
+        textView.textColor = UIColor.black   
+    }
+}
 ```
 
 ```swift
+class ViewController: UIViewController {
+    // данный метод отслеживаем тапы
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // скрыть клавиатуру для любого вызванного объекта
+        // при тапе по view он скроет ранее вызванную клавиатуру
+        self.view.endEditing(true)
+        
+  // позволяет отключить клавиатуру для конкретного вызванного объекта
+        textView.resignFirstResponder()
+    }
+}
+```
 
+`#textView.text.count` – количество символов в textView. 
+Далее вводим символ (всегда считается по одному введенному символу), и здесь же отнимаем удаленные символы клавишей backspace если конечно удаляли `+ (text.count - range.length)` <= 600 , и здесь лимит на 600 значений
+
+
+```swift
+extension ViewController: UITextViewDelegate {
+    // позволяет вводить в textView определенное кол-во символов
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        countLabel.text = "\(textView.text.count)"
+       return textView.text.count + (text.count - range.length) <= 600
+    }
+}
+```
+
+Можно назначать наблюдателей за поведением textView, чтобы клавиатура не перекрывала textView, "приподнять" поле при появлении клавиатуры, и "опустить" при скрытии клавиатуры. Уменьшить шрифт, фон, цвет и тп.
+
+```swift
+override func viewDidLoad() {
+
+  // наблюдатель, будет следить за появлением клавиатуры
+  // UIKeyboardWillChangeFrame, и запускать updateTextView
+  // когда клавиатура поменяет свой размер
+        NotificationCenter.default.addObserver(self,
+                selector: #selector(updateTextView(notification:)),
+                name: UIResponder.keyboardWillChangeFrameNotification,
+                object: nil)
+                
+// наблюдатель, будет следить за скрытием клавиатуры UIKeyboardWillHide и запускать updateTextView
+        NotificationCenter.default.addObserver(self,
+                   selector: #selector(updateTextView(notification:)),
+                   name: UIResponder.keyboardWillHideNotification,
+                   object: nil)
+                   
+}
 ```
 
 ---
 
-### []()
+### [#UIStepper ](https://developer.apple.com/documentation/uikit/uistepper)
+Элемент управления, для увеличения или уменьшения значения.
+Размер шрифта измеряется в CGFloat
 
 ```swift
+override func viewDidLoad() {
 
+        stepper.value = 17
+        stepper.maximumValue = 10
+        stepper.maximumValue = 25
+        stepper.stepValue = 1
+        stepper.tintColor = .white
+        stepper.backgroundColor = .gray
+        // скругление углов у stepper
+        stepper.layer.cornerRadius = 5
+        
+}
 ```
 
 ```swift
-
+// увеличение и уменьшение шрифта 
+// в заданных границах в textView
+  @IBAction func sizeFont(_ sender: UIStepper) {
+        let font = textView.font?.fontName
+        let fontSize = CGFloat(sender.value)
+        textView.font = UIFont(name: font!, size: fontSize)
+  }
 ```
 
 ---
 
-### []()
+### [#UIActivityIndicatorView](https://developer.apple.com/documentation/uikit/uiactivityindicatorview)
+Анимация прогресса загрузки данных.
+
+Если нужно запретить пользователю взаимодействовать с вашим приложением во время пока `#UIActivityIndicatorView` активен (к примеру, пока грузятся данные). То в `viewDidLoad()`
 
 ```swift
+@IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
-```
+override func viewDidLoad() {
 
-```swift
+// отвечает за ActivityIndicator,
+// когда он закончит свою анимацию действия, то исчезнет
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.color = UIColor.darkGray
+        activityIndicator.startAnimating()
 
+// метод UIApplication.shared.beginIgnoringInteractionEvents() устарел
+// вот новое решение, заморозим view, с ним нельзя взаимодействовать
+        self.view.isUserInteractionEnabled = false
+        
+        
+// данный метод прекратит анимацию activityIndicator.startAnimating()
+    UIView.animate(withDuration: 0, delay: 5, options: .curveEaseIn) {
+            self.textView.alpha = 1
+        } completion: { finished in
+            self.activityIndicator.stopAnimating()
+            self.textView.isHidden = false
+            // оживим view для взаимодействия
+            self.view.isUserInteractionEnabled = true
+        }
+}
 ```
 
 ---
 
-### []()
+### [UIProgressView](https://developer.apple.com/documentation/uikit/uiprogressview)
+Индикатор прогресса загрузки.
 
 ```swift
+@IBOutlet weak var progressView: UIProgressView!
+ 
+override func viewDidLoad() {
+progressView.setProgress(0, animated: true)
 
-```
-
-```swift
-
+      Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            if self.progressView.progress != 1 {
+                self.progressView.progress += 0.2
+            } else {
+                self.activityIndicator.stopAnimating()
+                self.textView.isHidden = false
+                // оживим view для взаимодействия
+                self.view.isUserInteractionEnabled = true
+                self.progressView.isHidden = true
+            }
+        }
+}        
 ```
 
 ---
