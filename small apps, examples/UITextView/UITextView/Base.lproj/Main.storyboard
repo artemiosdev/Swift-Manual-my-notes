@@ -45,19 +45,25 @@ The appearance of the keyboard itself can be customized using the properties pro
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="FAj-Iv-3Kw">
+                                <rect key="frame" x="20" y="147" width="388" height="4"/>
+                            </progressView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemGreenColor"/>
                         <constraints>
                             <constraint firstItem="alt-gp-6pa" firstAttribute="centerY" secondItem="Ted-kh-oKh" secondAttribute="centerY" id="3xP-Jb-rSR"/>
+                            <constraint firstItem="FAj-Iv-3Kw" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" multiplier="0.906542" id="C0k-Zp-NKd"/>
                             <constraint firstItem="qdp-jV-OFB" firstAttribute="centerX" secondItem="wpT-UF-Teq" secondAttribute="centerX" id="HxU-8B-zqG"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Ted-kh-oKh" secondAttribute="trailing" constant="20" id="LzN-pp-6Z3"/>
                             <constraint firstItem="Ted-kh-oKh" firstAttribute="leading" secondItem="alt-gp-6pa" secondAttribute="trailing" constant="205.66666666666666" id="QGk-ui-N3g"/>
                             <constraint firstItem="alt-gp-6pa" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Qts-SA-271"/>
                             <constraint firstItem="wpT-UF-Teq" firstAttribute="top" secondItem="Ted-kh-oKh" secondAttribute="bottom" constant="28.666666666666686" id="Z3J-AI-L2Z"/>
                             <constraint firstItem="Ted-kh-oKh" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="43" id="bpe-3K-5ty"/>
+                            <constraint firstItem="FAj-Iv-3Kw" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="etm-2y-WSn"/>
                             <constraint firstItem="alt-gp-6pa" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="48" id="gBw-bs-Y64"/>
                             <constraint firstItem="Ted-kh-oKh" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="gF0-jD-gwE"/>
+                            <constraint firstItem="FAj-Iv-3Kw" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="103" id="iqL-Ja-95n"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="wpT-UF-Teq" secondAttribute="bottom" constant="280" id="mhg-Fu-mbv"/>
                             <constraint firstItem="wpT-UF-Teq" firstAttribute="centerY" secondItem="qdp-jV-OFB" secondAttribute="centerY" id="vQI-Rj-gx1"/>
                             <constraint firstItem="wpT-UF-Teq" firstAttribute="top" secondItem="alt-gp-6pa" secondAttribute="bottom" constant="33.666666666666686" id="wg3-ee-LKd"/>
@@ -69,6 +75,7 @@ The appearance of the keyboard itself can be customized using the properties pro
                         <outlet property="activityIndicator" destination="qdp-jV-OFB" id="SkO-AZ-Hnm"/>
                         <outlet property="bottomConstrait" destination="mhg-Fu-mbv" id="NNR-OM-mjA"/>
                         <outlet property="countLabel" destination="alt-gp-6pa" id="tUo-L7-aoK"/>
+                        <outlet property="progressView" destination="FAj-Iv-3Kw" id="Dgk-1q-AnI"/>
                         <outlet property="stepper" destination="Ted-kh-oKh" id="2UB-eU-vSy"/>
                         <outlet property="textView" destination="wpT-UF-Teq" id="bQl-pe-UmP"/>
                     </connections>

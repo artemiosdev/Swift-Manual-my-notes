@@ -8,21 +8,22 @@
 import UIKit
 
 class ViewController: UIViewController {
-
     @IBOutlet weak var countLabel: UILabel!
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var bottomConstrait: NSLayoutConstraint!
     @IBOutlet weak var stepper: UIStepper!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var progressView: UIProgressView!
     override func viewDidLoad() {
         super.viewDidLoad()
-//        textView.text = ""
+        // textView.text = ""
         textView.delegate = self
         
         // для примера работы UIActivityIndicatorView
         textView.isHidden = true
+        
         // прозрачность текста
-        textView.alpha = 0
+        // textView.alpha = 0
         
         view.backgroundColor = UIColor.systemGreen
         countLabel.text = "0"
@@ -38,8 +39,8 @@ class ViewController: UIViewController {
         // скругление углов у stepper
         stepper.layer.cornerRadius = 5
         
-//      или можно вот так, если цвет задали в storyboard
-//      textView.backgroundColor = self.view.backgroundColor
+        //      или можно вот так, если цвет задали в storyboard
+        //      textView.backgroundColor = self.view.backgroundColor
         
         textView.layer.cornerRadius = 10
         
@@ -48,11 +49,14 @@ class ViewController: UIViewController {
         activityIndicator.hidesWhenStopped = true
         activityIndicator.color = UIColor.darkGray
         activityIndicator.startAnimating()
-
-//      устарел
-//      UIApplication.shared.beginIgnoringInteractionEvents()
-//      заморозим view, с ним нельзя взаимодействовать
+        
+        //      устарел
+        //      UIApplication.shared.beginIgnoringInteractionEvents()
+        //      заморозим view, с ним нельзя взаимодействовать
+        // пока "идет загрузка" данных
         self.view.isUserInteractionEnabled = false
+        
+        progressView.setProgress(0, animated: true)
         
         // наблюдатель, будет следить за появлением клавиатуры
         // UIKeyboardWillChangeFrame, и запускать updateTextView
@@ -61,6 +65,7 @@ class ViewController: UIViewController {
                                                selector: #selector(updateTextView(notification:)),
                                                name: UIResponder.keyboardWillChangeFrameNotification,
                                                object: nil)
+        
         // наблюдатель, будет следить за скрытием клавиатуры UIKeyboardWillHide
         // UIKeyboardWillHide, и запускать updateTextView
         NotificationCenter.default.addObserver(self,
@@ -70,15 +75,30 @@ class ViewController: UIViewController {
         
         // данный метод прекратит анимацию activityIndicator.startAnimating()
         // которая объявлена выше
-        UIView.animate(withDuration: 0, delay: 5, options: .curveEaseIn) {
-            self.textView.alpha = 1
-        } completion: { finished in
-            self.activityIndicator.stopAnimating()
-            self.textView.isHidden = false
-            // оживим view для взаимодействия
-            self.view.isUserInteractionEnabled = true
+        // его можно уже и не использовать, так его он только для activityIndicator
+        // и его функционал есть ниже в реализации progressView с Timer
+        //        UIView.animate(withDuration: 0, delay: 5, options: .curveEaseIn) {
+        //            self.textView.alpha = 1
+        //        } completion: { finished in
+        //            self.activityIndicator.stopAnimating()
+        //            self.textView.isHidden = false
+        //            // оживим view для взаимодействия
+        //            self.view.isUserInteractionEnabled = true
+        //        }
+        
+        // используем его для индикаторов
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            if self.progressView.progress != 1 {
+                self.progressView.progress += 0.2
+            } else {
+                self.activityIndicator.stopAnimating()
+                self.textView.isHidden = false
+                // оживим view для взаимодействия
+                self.view.isUserInteractionEnabled = true
+                self.progressView.isHidden = true
+            }
         }
- 
+        
     }
     
     // данный метод отслеживаем тапы
@@ -92,10 +112,9 @@ class ViewController: UIViewController {
     }
     
     @objc func updateTextView(notification: Notification) {
-        
         guard let userInfo = notification.userInfo as? [String: AnyObject],
               let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
-            else { return }
+        else { return }
         
         if notification.name == UIResponder.keyboardWillHideNotification {
             textView.contentInset = UIEdgeInsets.zero
@@ -104,10 +123,8 @@ class ViewController: UIViewController {
                                                  left: 0,
                                                  bottom: keyboardFrame.height - bottomConstrait.constant,
                                                  right: 0)
-            
             textView.scrollIndicatorInsets = textView.contentInset
         }
-        
         textView.scrollRangeToVisible(textView.selectedRange)
     }
     
@@ -117,9 +134,9 @@ class ViewController: UIViewController {
         textView.font = UIFont(name: font!, size: fontSize)
     }
     
-    
 }
 
+//MARK: - Set TextView
 extension ViewController: UITextViewDelegate {
     // срабатывает при тапе на область textView
     func textViewDidBeginEditing(_ textView: UITextView) {
