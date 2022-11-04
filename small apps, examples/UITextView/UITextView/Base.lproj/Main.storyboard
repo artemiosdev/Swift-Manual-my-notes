@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="wpT-UF-Teq">
-                                <rect key="frame" x="19.999999999999996" y="146.66666666666666" width="41.666666666666657" height="465.33333333333337"/>
+                                <rect key="frame" x="20" y="147.66666666666666" width="388" height="464.33333333333337"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <string key="text">Manage the keyboard
 When the user taps in an editable text view, that text view becomes the first responder and automatically asks the system to display the associated keyboard. Because the appearance of the keyboard has the potential to obscure portions of your user interface, it’s up to you to make sure that doesn’t happen by repositioning any views that might be obscured. Some system views, like table views, help you by scrolling the first responder into view automatically. If the first responder is at the bottom of the scrolling region, however, you may still need to resize or reposition the scroll view itself to ensure the first responder is visible.
@@ -29,48 +29,45 @@ The appearance of the keyboard itself can be customized using the properties pro
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="alt-gp-6pa">
-                                <rect key="frame" x="22.000000000000004" y="92" width="41.333333333333343" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="386" id="3CL-QQ-xsZ"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="17" minimumValue="10" maximumValue="25" translatesAutoresizingMaskIntoConstraints="NO" id="Ted-kh-oKh">
-                                <rect key="frame" x="258" y="44" width="94" height="32"/>
+                                <rect key="frame" x="314" y="87" width="94" height="32"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <action selector="sizeFont:" destination="BYZ-38-t0r" eventType="valueChanged" id="ld1-Qr-4hj"/>
                                 </connections>
                             </stepper>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="qdp-jV-OFB">
-                                <rect key="frame" x="204" y="369" width="20" height="20"/>
+                                <rect key="frame" x="204" y="370" width="20" height="20"/>
                             </activityIndicatorView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="alt-gp-6pa">
+                                <rect key="frame" x="54" y="92" width="54.333333333333343" height="22"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="23"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemGreenColor"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="wpT-UF-Teq" secondAttribute="trailing" constant="20" id="BKm-IY-ssd"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="wpT-UF-Teq" secondAttribute="bottom" constant="280" id="BYe-Rp-hk8"/>
-                            <constraint firstItem="Ted-kh-oKh" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="FtM-u8-Vty"/>
-                            <constraint firstItem="alt-gp-6pa" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="22" id="HTR-1J-lL8"/>
-                            <constraint firstItem="Ted-kh-oKh" firstAttribute="leading" secondItem="wpT-UF-Teq" secondAttribute="leading" constant="238" id="JGg-ud-exz"/>
-                            <constraint firstItem="alt-gp-6pa" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="48" id="PlV-Bm-obo"/>
-                            <constraint firstItem="alt-gp-6pa" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" symbolic="YES" id="Qep-O1-ZHd"/>
-                            <constraint firstItem="wpT-UF-Teq" firstAttribute="top" secondItem="alt-gp-6pa" secondAttribute="bottom" constant="33.5" id="UwG-2s-eiG"/>
-                            <constraint firstItem="wpT-UF-Teq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Yu3-ZB-fKa"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="alt-gp-6pa" secondAttribute="trailing" constant="20" id="Z9X-EW-KyP"/>
-                            <constraint firstItem="qdp-jV-OFB" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" constant="172.33333333333334" id="bEa-q5-cO2"/>
-                            <constraint firstItem="alt-gp-6pa" firstAttribute="width" secondItem="wpT-UF-Teq" secondAttribute="width" multiplier="0.994845" id="bHk-Vi-U1x"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="alt-gp-6pa" secondAttribute="trailing" constant="20" id="p5j-1d-Nx8"/>
-                            <constraint firstItem="qdp-jV-OFB" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" constant="-89" id="y65-C4-fcm"/>
+                            <constraint firstItem="alt-gp-6pa" firstAttribute="centerY" secondItem="Ted-kh-oKh" secondAttribute="centerY" id="3xP-Jb-rSR"/>
+                            <constraint firstItem="qdp-jV-OFB" firstAttribute="centerX" secondItem="wpT-UF-Teq" secondAttribute="centerX" id="HxU-8B-zqG"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Ted-kh-oKh" secondAttribute="trailing" constant="20" id="LzN-pp-6Z3"/>
+                            <constraint firstItem="Ted-kh-oKh" firstAttribute="leading" secondItem="alt-gp-6pa" secondAttribute="trailing" constant="205.66666666666666" id="QGk-ui-N3g"/>
+                            <constraint firstItem="alt-gp-6pa" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Qts-SA-271"/>
+                            <constraint firstItem="wpT-UF-Teq" firstAttribute="top" secondItem="Ted-kh-oKh" secondAttribute="bottom" constant="28.666666666666686" id="Z3J-AI-L2Z"/>
+                            <constraint firstItem="Ted-kh-oKh" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="43" id="bpe-3K-5ty"/>
+                            <constraint firstItem="alt-gp-6pa" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="48" id="gBw-bs-Y64"/>
+                            <constraint firstItem="Ted-kh-oKh" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="gF0-jD-gwE"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="wpT-UF-Teq" secondAttribute="bottom" constant="280" id="mhg-Fu-mbv"/>
+                            <constraint firstItem="wpT-UF-Teq" firstAttribute="centerY" secondItem="qdp-jV-OFB" secondAttribute="centerY" id="vQI-Rj-gx1"/>
+                            <constraint firstItem="wpT-UF-Teq" firstAttribute="top" secondItem="alt-gp-6pa" secondAttribute="bottom" constant="33.666666666666686" id="wg3-ee-LKd"/>
+                            <constraint firstItem="wpT-UF-Teq" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="xk6-oh-dgX"/>
+                            <constraint firstItem="Ted-kh-oKh" firstAttribute="trailing" secondItem="wpT-UF-Teq" secondAttribute="trailing" id="zDB-qR-VgF"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="qdp-jV-OFB" id="SkO-AZ-Hnm"/>
-                        <outlet property="bottomConstrait" destination="BYe-Rp-hk8" id="GOx-72-55q"/>
+                        <outlet property="bottomConstrait" destination="mhg-Fu-mbv" id="NNR-OM-mjA"/>
                         <outlet property="countLabel" destination="alt-gp-6pa" id="tUo-L7-aoK"/>
                         <outlet property="stepper" destination="Ted-kh-oKh" id="2UB-eU-vSy"/>
                         <outlet property="textView" destination="wpT-UF-Teq" id="bQl-pe-UmP"/>
