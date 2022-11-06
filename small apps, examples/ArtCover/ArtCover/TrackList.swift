@@ -9,16 +9,7 @@ import UIKit
 
 class TrackList: UITableViewController {
     
-    let imageNameArray = ["Alberto Ruiz - 7 Elements (Original Mix)",
-                          "Dave Wincent - Red Eye (Original Mix)",
-                          "E-Spectro - End Station (Original Mix)",
-                          "Edna Ann - Phasma (Konstantin Yoodza Remix)",
-                          "Ilija Djokovic - Delusion (Original Mix)",
-                          "John Baptiste - Mycelium (Original Mix)",
-                          "Lane 8 - Fingerprint (Original Mix)",
-                          "Mac Vaughn - Pink Is My Favorite Color (Alex Stein Remix)",
-                          "Metodi Hristov, Gallya - Badmash (Original Mix)",
-                          "Veerus, Maxie Devine - Nightmare (Original Mix)"]
+    let imageNameArray = Track.getTrackList()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,9 +37,11 @@ class TrackList: UITableViewController {
         
         var content = cell.defaultContentConfiguration()
         
+        let track = imageNameArray[indexPath.row]
         // Configure content.
-        content.image = UIImage(named: imageNameArray[indexPath.row])
-        content.text = imageNameArray[indexPath.row]
+        content.image = UIImage(named: track.title)
+        content.text = track.song
+        content.secondaryText = track.artist
         content.textProperties.numberOfLines = 0
         content.imageProperties.cornerRadius = tableView.rowHeight / 2
         cell.contentConfiguration = content
