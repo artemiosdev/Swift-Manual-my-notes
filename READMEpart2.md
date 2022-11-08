@@ -3362,6 +3362,287 @@ struct Temperature {
   }
 }
 
+Создадим инициализатор для структуры ChessPlayer, который принимает значение только для свойства name 
+struct ChessPlayer {
+    var name: String = "Игрок"
+    var victories: UInt = 0
+    // инициализатор
+init(name: String){
+        self.name = name
+    }
+}
+var playerHelgaPotaki = ChessPlayer(name: "Ольга")
+playerHelgaPotaki.victories // 0
+
+// следующий код вызовет ошибку
+// структура больше не имеет встроенных инициализаторов
+var newPlayer = ChessPlayer()
+Инициализатор принимает значение только для свойства name, при этом свойству victories будет проинициализировано значение по умолчанию. При создании экземпляра вам будет доступен исключительно разработанный вами инициализатор. 
+Помните, что создавать собственные инициализаторы для структур не обязательно, так как они уже имеют встроенные инициализаторы. 
+Если экземпляр структуры хранится в константе, модификация его свойств невозможна. Если же он хранится в переменной, то возможна модификация тех свойств, которые объявлены с помощью оператора var. 
+Структуры – это типы-значения (Value type). При передаче экземпляра структуры от одного параметра в другой происходит его копирование. В примере создаются два независимых экземпляра одной и той же структуры: 
+     var olegMuhin = ChessPlayer(name: "Олег")
+     var olegLapin = olegMuhin
+
+Another examples init
+struct Temperature {
+  var celsius: Double
+}
+let temperature = Temperature(celsius: 30.0)
+But if you have access to a temperature in Fahrenheit, you would need to convert that value to Celsius before using the memberwise initializer.
+let fahrenheitValue = 98.6
+let celsiusValue = (fahrenheitValue - 32) / 1.8
+let temperature = Temperature(celsius: celsiusValue)
+Вместо этого вы можете создать пользовательский инициализатор, который принимает значение Fahrenheit в качестве параметра, выполняет расчет и назначает значение свойства Celsius.
+struct Temperature {
+  var celsius: Double
+ 
+  init(celsius: Double) {
+    self.celsius = celsius
+  }
+ 
+  init(fahrenheit: Double) {
+    celsius = (fahrenheit - 32) / 1.8
+  }
+}
+ 
+let currentTemperature = Temperature(celsius: 18.5)
+let boiling = Temperature(fahrenheit: 212.0)
+ 
+print(currentTemperature.celsius) // 18.5
+print(boiling.celsius) // 100.0
+и еще init
+struct Temperature {
+  var celsius: Double
+ 
+  init(celsius: Double) {
+    self.celsius = celsius
+  }
+ 
+  init(fahrenheit: Double) {
+    celsius = (fahrenheit - 32) / 1.8
+  }
+ 
+  init(kelvin: Double) {
+    celsius = kelvin - 273.15
+  }
+}
+ 
+let currentTemperature = Temperature(celsius: 18.5)
+let boiling = Temperature(fahrenheit: 212.0)
+let freezing = Temperature(kelvin: 273.15)
+ 
+print(currentTemperature.celsius) // 18.5
+print(boiling.celsius) // 100.0
+print(freezing.celsius) // 0
+Каждый случай Temperature создан с использованием другого инициализатора и другого значения, но каждый заканчивается как Temperature object требуемым свойством celsius.
+
+Computed Вычисляемые Properties
+struct Temperature {
+  var celsius: Double
+  var fahrenheit: Double
+  var kelvin: Double
+} 
+let temperature = Temperature(celsius: 0, fahrenheit: 32.0,
+kelvin: 273.15)
+or an alternative would be to add multiple initializers that handle the calculations
+struct Temperature {
+  var celsius: Double
+  var fahrenheit: Double
+  var kelvin: Double
+    
+  init(celsius: Double) {
+    self.celsius = celsius
+    fahrenheit = celsius * 1.8 + 32
+    kelvin = celsius + 273.15
+  }
+    
+  init(fahrenheit: Double) {
+    self.fahrenheit = fahrenheit
+    celsius = (fahrenheit - 32) / 1.8
+    kelvin = celsius + 273.15
+  }
+    
+  init(kelvin: Double) {
+    self.kelvin = kelvin
+    celsius = kelvin - 273.15
+    fahrenheit = celsius * 1.8 + 32
+  }
+}
+
+let currentTemperature = Temperature(celsius: 18.5)
+print(currentTemperature)
+// Temperature(celsius: 18.5, fahrenheit: 65.30000000000001, kelvin: 291.65)
+
+let boiling = Temperature(fahrenheit: 212.0)
+print(boiling)
+// Temperature(celsius: 100.0, fahrenheit: 212.0, kelvin: 373.15)
+
+let freezing = Temperature(kelvin: 273.15)
+print(freezing)
+// Temperature(celsius: 0.0, fahrenheit: 32.0, kelvin: 273.15)
+Вышеупомянутый подход, использующий несколько инициализаторов, включает управление большим количеством состояний или информации. Каждый раз при изменении температуры вам потребуется обновить все три свойства. Такой подход подвержен ошибкам.
+Swift предоставляет более безопасный подход. При вычисленных свойствах (computed properties) вы можете создавать свойства, которые могут вычислить их значение на основе других свойств экземпляра или логики.
+struct Temperature {
+  var celsius: Double
+ 
+  var fahrenheit: Double {
+    celsius * 1.8 + 32
+  }
+ 
+  var kelvin: Double {
+    celsius + 273.15
+  }
+} 
+To add a computed property, you declare the property as a variable (because its value can change). You must also явно объявлять the type. Then you use an open curly brace ({) and closing curly brace (}) to define the logic that calculates the value to return.
+let currentTemperature = Temperature(celsius: 0.0)
+print(currentTemperature.fahrenheit)   // 32.0
+print(currentTemperature.kelvin)       // 273.15
+
+Методы в структура, Объявление методов 
+Named types can have their own variables and functions, which are called properties and methods.
+ 
+Помимо свойств, структуры, как и перечисления, могут содержать методы. Синтаксис объявления методов в структурах аналогичен объявлению методов в перечислениях. Они, как и обычные функции, могут принимать входные параметры. 
+Реализуем метод description(), который выводит справочную информацию об игроке в шахматы на консоль 
+struct ChessPlayer {
+    var name: String = "Игрок"
+    var victories: UInt = 0
+    init(name: String) {
+        self.name = name
+    }
+    func description() {
+        print("Игрок \(name) имеет \(victories) побед")
+    }
+} 
+var andrey = ChessPlayer(name: "Андрей")
+andrey.description()
+Консоль Игрок Андрей имеет 0 побед
+
+Another instances
+struct Car {
+  var make: String
+  var model: String
+  var year: Int
+  var topSpeed: Int
+ 
+  func startEngine() {
+    print(”The \(year) \(make) \(model)’s engine has started.”)
+}
+ 
+  func drive() {
+    print(”The \(year) \(make) \(model) is moving.”)
+  }
+ 
+  func park() {
+    print(”The \(year) \(make) \(model) is parked.”)
+  }
+}
+ 
+let firstCar = Car(make: “Honda”, model: “Civic”, year: 2010, 
+topSpeed: 120) 
+let secondCar = Car(make: “Ford”, model: “Fusion”, year: 2013, 
+topSpeed: 125)
+ 
+firstCar.startEngine() // The 2010 Honda Civic’s engine has started.
+firstCar.drive() // The 2010 Honda Civic is moving
+or 
+struct Size {
+  var width: Double
+  var height: Double
+ 
+  func area() -> Double {
+    width * height
+  }
+}
+let someSize = Size(width: 10.0, height: 5.5)
+let area = someSize.area() // Area is assigned a value of 55.0
+
+Изменяющие методы 
+По умолчанию методы структур, кроме инициализаторов, не могут изменять значения свойств, объявленные в тех же самых структурах. Для того чтобы обойти данное ограничение, перед именем метода необходимо указать модификатор #mutating. 
+Создадим метод addVictories(count: ), который будет изменять значение свойства victories 
+struct ChessPlayer {
+    var name: String = "Игрок"
+    var victories: UInt = 0
+    init(name: String) {
+        self.name = name
+    }
+    func description() {
+        print("Игрок \(name) имеет \(victories) побед")
+    }
+    mutating func addVictories( count: UInt = 1 ) {
+        victories += count
+    }
+}
+var harold = ChessPlayer(name: "Гарольд")
+harold.victories // 0
+harold.addVictories ()
+harold.victories // 1
+harold.addVictories(count: 3)
+harold.victories // 4
+Структура может изменять значения свойств только в том случае, если экземпляр структуры хранится в переменной.
+
+Another instances
+Экземпляр odometer относится к типу Odometer, а increment () и increment (by :) – это методы экземпляра, которые добавляют мили к экземпляру. Метод экземпляра reset () сбрасывает счетчик пробега на ноль
+struct Odometer {
+  var count: Int = 0 // Assigns a default value to the `count` 
+  property. 
+ 
+  mutating func increment() {
+    count += 1
+  }
+ 
+  mutating func increment(by amount: Int) {
+    count += amount
+  }
+ 
+  mutating func reset() {
+    count = 0
+  }
+}
+var odometer = Odometer()   // odometer.count defaults to 0
+odometer.increment()            // odometer.count is incremented to 1
+odometer.increment(by: 15)  // odometer.count is incremented to 16 
+odometer.reset()                     // odometer.count is reset to 0
+
+Property Observers
+Смотри опеределение в гл 22 Свойства, пункт Наблюдатели или #Observers
+Swift позволяет вам наблюдать за любым свойством и реагировать на изменения его значения. Эти наблюдатели свойств вызываются каждый раз, когда устанавливается значение свойства, даже если новое значение совпадает с текущим значением свойства. Есть два блока кода, которые вы можете определить для любого данного свойства: willSet и didSet
+In the following example, a StepCounter has been defined with a totalSteps property. Both the willSet and didSet observers have been defined. Whenever totalSteps is modified, willSet will be called first, and you’ll have access to the new value that will be set to the property value in a constant named newValue. After the property’s value has been updated, didSet will be called, and you can access the previous property value using oldValue.
+struct StepCounter {
+    var totalSteps: Int = 0 {
+        willSet {
+            print(”About to set totalSteps to \(newValue)”)
+        }
+        didSet {
+            if totalSteps > oldValue  {
+                print(”Added \(totalSteps - oldValue) steps”)
+            }
+        }
+    }
+}
+Here’s the output when изменяется the totalSteps property of a new StepCounter:
+var stepCounter = StepCounter()
+stepCounter.totalSteps = 40
+stepCounter.totalSteps = 100
+Console Output:
+About to set totalSteps to 40
+Added 40 steps
+About to set totalSteps to 100
+Added 60 steps 
+
+Type Properties and Methods
+Свойства экземпляра являются данными об индивидуальном экземпляре типа, а методы экземпляра являются функциями, которые могут быть вызваны отдельными экземплярами типа.
+Swift также поддерживает добавление свойств и методов типа, которые могут быть доступны или вызываться на самом типе. Используйте ключевое слово #static, чтобы добавить свойство или метод в тип.
+Тип свойств полезен, когда свойство связано с типом, но не характерным для самого экземпляра.
+Следующий пример определяет Temperature structure, которая имеет static property named boilingPoint, которое является постоянным значением для всех экземпляров Temperature.
+struct Temperature {
+  static var boilingPoint = 100
+}
+let boilingPoint = Temperature.boilingPoint
+print(boilingPoint)
+
+let smallerNumber = Double.minimum(100.0, -1000.0)
+
 
 ---
 
