@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DD147C36291BB0DF0031CDD7 /* ArtCoverCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD147C35291BB0DE0031CDD7 /* ArtCoverCell.swift */; };
+		DD147C38291BB5B90031CDD7 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD147C37291BB5B90031CDD7 /* Track.swift */; };
 		DD17F79B2919991C00B72ADB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD17F79A2919991C00B72ADB /* AppDelegate.swift */; };
 		DD17F79D2919991C00B72ADB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD17F79C2919991C00B72ADB /* SceneDelegate.swift */; };
 		DD17F7A22919991C00B72ADB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD17F7A02919991C00B72ADB /* Main.storyboard */; };
@@ -16,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DD147C35291BB0DE0031CDD7 /* ArtCoverCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtCoverCell.swift; sourceTree = "<group>"; };
+		DD147C37291BB5B90031CDD7 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		DD17F7972919991C00B72ADB /* ArtCoverCollectionView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArtCoverCollectionView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD17F79A2919991C00B72ADB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DD17F79C2919991C00B72ADB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -58,7 +62,9 @@
 			children = (
 				DD17F79A2919991C00B72ADB /* AppDelegate.swift */,
 				DD17F79C2919991C00B72ADB /* SceneDelegate.swift */,
+				DD147C37291BB5B90031CDD7 /* Track.swift */,
 				DD17F7AE29199A1D00B72ADB /* PreviewPage.swift */,
+				DD147C35291BB0DE0031CDD7 /* ArtCoverCell.swift */,
 				DD17F7A02919991C00B72ADB /* Main.storyboard */,
 				DD17F7A32919992000B72ADB /* Assets.xcassets */,
 				DD17F7A52919992000B72ADB /* LaunchScreen.storyboard */,
@@ -139,8 +145,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD17F7AF29199A1D00B72ADB /* PreviewPage.swift in Sources */,
+				DD147C38291BB5B90031CDD7 /* Track.swift in Sources */,
 				DD17F79B2919991C00B72ADB /* AppDelegate.swift in Sources */,
 				DD17F79D2919991C00B72ADB /* SceneDelegate.swift in Sources */,
+				DD147C36291BB0DF0031CDD7 /* ArtCoverCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
