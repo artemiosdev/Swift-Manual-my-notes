@@ -15,6 +15,7 @@
 		DD17F7A42919992000B72ADB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD17F7A32919992000B72ADB /* Assets.xcassets */; };
 		DD17F7A72919992000B72ADB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD17F7A52919992000B72ADB /* LaunchScreen.storyboard */; };
 		DD17F7AF29199A1D00B72ADB /* PreviewPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD17F7AE29199A1D00B72ADB /* PreviewPage.swift */; };
+		DD2FCD35291CF1580040C8F9 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2FCD34291CF1580040C8F9 /* DetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		DD17F7A62919992000B72ADB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DD17F7A82919992000B72ADB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DD17F7AE29199A1D00B72ADB /* PreviewPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewPage.swift; sourceTree = "<group>"; };
+		DD2FCD34291CF1580040C8F9 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 				DD147C37291BB5B90031CDD7 /* Track.swift */,
 				DD17F7AE29199A1D00B72ADB /* PreviewPage.swift */,
 				DD147C35291BB0DE0031CDD7 /* ArtCoverCell.swift */,
+				DD2FCD34291CF1580040C8F9 /* DetailViewController.swift */,
 				DD17F7A02919991C00B72ADB /* Main.storyboard */,
 				DD17F7A32919992000B72ADB /* Assets.xcassets */,
 				DD17F7A52919992000B72ADB /* LaunchScreen.storyboard */,
@@ -147,6 +150,7 @@
 				DD17F7AF29199A1D00B72ADB /* PreviewPage.swift in Sources */,
 				DD147C38291BB5B90031CDD7 /* Track.swift in Sources */,
 				DD17F79B2919991C00B72ADB /* AppDelegate.swift in Sources */,
+				DD2FCD35291CF1580040C8F9 /* DetailViewController.swift in Sources */,
 				DD17F79D2919991C00B72ADB /* SceneDelegate.swift in Sources */,
 				DD147C36291BB0DF0031CDD7 /* ArtCoverCell.swift in Sources */,
 			);

@@ -9,5 +9,4 @@ import UIKit
 
 class ArtCoverCell: UICollectionViewCell {
     @IBOutlet weak var coverImageView: UIImageView!
-
 }
