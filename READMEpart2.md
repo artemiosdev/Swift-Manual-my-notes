@@ -16,7 +16,7 @@
 - [Глава  №18. Введение в объектно-ориентированное и протокол-ориентированное программирование. ](#chapter18)
 - [Глава  №19. Перечисления. Синтаксис перечислений . ](#chapter19)
 - [Глава  №20. Структуры. Struct . ](#chapter20)
-- [Глава  №21. . ](#chapter21)
+- [Глава  №21. Классы. Class. ](#chapter21)
 - [Глава  №22. . ](#chapter22)
 - [Глава  №23. . ](#chapter23)
 - [Глава  №24. . ](#chapter24)
@@ -3396,42 +3396,42 @@ let temperature = Temperature(celsius: celsiusValue)
 Вместо этого вы можете создать пользовательский инициализатор, который принимает значение Fahrenheit в качестве параметра, выполняет расчет и назначает значение свойства Celsius.
 struct Temperature {
   var celsius: Double
- 
+
   init(celsius: Double) {
     self.celsius = celsius
   }
- 
+
   init(fahrenheit: Double) {
     celsius = (fahrenheit - 32) / 1.8
   }
 }
- 
+
 let currentTemperature = Temperature(celsius: 18.5)
 let boiling = Temperature(fahrenheit: 212.0)
- 
+
 print(currentTemperature.celsius) // 18.5
 print(boiling.celsius) // 100.0
 и еще init
 struct Temperature {
   var celsius: Double
- 
+
   init(celsius: Double) {
     self.celsius = celsius
   }
- 
+
   init(fahrenheit: Double) {
     celsius = (fahrenheit - 32) / 1.8
   }
- 
+
   init(kelvin: Double) {
     celsius = kelvin - 273.15
   }
 }
- 
+
 let currentTemperature = Temperature(celsius: 18.5)
 let boiling = Temperature(fahrenheit: 212.0)
 let freezing = Temperature(kelvin: 273.15)
- 
+
 print(currentTemperature.celsius) // 18.5
 print(boiling.celsius) // 100.0
 print(freezing.celsius) // 0
@@ -3485,11 +3485,11 @@ print(freezing)
 Swift предоставляет более безопасный подход. При вычисленных свойствах (computed properties) вы можете создавать свойства, которые могут вычислить их значение на основе других свойств экземпляра или логики.
 struct Temperature {
   var celsius: Double
- 
+
   var fahrenheit: Double {
     celsius * 1.8 + 32
   }
- 
+
   var kelvin: Double {
     celsius + 273.15
   }
@@ -3501,7 +3501,7 @@ print(currentTemperature.kelvin)       // 273.15
 
 Методы в структура, Объявление методов 
 Named types can have their own variables and functions, which are called properties and methods.
- 
+
 Помимо свойств, структуры, как и перечисления, могут содержать методы. Синтаксис объявления методов в структурах аналогичен объявлению методов в перечислениях. Они, как и обычные функции, могут принимать входные параметры. 
 Реализуем метод description(), который выводит справочную информацию об игроке в шахматы на консоль 
 struct ChessPlayer {
@@ -3524,32 +3524,32 @@ struct Car {
   var model: String
   var year: Int
   var topSpeed: Int
- 
+
   func startEngine() {
     print(”The \(year) \(make) \(model)’s engine has started.”)
 }
- 
+
   func drive() {
     print(”The \(year) \(make) \(model) is moving.”)
   }
- 
+
   func park() {
     print(”The \(year) \(make) \(model) is parked.”)
   }
 }
- 
+
 let firstCar = Car(make: “Honda”, model: “Civic”, year: 2010, 
 topSpeed: 120) 
 let secondCar = Car(make: “Ford”, model: “Fusion”, year: 2013, 
 topSpeed: 125)
- 
+
 firstCar.startEngine() // The 2010 Honda Civic’s engine has started.
 firstCar.drive() // The 2010 Honda Civic is moving
 or 
 struct Size {
   var width: Double
   var height: Double
- 
+
   func area() -> Double {
     width * height
   }
@@ -3586,15 +3586,15 @@ Another instances
 struct Odometer {
   var count: Int = 0 // Assigns a default value to the `count` 
   property. 
- 
+
   mutating func increment() {
     count += 1
   }
- 
+
   mutating func increment(by amount: Int) {
     count += amount
   }
- 
+
   mutating func reset() {
     count = 0
   }
@@ -3644,11 +3644,507 @@ print(boilingPoint)
 let smallerNumber = Double.minimum(100.0, -1000.0)
 
 
+Challenges
+Delivery Pizza
+В книге Swift Apprentice, есть пример расчета доставки от ресторана к клиенту пиццы с помощью теоремы #Пифагора Theorem #Pythagorean. Это вступление в тему Struct.
+distance(from:to:) will calculate how far away you are from your pizza. isInDeliveryRange(location:) will return true only if you’re not too far away.
+ 
+let restaurantLocation = (3, 4)
+let restaurantRange = 2.5
+
+// Pythagorean Theorem 📐🎓
+func distance(from source: (x: Int, y: Int), to target: (x: Int, y: Int)) -> Double {
+  let distanceX = Double(source.x - target.x)
+  let distanceY = Double(source.y - target.y)
+  return (distanceX * distanceX + distanceY * distanceY).squareRoot()
+}
+
+func isInDeliveryRange(location: (x: Int, y: Int)) -> Bool {
+  let deliveryDistance = distance(from: location, to: restaurantLocation)
+  return deliveryDistance < restaurantRange
+}
+isInDeliveryRange(location: (x: 5, y: 5)) //true
+
+isInDeliveryRange(location:) checks both locations to see if you can get your pizza from either one.
+ 
+let restaurantLocation = (3, 4)
+let restaurantRange = 2.5
+
+let otherRestaurantLocation = (7, 8)
+let otherRestaurantRange = 1.5
+// Pythagorean Theorem 📐🎓
+func distance(from source: (x: Int, y: Int), to target: (x: Int, y: Int)) -> Double {
+  let distanceX = Double(source.x - target.x)
+  let distanceY = Double(source.y - target.y)
+  return (distanceX * distanceX + distanceY * distanceY).squareRoot()
+}
+
+func isInDeliveryRange(location: (x: Int, y: Int)) -> Bool {
+  let deliveryDistance = distance(from: location, to: restaurantLocation)
+  
+  let secondDeliveryDistance =
+    distance(from: location, to: otherRestaurantLocation)
+  
+  return deliveryDistance < restaurantRange ||
+    secondDeliveryDistance < otherRestaurantRange
+}
+isInDeliveryRange(location: (x: 5, y: 5)) // true
+isInDeliveryRange(location: (x: 10, y: 10)) // false
+
+Rewrite isInDeliveryRange (ранее описанное) to use Location and DeliveryArea.
+В этом примере есть массив, области и функция, которая использует этот массив, чтобы определить, находится ли расположение клиента в любом из этих областей.
+Находится ли в диапазоне (зоне доставки) – это то, что вы хотите знать о конкретном ресторане. Было бы здорово, если бы DeliveryArea, могла сказать тебе, что ресторан мог доставить пиццу в это местоположение. Для этого мы добавим func contains в struct DeliveryArea, теперь эта функция является методом
+struct Location {
+  let x: Int
+  let y: Int
+}
+
+struct DeliveryArea {
+  let center: Location
+  var radius: Double
+
+func contains(_ location: Location) -> Bool {
+  let distanceFromCenter = distance(from: (center.x, center.y), to: (location.x, location.y))
+
+  return distanceFromCenter < radius
+  }
+}
+
+func distance(from source: (x: Int, y: Int), to target: (x: Int, y: Int)) -> Double {
+  let distanceX = Double(source.x - target.x)
+  let distanceY = Double(source.y - target.y)
+  return (distanceX * distanceX + distanceY * distanceY).squareRoot()
+}
+
+let areas = [
+  DeliveryArea(center: Location(x: 3, y: 4), radius: 2.5),
+  DeliveryArea(center: Location(x: 7, y: 8), radius: 1.5)
+]
+func isInDeliveryRange(_ location: Location) -> Bool {
+  for area in areas {
+    let distanceToStore = distance(from: (area.center.x, area.center.y), to: (location.x, location.y))
+
+    if distanceToStore < area.radius {
+      return true
+    }
+  }
+  return false
+}
+
+let customerLocation1 = Location(x: 8, y: 1)
+let customerLocation2 = Location(x: 5, y: 5)
+
+print(isInDeliveryRange(customerLocation1)) // false
+print(isInDeliveryRange(customerLocation2)) // true
+
+// This implicit access to properties and other members inside the structure makes methods different from regular functions
+let area = DeliveryArea(center: Location(x: 3, y: 4), radius: 2.5)
+let customerLocation = Location(x: 5, y: 5)
+area.contains(customerLocation) // true
+Refactoring DeliveryArea
+Change distance(from:to:) to use Location  as your parameters instead of x-y tuples.
+struct Location {
+  let x: Int
+  let y: Int
+}
+
+func distance(from source: Location, to target: Location) -> Double {
+  let distanceX = Double(source.x - target.x)
+  let distanceY = Double(source.y - target.y)
+  return sqrt(distanceX * distanceX + distanceY * distanceY)
+}
+
+Change contains(_:) to call the new distance(from:to:) with Location.
+Add a method overlaps(with:) on DeliveryArea that can tell you if the area overlaps with another area
+struct DeliveryArea {
+  let center: Location
+  var radius: Double
+  
+  func contains(_ location: Location) -> Bool {
+    distance(from: center, to: location) < radius
+  }
+  
+  func overlaps(with area: DeliveryArea) -> Bool {
+  distance(from: center, to: area.center) <= (radius + area.radius)
+  }
+}
+
+let area1 = DeliveryArea(center: Location(x: 3, y: 4), radius: 2.5)
+let area2 = DeliveryArea(center: Location(x: 7, y: 8), radius: 2.5)
+area1.overlaps(with: area2) // false
+
+let area3 = DeliveryArea(center: Location(x: 3, y: 4), radius: 2.5)
+let area4 = DeliveryArea(center: Location(x: 7, y: 7), radius: 2.5)
+area3.overlaps(with: area4) // true
+
+
+Ordering Pizza
+Write a structure that represents a pizza order. Include toppings, size and any other option you’d want for a pizza.
+struct Pizza {
+  let size: Int // Inches
+  let toppings: [String] // Pepperoni, cheese
+  let style: String // Thick, thin, hand-tossed
+}
+let pizza = Pizza(size: 14, toppings: ["Pepperoni", "Mushrooms", "Anchovies"], style: "Thin")
+
+Challenge 1: Fruit tree farm
+Представьте, что вы находитесь на ферме с фруктовыми деревьями и выращиваете разные фрукты: груши, яблоки и апельсины. После того, как фрукты собраны, грузовик привозит их для обработки на центральном предприятии. Поскольку все фрукты смешиваются в грузовике, работники центрального предприятия должны по одному сортировать их в подходящую инвентарную тару.
+Реализуйте алгоритм, который получает грузовик, полный различных видов фруктов и помещает каждый фрукт в правильный контейнер инвентаризации.
+Следите за общим весом фруктов, обрабатываемых объектом и распечатайте, сколько всего вес фруктов в инвентаре.
+// All kinds of fruit will share these attributes
+struct Fruit {
+  let kind: String // e.g. Apple, Pear, Orange
+  let weight: Int // measured in grams
+}
+
+// Load up the truck full of fruits with random weights
+let truck: [Fruit] = [
+  Fruit(kind: "Apple", weight: Int.random(in: 70...100)),
+  Fruit(kind: "Pear", weight: Int.random(in: 70...100)),
+  Fruit(kind: "Apple", weight: Int.random(in: 70...100)),
+  Fruit(kind: "Orange", weight: Int.random(in: 70...100)),
+  Fruit(kind: "Pear", weight: Int.random(in: 70...100)),
+  Fruit(kind: "Apple", weight: Int.random(in: 70...100))
+]
+
+// Allocate the inventory containers
+var pears = [Fruit]()
+var apples = [Fruit]()
+var oranges = [Fruit]()
+
+var totalProcessedWeight = 0
+
+// Алгоритм сортировки принимает грузовик, полный фруктов, обрабатывает каждый фрукт независимо, проверяет их, какие фрукты это. Помещает каждого в правильный контейнер инвентаризации
+func receive(_ truck: [Fruit]) {
+  for fruit in truck {
+    switch fruit.kind {
+    case "Pear":
+      pears.append(fruit)
+    case "Apple":
+      apples.append(fruit)
+    case "Orange":
+      oranges.append(fruit)
+    default:
+      fatalError("Fruit type not supported")
+    }
+    
+    totalProcessedWeight += fruit.weight
+  }
+}
+
+receive(truck)
+
+print("Total weight:", totalProcessedWeight, "grams", "\n---")
+print("Quantity of pears:\t\t", pears.count)
+print("Quantity of apples:\t\t", apples.count)
+print("Quantity of oranges:\t", oranges.count, "\n")
+Консоль:
+Total weight: 497 grams 
+---
+Quantity of pears:		 2
+Quantity of apples:		 3
+Quantity of oranges:	 1
+
+Challenge 2: A T-shirt model
+Создайте структуру футболки, которая имеет размер, цвет и материал. Предоставить метод для расчета стоимости рубашки на основе его атрибутов
+typealias Size = String
+let small: Size = "Small"
+let medium: Size = "Medium"
+let large: Size = "Large"
+let xLarge: Size = "XLarge"
+
+typealias Material = String
+let cotton: Material = "Cotton"
+let polyester: Material = "Polyester"
+let wool: Material = "Wool"
+
+typealias Color = String
+Float and Double хороши в данном примере для демонстрации, однако в реальности, в производстве лучше их не использовать, и вот почему:
+https://stackoverflow.com/questions/3730019/why-not-use-double-or-float-to-represent-currency 
+struct TShirt {
+  let size: Size
+  let color: Color
+  let material: Material
+
+  func cost() -> Double {
+    let basePrice = 10.0
+
+    let sizeMultiplier: Double
+    switch size {
+    case small, medium:
+      sizeMultiplier = 1.0
+    case large, xLarge:
+      sizeMultiplier = 1.1
+    default:
+      // Special order!
+      sizeMultiplier = 1.2
+    }
+
+    let materialMultipler: Double
+    switch material {
+    case cotton:
+      materialMultipler = 1.0
+    case polyester:
+      materialMultipler = 1.1
+    case wool:
+      materialMultipler = 1.5
+    default:
+      // Special order!
+      materialMultipler = 2.0
+    }
+
+    return basePrice * sizeMultiplier * materialMultipler
+  }
+}
+
+TShirt(size: medium, color: "Green", material: cotton).cost() // 10
+TShirt(size: xLarge, color: "Gray", material: wool).cost() // 16.5
+
+Challenge 3: Battleship. Морской бой
+Напишите Battleship-like game. Подробно об игре http://bit.ly/2nt3jbu 
+Используйте систему координат (X, Y) для ваших мест, смоделированные с использованием структуры.
+Корабли также должны быть смоделированы со структурами. Запишите происхождение, направление и длину.
+Каждый корабль должен быть в состоянии сообщить, если «выстрел» привел к «попаданию».
+struct Coordinate {
+  let x: Int
+  let y: Int
+}
+
+struct Ship {
+  let origin: Coordinate
+  let direction: String
+  let length: Int
+
+  func isHit(coordinate: Coordinate) -> Bool {
+    if direction == "Right" {
+      return origin.y == coordinate.y &&
+             coordinate.x >= origin.x &&
+             coordinate.x - origin.x < length
+    } else {
+      return origin.x == coordinate.x &&
+             coordinate.y >= origin.y &&
+             coordinate.y - origin.y < length
+    }
+  }
+}
+
+struct Board {
+  var ships: [Ship] = []
+
+  func fire(location: Coordinate) -> Bool {
+    for ship in ships {
+      if ship.isHit(coordinate: location) {
+        print("Hit!")
+        return true
+      }
+    }
+    return false
+  }
+}
+
+let patrolBoat = Ship(origin: Coordinate(x: 2, y: 2), direction: "Right", length: 2)
+let battleship = Ship(origin: Coordinate(x: 5, y: 3), direction: "Down", length: 4)
+let submarine = Ship(origin: Coordinate(x: 0, y: 0), direction: "Down", length: 3)
+
+// Set up the board.
+var board = Board()
+board.ships.append(contentsOf: [patrolBoat, battleship, submarine])
+
+// Play the game.
+board.fire(location: Coordinate(x: 2, y: 2)) // Hit on the patrolBoat
+
+board.fire(location: Coordinate(x: 2, y: 3)) // Miss...
+
+board.fire(location: Coordinate(x: 5, y: 6)) // Hit on the battleship
+
+board.fire(location: Coordinate(x: 5, y: 7)) // Miss...
+
+Challenges Apple
+Перевод дюймов в сантиметры и обратно. Создайте два настраиваемых инициализатора. Один инициализатор примет аргумент Double, который представляет высоту в дюймах. Другой инициализатор примет аргумент Double, который представляет высоту в сантиметрах. Каждый инициализатор должен принимать переданное значение и использовать его для установки свойства, соответствующего переданной единице измерения. Затем он должен установить другое свойство, вычисляя правильное значение из переданного значения. Подсказка: 1 дюйм = 2,54 сантиметра.
+If you use the initializer for inches to pass in a height of 65, the initializer should set heightInInches to 65 and heightInCentimeters to 165.1.
+struct Height {
+    var heigthInInches: Double
+    var heigthInCentimeters: Double
+    
+    init(heigthInInches: Double) {
+        self.heigthInInches = heigthInInches
+        self.heigthInCentimeters = heigthInInches * 2.54
+    }
+
+    init(heigthInCentimeters: Double) {
+        self.heigthInCentimeters = heigthInCentimeters
+        self.heigthInInches = heigthInCentimeters / 2.54
+    }
+}
+var someonesHeigth = Height(heigthInInches: 65)
+someonesHeigth.heigthInCentimeters //165.1
+someonesHeigth.heigthInInches // 65
+
+var myHeigth = Height(heigthInCentimeters: 195)
+myHeigth.heigthInCentimeters //195
+myHeigth.heigthInInches // 76.771
+
+Likes. Ниже для вас была создана Post struct, представляющая собой общий пост в социальных сетях. Добавьте mutating method в пост под названием like(), который увеличит количество лайков на единицу. Затем создайте экземпляр Post и вызовите на нем функцию like(). Распечатайте свойство likes до и после вызова метода, чтобы узнать, было ли увеличено значение.
+struct Post {
+    var message: String
+    var likes: Int
+    var numberOfComments: Int
+    mutating func like() {
+        likes += 1
+    }
+}
+var somePost = Post(message: "Did anyone else notice what happened during that game!?", likes: 18, numberOfComments: 9)
+print(somePost.likes) // 18
+somePost.like()
+print(somePost.likes) // 19
+
+Area. Computed Properties
+struct Rectangle {
+    var width: Int
+    var height: Int
+    var area: Int {
+        width * height
+    }
+}
+var one = Rectangle(width: 19, height: 10)
+one.area  // 190
+
+Дюймы в см и обратно. Property Observers
+В приведенной ниже Height struct высота представлена как в дюймах, так и в сантиметрах. Однако, если heightInInches, то heightInCentimeters также должны подстраиваться под нее. Добавьте didSet к каждому свойству, который проверит, соответствует ли другое свойство тому, каким оно должно быть, и если нет, установит правильное значение. Если вы зададите значение другого свойства, даже если оно уже имеет правильное значение, вы получите бесконечный цикл, в котором каждое свойство задает другое.
+Создайте экземпляр Height, а затем измените одно из его свойств. Распечатайте другое свойство, чтобы убедиться, что оно было соответствующим образом скорректировано.
+struct Height {
+    var heightInInches: Double {
+        didSet {
+            let inCm = heightInInches * 2.54
+            if heightInCentimeters != inCm {
+                heightInCentimeters = inCm
+            }
+        }
+    }
+    
+    var heightInCentimeters: Double {
+        didSet {
+            let inInches = heightInCentimeters / 2.54
+            if heightInInches != inInches {
+                heightInInches = inInches
+            }
+        }
+    }
+    
+    init(heightInInches: Double) {
+        self.heightInInches = heightInInches
+        self.heightInCentimeters = heightInInches * 2.54
+    }
+    
+    init(heightInCentimeters: Double) {
+        self.heightInCentimeters = heightInCentimeters
+        self.heightInInches = heightInCentimeters / 2.54
+    }
+}
+
+
+
+var height = Height(heightInInches: 70)
+height.heightInInches = 75
+print(height.heightInCentimeters) // 190.5
+
+Mile Times and Congratulations
+В приведенной ниже структуре RunningWorkout содержится информация о тренировках ваших пользователей по бегу. Однако вы решаете добавить информацию о среднем времени прохождения мили. Добавьте вычисляемое свойство (computed property) под названием averageMileTime, которое использует расстояние и время для вычисления среднего времени прохождения пользователем мили. Предположим, что расстояние измеряется в метрах, а 1600 метров это миля.
+Создайте экземпляр RunningWorkout и выведите свойство averageMileTime. Убедитесь, что он работает правильно.
+struct RunningWorkout {
+    var distance: Double
+    var time: Double
+    var elevation: Double
+    
+    var averageMileTime: Double {
+        time/distance * 1600
+    }
+    
+}
+
+
+var run = RunningWorkout(distance: 5000, time: 1200, elevation: 13)
+print(run.averageMileTime)
+В других упражнениях приложения вы предоставляли пользователю ободряющие сообщения в зависимости от того, сколько шагов они выполнили. Отличное место для проверки того, следует ли вам отображать что-либо пользователю, находится в наблюдателе свойств.
+В приведенной ниже Steps struct добавьте в свойство шаги набор параметров, который проверит, равно ли новое значение цели, и если да, то напечатает поздравительное сообщение. Создайте экземпляр Steps, где число шагов равно 9999, а цель 10000, затем вызовите функцию takeStep() и посмотрите, будет ли ваше сообщение распечатано на консоли.
+struct Steps {
+    var steps: Int {
+        willSet {
+            if newValue == goal {
+   print("Congratulations! You met your goal for the day!")
+            }
+        }
+    }
+    var goal: Int
+    
+    mutating func takeStep() {
+        steps += 1
+    }
+}
+
+
+var mySteps = Steps(steps: 9999, goal: 10000)
+mySteps.steps // 9999
+mySteps.takeStep()
+mySteps.steps // 10000
+// Congratulations! You met your goal for the day!
+
+Type Properties (static) and Methods
+Представьте, что у вас есть приложение, которое требует от пользователя входа в систему. У вас может быть структура пользователя, аналогичная показанной ниже. Однако в дополнение к отслеживанию конкретной информации о пользователе вам может потребоваться способ узнать, кто является текущим зарегистрированным пользователем. Создайте свойство текущего пользователя (currentUser) в структуре User ниже и назначьте его объекту пользователя, представляющему вас. Теперь вы можете получить доступ к текущему пользователю через структуру пользователя. Распечатайте свойства currentUser я.
+struct User {
+    static var currentUser: User = User(userName: "robocop", email: "rjt97@me.com", age: 23)
+    
+    static func logIn(user: User) {
+        currentUser = user
+        print("\(currentUser.userName) is now logged in.")
+    }
+        
+    var userName: String
+    var email: String
+    var age: Int
+}
+
+
+print(User.currentUser.userName)
+print(User.currentUser.email)
+print(User.currentUser.age)
+Below, call the logIn(user:) method and pass in a different User instance than what you assigned to currentUser above. Observe the printout in the console.
+Существуют другие свойства и действия, связанные c User struct, которые могут быть хорошими кандидатами для свойства или метода типа. Одним из них может быть способ входа в систему. Вернитесь назад и создайте метод типа logIn(user:), где пользователь имеет тип User. В теле метода назначьте переданного пользователя свойству currentUser и распечатайте, используя имя пользователя, в которой говорится, что пользователь вошел в систему.
+Ниже вызовите метод logIn(user:) и передайте экземпляр пользователя, отличный от того, который вы назначили текущему пользователю выше. Обратите внимание на распечатку в консоли.
+let newUser = User(userName: "JumbalayaJoe", email: "jjisthebest@me.com", age: 31)
+User.logIn(user: newUser)
+
+Type Properties and Methods
+В другом упражнении вы добавили вычисленное свойство, представляющее среднее время прохождения мили от начала забега. Тем не менее, вы можете захотеть иметь своего рода калькулятор, который пользователи могут использовать перед пробегом, чтобы узнать, какое среднее время в миле им нужно, чтобы пробежать заданное расстояние за заданное время. В этом случае может быть полезно иметь метод типа в RunningWorkout, к которому можно получить доступ, не имея экземпляра RunningWorkout.
+Добавьте в RunningWorkout метод типа mileTimeFor(distance:time:), где расстояние и время имеют тип Double. Этот метод должен иметь возвращаемое значение типа Double. Основная часть метода должна рассчитать среднее время прохождения мили, необходимое для преодоления пройденного расстояния за прошедшее время. Предположим, что расстояние измеряется в метрах, а одна миля составляет 1600 метров.
+Вызовите метод извне структуры и распечатайте результат, чтобы убедиться, что он работает правильно.
+Может быть полезно иметь несколько свойств типа в RunningWorkout, представляющих преобразования единиц измерения (т. е Метры в милю, футы в метры и т. д.). Добавьте свойство типа для meterInFeet и назначьте его 3.28084. Затем добавьте свойство типа для mileInMeters и назначьте ему 1600.0. 
+struct RunningWorkout {
+
+    static var meterInFeet = 3.28084
+    static var mileInMeters = 1600.0
+
+    static func mileTimeFor(distance: Double, time: Double) -> Double {
+        time/distance * 1600
+    }
+
+    var distance: Double
+    var time: Double
+    var elevation: Double
+}
+
+
+
+print(RunningWorkout.mileTimeFor(distance: 3200, time: 720))
+print(RunningWorkout.meterInFeet)
+print(RunningWorkout.mileInMeters)
+
+
 ---
 
 [К оглавлению](#contents)
 
-###  <a id="chapter21" /> Глава №21. 
+###  <a id="chapter21" /> Глава №21. Классы
 
 
 

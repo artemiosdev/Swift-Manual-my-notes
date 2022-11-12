@@ -41,7 +41,7 @@
 - [Глава  №18. Введение в объектно-ориентированное и протокол-ориентированное программирование. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter18)
 - [Глава  №19. Перечисления. Синтаксис перечислений. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter19)
 - [Глава  №20. Структуры. Struct. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter20)
-- [Глава  №21. . ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter21)
+- [Глава  №21. Классы. Class. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter21)
 - [Глава  №22. . ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter22)
 - [Глава  №23. . ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter23)
 - [Глава  №24. . ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter24)
