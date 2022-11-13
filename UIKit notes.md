@@ -502,6 +502,158 @@ progressView.setProgress(0, animated: true)
 
 ---
 
+### #Navigation
+
+- [#Navigation Controller Scene](https://developer.apple.com/documentation/uikit/uinavigationcontroller)
+- [#UINavigationItem](https://developer.apple.com/documentation/uikit/uinavigationitem)
+
+```swift
+// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+self.navigationItem.rightBarButtonItem = self.editButtonItem
+```
+
+---
+
+### [#UITableViewController](https://developer.apple.com/documentation/uikit/uitableviewcontroller)
+
+В `[indexPath.row]` мы располагаем каждый элемент из нашего массива на отдельной строке. Обращаемся, чтобы выбрать конкретный элемент для конкретной строки. 
+
+- [#UIListContentConfiguration](https://developer.apple.com/documentation/uikit/uilistcontentconfiguration) - конфигурация содержимого для представления содержимого на основе списка, `#content`
+
+```swift
+var content = cell.defaultContentConfiguration()
+// Configure content.
+content.image = UIImage(systemName: "star")
+content.text = "Favorites"
+// Customize appearance.
+content.imageProperties.tintColor = .purple
+cell.contentConfiguration = content
+```
+
+- [#tableView(_:numberOfRowsInSection:)](https://developer.apple.com/documentation/uikit/uitableviewdatasource/1614931-tableview) - указывает источнику данных возвращать необходимое количество строк в заданном разделе табличного представления.
+
+```swift
+    // MARK: - Table view data source
+    // возвращает кол-во строк
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+     // #warning Incomplete implementation, return the number of rows
+        return imageNameArray.count
+    }
+```
+
+- [#tableView(_:cellForRowAt:)](https://developer.apple.com/documentation/uikit/uitableviewdatasource/1614861-tableview) - запрашивает у источника данных ячейку для вставки в определенном месте табличного представления. Используем описанный выше `#content` [#UIListContentConfiguration](https://developer.apple.com/documentation/uikit/uilistcontentconfiguration)
+
+```swift
+// создание ячейки по Identifier и работа с ячейкой
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Title", for: indexPath)
+
+        // устаревшие свойства
+        // cell.imageView?.image = UIImage(named: imageNameArray[indexPath.row])
+        // cell.textLabel?.text = imageNameArray[indexPath.row]
+        
+        var content = cell.defaultContentConfiguration()
+        let track = imageNameArray[indexPath.row]
+        // Configure content.
+        content.image = UIImage(named: track.title)
+        content.text = track.song
+        content.secondaryText = track.artist
+        content.textProperties.numberOfLines = 0
+        content.imageProperties.cornerRadius = tableView.rowHeight / 2
+        cell.contentConfiguration = content
+        return cell
+    }
+```
+
+- [#prepare(for:sender:)](https://developer.apple.com/documentation/uikit/uiviewcontroller/1621490-prepare) - уведомляет контроллер представления о том, что переход вот-вот будет выполнен. При тапе на трек, сделаем переход #seque, добавим #identifier, на новый view controller 
+
+```swift
+    // MARK: - Navigation
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowDetail" {
+           if let indexPath = self.tableView.indexPathForSelectedRow {
+                let detailViewController = segue.destination as! DetailViewController
+                let track = imageNameArray[indexPath.row]
+                detailViewController.track = track
+            }
+        }       
+//        или тот же переход, но с guard
+//        guard let detailViewController = segue.destination as? DetailViewController else { return }
+//        guard let indexPath = tableView.indexPathForSelectedRow else { return }
+//        let track = imageNameArray[indexPath.row]
+//        detailViewController.track = track
+    } 
+```
+
+---
+
+### [#UICollectionViewController](https://developer.apple.com/documentation/uikit/uicollectionviewcontroller)
+контроллер представления, который специализируется на управлении представлением коллекции.
+
+- [#UICollectionViewCell](https://developer.apple.com/documentation/uikit/uicollectionviewcell)
+
+- [#collectionView(_:numberOfItemsInSection:)](https://developer.apple.com/documentation/uikit/uicollectionviewdatasource/1618058-collectionview) - запрашивает у вашего объекта источника данных количество элементов в указанном разделе.
+
+```swift
+    // MARK: UICollectionViewDataSource
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    // #warning Incomplete implementation, return the number of items
+        return imageNameArray.count
+    }
+```
+
+- [#collectionView(_:cellForItemAt:)](https://developer.apple.com/documentation/uikit/uicollectionviewdatasource/1618029-collectionview) - запрашивает у вашего объекта источника данных ячейку, соответствующую указанному элементу в представлении коллекции. 
+
+```swift
+override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ArtCoverCell
+        let track = imageNameArray[indexPath.row]
+        // Configure content.
+        cell.coverImageView.image = UIImage(named: track.title)
+        return cell
+    }
+}
+```
+
+- [#prepare(for:sender:)](https://developer.apple.com/documentation/uikit/uiviewcontroller/1621490-prepare) - уведомляет контроллер представления о том, что переход вот-вот будет выполнен.  При тапе на трек, сделаем переход #seque, добавим #identifier, на новый view controller 
+
+```swift
+// MARK: - Navigation
+   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowDetail" {
+            let cell = sender as! UICollectionViewCell
+            let indexPath = self.collectionView.indexPath(for: cell)
+            let detailViewController = segue.destination as! DetailViewController
+            let track = imageNameArray[indexPath!.row]
+            detailViewController.track = track
+        }
+    }
+```
+
+
+---
+
+### [#UICollectionViewFlowLayout](https://developer.apple.com/documentation/uikit/uicollectionviewflowlayout) 
+верстка элемента кодом
+
+```swift
+let layout = UICollectionViewFlowLayout()
+layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+layout.itemSize = CGSize(width: 105, height: 105)
+layout.minimumInteritemSpacing = 0
+layout.minimumLineSpacing = 20
+collectionView.collectionViewLayout = layout
+```
+
+```swift
+
+```
+
+
+
+---
+
 ### []()
 
 ```swift
@@ -511,4 +663,5 @@ progressView.setProgress(0, animated: true)
 ```swift
 
 ```
+
 
