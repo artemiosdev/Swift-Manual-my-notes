@@ -3648,7 +3648,7 @@ Challenges
 Delivery Pizza
 В книге Swift Apprentice, есть пример расчета доставки от ресторана к клиенту пиццы с помощью теоремы #Пифагора Theorem #Pythagorean. Это вступление в тему Struct.
 distance(from:to:) will calculate how far away you are from your pizza. isInDeliveryRange(location:) will return true only if you’re not too far away.
- 
+
 let restaurantLocation = (3, 4)
 let restaurantRange = 2.5
 
@@ -3666,7 +3666,7 @@ func isInDeliveryRange(location: (x: Int, y: Int)) -> Bool {
 isInDeliveryRange(location: (x: 5, y: 5)) //true
 
 isInDeliveryRange(location:) checks both locations to see if you can get your pizza from either one.
- 
+
 let restaurantLocation = (3, 4)
 let restaurantRange = 2.5
 
@@ -3681,10 +3681,10 @@ func distance(from source: (x: Int, y: Int), to target: (x: Int, y: Int)) -> Dou
 
 func isInDeliveryRange(location: (x: Int, y: Int)) -> Bool {
   let deliveryDistance = distance(from: location, to: restaurantLocation)
-  
+
   let secondDeliveryDistance =
     distance(from: location, to: otherRestaurantLocation)
-  
+
   return deliveryDistance < restaurantRange ||
     secondDeliveryDistance < otherRestaurantRange
 }
@@ -3759,11 +3759,11 @@ Add a method overlaps(with:) on DeliveryArea that can tell you if the area overl
 struct DeliveryArea {
   let center: Location
   var radius: Double
-  
+
   func contains(_ location: Location) -> Bool {
     distance(from: center, to: location) < radius
   }
-  
+
   func overlaps(with area: DeliveryArea) -> Bool {
   distance(from: center, to: area.center) <= (radius + area.radius)
   }
@@ -3879,7 +3879,7 @@ struct TShirt {
       // Special order!
       sizeMultiplier = 1.2
     }
-
+    
     let materialMultipler: Double
     switch material {
     case cotton:
@@ -3892,7 +3892,7 @@ struct TShirt {
       // Special order!
       materialMultipler = 2.0
     }
-
+    
     return basePrice * sizeMultiplier * materialMultipler
   }
 }
@@ -3970,7 +3970,7 @@ struct Height {
         self.heigthInInches = heigthInInches
         self.heigthInCentimeters = heigthInInches * 2.54
     }
-
+    
     init(heigthInCentimeters: Double) {
         self.heigthInCentimeters = heigthInCentimeters
         self.heigthInInches = heigthInCentimeters / 2.54
@@ -4059,7 +4059,7 @@ struct RunningWorkout {
     var averageMileTime: Double {
         time/distance * 1600
     }
-    
+
 }
 
 
@@ -4123,11 +4123,11 @@ struct RunningWorkout {
 
     static var meterInFeet = 3.28084
     static var mileInMeters = 1600.0
-
+    
     static func mileTimeFor(distance: Double, time: Double) -> Double {
         time/distance * 1600
     }
-
+    
     var distance: Double
     var time: Double
     var elevation: Double
@@ -4140,12 +4140,184 @@ print(RunningWorkout.meterInFeet)
 print(RunningWorkout.mileInMeters)
 
 
+
+
 ---
 
 [К оглавлению](#contents)
 
 ###  <a id="chapter21" /> Глава №21. Классы
 
+Тип #Класс #class — это ссылочный тип (reference type). Экземпляры класса передаются по ссылке, а не копированием. 
+
+Экземпляр структуры является неизменяемым значением, в то время как экземпляр класса является изменяемым объектом. Классы являются ссылочными типами, поэтому переменная типа класса не хранит фактический экземпляр — она хранит ссылку на местоположение в памяти, в котором хранится экземпляр.
+Классы очень похожи на структуры. Оба могут определять свойства для хранения значений, определять методы для обеспечения функциональности и определять инициализаторы для настройки их начального состояния. Синтаксис для выполнения этих действий почти всегда одинаков.
+Если вы создали экземпляр класса SimplePerson только с таким именем:
+class SimplePerson {
+  let name: String
+  init(name: String) {
+    self.name = name
+  }
+}
+var var1 = SimplePerson(name: "John")
+
+var var2 = var1
+
+<img alt="image" src="images/classes var reference.jpg"/>
+
+И наоборот, структура как тип значения хранит фактическое значение, обеспечивая прямой доступ к нему.
+
+```swift
+struct SimplePerson {
+  let name: String
+}
+```
+
+В памяти переменная не будет ссылаться на место в памяти, но вместо этого значение будет принадлежать исключительно var1
+
+Присвоение var var2 = var1 в этом случае скопирует значение var1:
+
+<img alt="image" src="images/struct var value.jpg"/>
+
+Изменяемость. Экземпляр класса может изменять значения своих свойств, объявленных как переменная (var), даже если сам экземпляр хранится в константе (let). При этом использовать ключевое слово mutating для методов не требуется. 
+Наследование. Два класса могут быть в отношении «родительский — дочерний» друг к другу. При этом подкласс наследует и включает в себя все характеристики (свойства и методы) суперкласса и при необходимости может быть дополнительно расширен. 
+Инициализатор (конструктор). Класс имеет только пустой встроенный инициализатор init(), который не требует передачи значения входных параметров для их инициализации свойствам. 
+Деинициализатор (деструктор). Метод который автоматически вызывается при удалении экземпляра класса. 
+Приведение типов. В процессе выполнения программы вы можете проверить экземпляр класса на соответствие определенному типу данных. 
+Instance – экземпляр, пример
+
+Синтаксис классов 
+Объявление классов:
+class ИмяКласса {
+       // свойства и методы класса
+   }
+Классы объявляются с помощью ключевого слова class, за которым следует имя создаваемого класса. Имя класса должно быть написано в верхнем верблюжьем регистре. 
+Тело класса заключается в фигурные скобки и может содержать методы и свойства, и др другие элементы. 
+При объявлении нового класса, как и при объявлении перечисления или структуры, создается новый тип данных, который может быть использован в дальнейшем.
+
+The heap vs. the stack
+Когда вы создаете ссылочный тип reference type, такой как класс, система сохраняет фактический экземпляр в области памяти, известной как куча heap. Экземпляры типа значения, такие как структура, находятся в области памяти, называемой стеком stack, если только значение не является частью экземпляра класса, и в этом случае значение хранится в куче вместе с остальной частью экземпляра класса
+How they work will help you visualize the functional differences between a class and a structure
+Система использует стек stack для хранения (value type) всего, что находится в непосредственном потоке выполнения; он жестко управляется и оптимизируется процессором. Функция выделяет переменные стека при входе и освобождает их при выходе. Поскольку стек так строго организован, он очень эффективен.
+Система использует кучу heap для хранения экземпляров ссылочных типов reference types. Куча, как правило, представляет собой большой пул памяти, из которого система может запрашивать и динамически выделять блоки памяти. Срок службы является гибким и динамичным.
+Куча не уничтожает свои данные автоматически, как это делает стек; для этого требуется дополнительная работа. Это делает создание и удаление данных в куче более медленным процессом по сравнению со стеком.
+Возможно, вы уже поняли, как это связано со структурами и классами. Взгляните на диаграмму ниже: 
+
+<img alt="image" src="images/stack-heap.jpg"/>
+
+Когда вы создаете экземпляр класса, ваш код запрашивает блок памяти в куче для хранения самого экземпляра; это имя и фамилия внутри экземпляра в правой части диаграммы. Он хранит адрес этой памяти в вашей именованной переменной в стеке; это ссылка, хранящаяся в левой части диаграммы.
+Когда вы создаете экземпляр структуры (который не является частью экземпляра класса), сам экземпляр хранится в стеке, и куча никогда не задействована.
+class Person {
+  var firstName: String
+  var lastName: String
+
+  init(firstName: String, lastName: String) {
+    self.firstName = firstName
+    self.lastName = lastName
+  }
+
+  var fullName: String {
+    "\(firstName) \(lastName)"
+  }
+}
+
+let john = Person(firstName: "Johnny", lastName: "Appleseed")
+var homeOwner = john
+john.firstName = "John" // John wants to use his short name!
+john.firstName // "John"
+homeOwner.firstName // "John
+
+homeOwner.lastName = "Googleseed"
+print(john.fullName)               // Johnny Googleseed
+print(homeOwner.fullName)  // Johnny Googleseed
+Например, если объект john изменится, то все, что содержит ссылку на john, автоматически увидит обновление. Если бы вы использовали struct, вам пришлось бы обновлять каждую копию по отдельности, иначе она все равно имела бы старое значение "Johnny".
+
+Object identity
+В предыдущем примере кода легко увидеть, что john и homeOwner указывают на один и тот же объект. Код короткий, и обе ссылки являются именованными переменными. Что делать, если вы хотите узнать, является ли значение переменной John?
+Вам может прийти в голову проверить значение имени, но как вы узнаете, что это тот Джон, которого вы ищете, а не самозванец? Или, что еще хуже, что, если Джон снова изменит свое имя?
+В Swift оператор === позволяет проверить, совпадает ли #идентичность #identity #тождественность одного объекта с идентичностью другого (#===):
+john === homeOwner // true
+Принадлежат ли экземпляры одной ячейки памяти
+Точно так же, как оператор == проверяет, равны ли два значения, оператор === identity operator сравнивает адрес памяти двух ссылок.
+Это означает, что этот === оператор может определить разницу между John, которого вы ищете, и самозванцем imposterJohn:
+let imposterJohn = Person(firstName: "Johnny", lastName: "Appleseed")
+
+john === homeOwner // true
+john === imposterJohn // false
+imposterJohn === homeOwner // false
+
+// Назначение существующих переменных изменяет экземпляры, на которые ссылаются переменные, т.е изменяются ссылки
+homeOwner = imposterJohn
+john === homeOwner // false
+
+homeOwner = john
+john === homeOwner // true
+Это может быть особенно полезно, когда вы не можете полагаться на регулярное равенство (==) для сравнения и идентификации объектов, которые вам небезразличны
+// Create fake, imposter Johns. Use === to see if any of these imposters are our real John.
+var imposters = (0...100).map { _ in
+  Person(firstName: "John", lastName: "Appleseed")
+}
+
+// Equality (==) is not effective when John cannot be identified by his name alone
+imposters.contains {
+  $0.firstName == john.firstName && $0.lastName == john.lastName
+}                       // true
+Используя оператор идентификации, вы можете убедиться, что сами ссылки равны, и отделить нашего настоящего John от толпы:
+// Проверьте, чтобы настоящий Джон не был найден среди самозванцев.
+imposters.contains {
+  $0 === john
+}                      // false
+
+// Теперь спрячьте "настоящего" Джона где-нибудь среди самозванцев.
+imposters.insert(john, at: Int.random(in: 0..<100))
+
+// Джона теперь можно найти среди самозванцев.
+imposters.contains {
+  $0 === john
+}                     // true
+
+// Поскольку `Person` является ссылочным типом, вы можете использовать ===, чтобы извлечь настоящего John из списка самозванцев и изменить значение.
+// Исходная переменная `john` выведет новую фамилию!
+if let indexOfJohn = imposters.firstIndex(where: { $0 === john }) {
+  imposters[indexOfJohn].lastName = "Bananapeel"
+}
+john.fullName // John Bananapeel
+
+Mini-exercise
+Write a function memberOf(person: Person, group: [Person]) -> Bool that will return true if person can be found inside group, and false if it can not.
+Test it by creating two arrays of five Person objects for group and using john as the person. Put john in one of the arrays, but not in the other.
+class Person {
+  var firstName: String
+  var lastName: String
+
+  init(firstName: String, lastName: String) {
+    self.firstName = firstName
+    self.lastName = lastName
+  }
+
+  var fullName: String {
+    "\(firstName) \(lastName)"
+  }
+}
+
+let john = Person(firstName: "Johnny", lastName: "Appleseed")
+
+
+func memberOf(person: Person, group: [Person]) -> Bool {
+  group.contains(where: { $0 === person })
+}
+
+let johnny = Person(firstName: "Johnny", lastName: "Appleseed")
+let jane = Person(firstName: "Jane", lastName: "Appleseed")
+let anonymous1 = Person(firstName: "Bob", lastName: "Anonymous")
+let anonymous2 = Person(firstName: "Bill", lastName: "Anonymous")
+let anonymous3 = Person(firstName: "Biff", lastName: "Anonymous")
+
+let group1 = [johnny, jane, anonymous1, anonymous2, anonymous3]
+let group2 = [johnny, john, anonymous1, anonymous2, anonymous3]
+
+memberOf(person: john, group: group1) // false
+memberOf(person: john, group: group2) // true
 
 
 ---
