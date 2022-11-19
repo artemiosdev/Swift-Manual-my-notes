@@ -3313,62 +3313,92 @@ let myLunch = Lunch.meal(.salad, .soup)
 [К оглавлению](#contents)
 
 ###  <a id="chapter20" /> Глава №20. Структуры. Struct
-A structure combines one or more variables into a single #type. You can define functionality by adding type and instance methods to a structure
+A structure combines one or more variables into a single #type. You can define functionality by adding type and instance экземпляры methods to a structure
 Structures are one of the named types in Swift that allow you to encapsulate включать related связанные properties and behaviors. You can declare a new type, give it a name, and then use it in your code.
 Instance – экземпляр 
 
 Структура – тип данных, который похож на класс, но не поддерживает наследование и передается по значению (value type), а не по ссылке.
+
 Знакомство со структурами начнем с рассмотрения примера. Перед вами стоит задача описать в вашей программе сущность «игрок в шахматы», включая характеристики: имя и количество побед. Для решения этой задачи можно использовать кортежи и хранить в переменной имя и количество побед игрока 
-var playerVasiliy = (name: "Василий", victories: 10)
-Это решает поставленную задачу, но если количество характеристик будет увеличиваться, то кортеж станет чересчур сложным. Требуется механизм, позволяющий гибко описывать даже самые сложные сущности, и который учитывает все возможные параметры. Это структуры. Они позволяют создать «скелет» или «шаблон» сущности. Например, структура Int описывает сущность «целое число». 
+
+`var playerVasiliy = (name: "Василий", victories: 10)`
+
+Это решает поставленную задачу, но если количество характеристик будет увеличиваться, то кортеж станет чересчур сложным. Требуется механизм, позволяющий гибко описывать даже самые сложные сущности, и который учитывает все возможные параметры. Это **структуры. Они позволяют создать «скелет» или «шаблон» сущности.** Например, структура Int описывает сущность «целое число». 
+
+```swift
    struct ИмяСтруктуры {
        // свойства и методы структуры
    }
-Структуры объявляются с помощью ключевого слова #struct, за которым следует имя создаваемой конструкции. Требования к имени: оно должно писаться в верхнем верблюжьем регистре. 
-Тело #структуры заключается в фигурные скобки и может содержать свойства и методы. Объявим структуру, которая будет описывать сущность «игрок в шахматы» 
-struct ChessPlayer { }
-Теперь у вас появился новый тип данных ChessPlayer. Пока еще он не имеет совершенно никакой практической ценности, у него нет свойств и методов. Уже можно объявить новый параметр данного типа и проинициализировать ему значение 
-let playerOleg = ChessPlayer()
-type(of: playerOleg) // ChessPlayer.Type
-Обратите внимание на то, что напротив функции type(of: ) в области результатов в указании на тип присутствует префикс вида __lldb_expr_141 (число может отличаться). Это особенность Xcode Playground, данный префикс определяет модуль, в котором определена структура, то есть то, к какому пространству имен она относится. 
+```
 
-Свойства в структурах Объявление свойств 
-Структура ChessPlayer пуста и в нее можно добавить свойства (#properties)
+Структуры объявляются с помощью ключевого слова `#struct`, за которым следует имя создаваемой конструкции. Требования к имени: оно должно писаться в **верхнем** верблюжьем регистре. 
+Тело #структуры заключается в фигурные скобки и может содержать свойства и методы. Объявим структуру, которая будет описывать сущность «игрок в шахматы» 
+
+`struct ChessPlayer { }`
+
+Теперь у вас появился новый тип данных ChessPlayer. Пока еще он не имеет совершенно никакой практической ценности, у него нет свойств и методов. Уже можно объявить новый параметр данного типа и проинициализировать ему значение 
+
+`let playerOleg = ChessPlayer()`
+
+`type(of: playerOleg) // ChessPlayer.Type`
+
+Обратите внимание на то, что напротив функции `type(of: )` в области результатов в указании на тип присутствует префикс вида __lldb_expr_141 (число может отличаться). Это особенность Xcode Playground, данный префикс определяет модуль, в котором определена структура, то есть то, к какому пространству имен она относится.
+
+### Свойства в структурах, Объявление свойств 
+Структура ChessPlayer пуста и в нее можно добавить свойства `#properties`
 В простейшей форме структура – это именованная группа из одного или нескольких свойств, составляющих тип. Свойства представляют собой информацию об экземпляре структуры
+
+```swift
    struct ИмяСтруктуры {
        var свойство1: ТипДанных
        let свойство2: ТипДанных
        // остальные свойства и методы
-} 
-Свойство: Any свойство структуры, может быть произвольного типа данных
-Свойство может быть представлено как в виде переменной, так и в виде константы. Количество свойств в структуре не ограничено. 
-Добавим в структуру ChessPlayer два свойства, описывающие имя и количество побед (name и victories) 
+}
+```
+
+Свойство: `Any` свойство структуры, может быть произвольного типа данных. 
+Свойство может быть представлено как в виде переменной, так и в виде константы. Количество свойств в структуре не ограничено.  
+Добавим в структуру ChessPlayer два свойства, описывающие имя и количество побед (`name` и `victories`)
+
+```swift
 struct ChessPlayer {
     var name: String
     var victories: UInt
 }
+```
 
-Встроенный инициализатор 
-Структуры, так же, как и перечисления, имеют встроенный инициализатор (метод с именем init), который не требуется объявлять. Данный инициализатор принимает на входе значения всех свойств структуры, производит их инициализацию и возвращает экземпляр данной структуры 
-let playerHarry = ChessPlayer.init(name: “Гарри Поттер”, victories: 32). 
+### Встроенный инициализатор 
+**Структуры, так же, как и перечисления, имеют встроенный инициализатор** (метод с именем `init`), который не требуется объявлять. Данный инициализатор принимает на входе значения всех свойств структуры, производит их инициализацию и возвращает экземпляр данной структуры 
+
+`let playerHarry = ChessPlayer.init(name: “Гарри Поттер”, victories: 32)`
+
 Имя инициализатора (init) может быть опущено. Точно такой же подход вы видели при создании значений любых фундаментальных типов. 
-var harry = ChessPlayer(name: “Гарри”, victories: 32)
+
+`var harry = ChessPlayer(name: “Гарри”, victories: 32)`
+
 В результате будет создан новый экземпляр структуры ChessPlayer, содержащий свойства с определенными в инициализаторе значениями. 
-Похоже с присваиванием значения функции переменной, но в таком случаи функция пишется с маленькойБуквы, а тип с БольшойБуквы
+Похоже с присваиванием значения функции переменной, но в таком случаи функция пишется с маленькойБуквы, а тип с БольшойБуквы. 
 При создании экземпляра структуры всем свойствам обязательно должны быть инициализированы значения. Если значение какого-либо из свойств не будет указано, Xcode сообщит об ошибке
 
-Значения свойств по умолчанию 
+### Значения свойств по умолчанию 
 Для свойств могут быть заданы значения по умолчанию. При этом такие свойства могут быть опущены при создании нового значения данного типа (Swift автоматически создает новый инициализатор). 
+
+```swift
 Struct ChessPlayer {
     var name: String
-    var victories: Uint = 0
+    var victories: UInt = 0
 }
-Ниже два разных инициализатора, при создании экземпляра типа: 
--первый требует указать значение только для свойства name, так как для него не задано значение по умолчанию; 
--второй требует указать оба значения. 
+```
 
-Если инициализатор вообще не требует передачи каких-либо значений, то он называется пустым инициализатором. Также присутствует инициализатор по умолчанию, т.е встроенный Memberwise initializers. Он доступен, когда структура не имеет свойств или для всех свойств заданы значения по умолчанию. 
+Ниже два разных инициализатора, при создании экземпляра типа: 
+- первый требует указать значение только для свойства name, так как для него не задано значение по умолчанию; 
+- второй требует указать оба значения. 
+
+Если инициализатор вообще не требует передачи каких-либо значений, то он называется пустым инициализатором. Также присутствует инициализатор по умолчанию, т.е встроенный `Memberwise initializers`. Он доступен, когда структура не имеет свойств или для всех свойств заданы значения по умолчанию. 
+
 Значения по умолчанию указываются при объявлении свойств точно так же, как вы указываете значение любой переменной или константы. При этом вы можете указывать или не указывать значения по умолчанию для каждого свойства в отдельности. 
+
+```swift
 struct Odometer {
   var count: Int = 0
 }
@@ -3379,8 +3409,13 @@ print(odometer.count) // 0
 // a new instance with a non-default value
 let odometer = Odometer(count: 27000)
 print(odometer.count) // 27000
-Обратите внимание, что count устанавливается на значение по умолчанию 0 при объявлении свойства. Все новые экземпляры Odometer будут созданы с этим значением по умолчанию.
+```
+
+Обратите внимание, что `count` устанавливается на значение по умолчанию 0 при объявлении свойства. Все новые экземпляры Odometer будут созданы с этим значением по умолчанию.
+
 Ниже показан пример создания параметров типа ChessPlayer с передачей значения свойств и без нее (через пустой инициализатор). 
+
+```swift
 Struct ChessPlayer {
     var name: String = “Игрок”
     var victories: Uint = 0
@@ -3389,9 +3424,12 @@ Struct ChessPlayer {
 var playerJohn = ChessPlayer(name: “Джон”, victories: 32)
 // используем значения по умолчанию с помощью пустого инициализатора
 var unknownPlayer = ChessPlayer()
+```
 
-Структура может включать в себя другую структуру
+### Структура может включать в себя другую структуру
 New structure named DeliveryArea that contains a constant center property along with a variable radius property. You can have a structure value inside a structure value; here, you use the Location type as the type of the center property of the DeliveryArea struct.
+
+```swift
 struct Location {
   let x: Int
   let y: Int
@@ -3404,51 +3442,60 @@ struct DeliveryArea {
 }
 
 var storeArea = DeliveryArea(center: storeLocation, radius: 2.5)
+```
 
-Structures as values и Структура как пространство имен 
+### Structures as values и Структура как пространство имен 
 Структура образует отдельное пространство имен, поэтому для доступа к элементам этого пространства имен необходимо в первую очередь получить доступ к самому пространству. 
-В предыдущем примере была создана структура ChessPlayer с двумя свойствами, для доступа к которым необходимо указать имя параметра и через точку (.) имя свойства, доступ через точку (#dot syntax). Таким образом, вы сперва получаете доступ к структуре (пространству имен), а затем к самому свойству. 
+В предыдущем примере была создана структура ChessPlayer с двумя свойствами, для доступа к которым необходимо указать имя параметра и через точку ` . ` имя свойства, доступ через точку `#dot syntax`. Таким образом, вы сперва получаете доступ к структуре (пространству имен), а затем к самому свойству. 
 
-```Who.What = Value```
+`Who.What = Value`
 
+```swift
 struct Person {
   var name: String
 }
 let firstPerson = Person(name: “Jasmine”)
 print(firstPerson.name)
 
-playerJohn.name          // “Джон”
+playerJohn.name      // “Джон”
 unknownPlayer.name   // “Игрок”
 print(unknownPlayer.name ) // “Игрок”
-Доступ вглубь с помощью второй точки
-//var storeArea = DeliveryArea(center: storeLocation, radius: 2.5)
+
+// Доступ вглубь с помощью второй точки
+var storeArea = DeliveryArea(center: storeLocation, radius: 2.5)
 print(storeArea.center.x) // 3
+```
+
 Данный способ доступа обеспечивает не только чтение, но и изменение значения свойства экземпляра структуры (только для переменной var)
+
+```swift
 playerJohn.victories // 32
 playerJohn.victories += 1
 playerJohn.victories // 33
 playerJohn.victories = 34   // 34
 
-Another example
+// Another example
 struct Car {
   var make: String
   var year: Int
   var color: Color
   var topSpeed: Int
 }
-var firstCar = Car(make: “Honda”, year: 2010, color: .blue, 
-   topSpeed: 120)
+var firstCar = Car(make: “Honda”, year: 2010, color: .blue, topSpeed: 120)
 var secondCar = firstCar
 secondCar.make = “Ford”
 
-let firstCar = Car(make: “Honda”, year: 2010, color: .blue, 
-topSpeed: 120)
+let firstCar = Car(make: “Honda”, year: 2010, color: .blue, topSpeed: 120)
 firstCar.color = .red // Compiler error!
-Даже если свойства объявлены с использованием var, значения let не могут быть изменены. В качестве общего правила вы следует использовать let, когда это возможно, чтобы определить экземпляр структуры, используйте var, если экземпляр должен быть изменяем, и использовать var при определении свойств структуры.
+```
+
+Даже если свойства объявлены с использованием `var`, значения `let` не могут быть изменены. В качестве общего правила  следует использовать let, когда это возможно, чтобы определить экземпляр структуры, используйте var, если экземпляр должен быть изменяем, и использовать var при определении свойств структуры.
 
 Structures create what are known as #value types.
 Structures are value types, which means their values are copied on assignment.
 A value type is a type whose instances are copied on assignment (это тип, который копируется на назначение).
+
+```swift
 var a = 5
 var b = a
 print(a) // 5
@@ -3457,18 +3504,27 @@ print(b) // 5
 a = 10
 print(a) // 10
 print(b) // 5
+```
+
 Это поведение для присваиваемого копирования (copy-on-assignment) означает, что когда A назначается B, значение A копируется в В. Вот почему важно читать = как «назначить (assign)», а не «равно (is equal to)». Read the statement b = a as “Assign the value of a to b
-Однако!!!
+
+Однако!!! 
 Note: You use == to calculate equality: 2 + 2 == 4. Read this expression as a question: “Is 2 + 2 equal to 4?
+
 Or another example
+
+```swift
 var someSize = Size(width: 250, height: 1000)
 var anotherSize = someSize
 
 someSize.width = 500
 print(someSize.width)     // 500 
 print(anotherSize.width) // 250
+```
 
 As with the previous example, area2.radius не поменял the new value set in area1.radius. The disconnection demonstrates the value semantics of working with structures. When you assign (назначаете) area2 the value of area1, он получает точную копию этого value. area1 and area2 все еще полностью независимы!
+
+```swift
 // пример взят на основе структуры challenges ниже 
 var area1 = DeliveryArea(center: Location(x: 3, y: 4), radius: 2.5)
 var area2 = area1
@@ -3478,33 +3534,40 @@ print(area2.radius) // 2.5
 area1.radius = 4
 print(area1.radius) // 4.0
 print(area2.radius) // 2.5
+```
 
 Structures everywhere
 The Int type is also a structure. In fact, many of the standard Swift types are defined as structures, such as: Double, String, Bool, Array and Dictionary
+
+### Conforming to a protocol (соответствие протоколам)
+The types FixedWidthInteger and SignedInteger отображаются сразу же after the declaration of Int:
+
+```swift
 @frozen public struct Int : FixedWidthInteger, SignedInteger {
  // …
 }
+```
 
-Conforming to a protocol (соответствие протоколам)
-The types FixedWidthInteger and SignedInteger отображаются сразу же after the declaration of Int:
-@frozen public struct Int : FixedWidthInteger, SignedInteger {
-  // …
-}
 These types are known as #protocols. Помещая их после двоеточия при объявлении Int, вы заявляете, что Int соответствует (conforms) этим протоколам.
 Протоколы содержат набор требований, которым должны удовлетворять соответствующие типы. Простой пример из стандартной библиотеки - CustomStringConvertible:
+
+```swift
 public protocol CustomStringConvertible {
   /// Текстовое представление этого экземпляра
   var description: String { get }
 }
-В этом протоколе содержится одно свойство: description. В документации описание упоминается как «Текстовое представление этого экземпляра».
-Если вы измените DeliveryArea для соответствия CustomStringConvertible, вам потребуется обязательно добавить свойство description с «текстовым представлением» экземпляра. Иначе будет ошибка т.к если тип подписан на протокол, то обязательно должен соответствовать ему и иметь его свойства.
+```
+
+В этом протоколе содержится одно свойство: `description`. В документации описание упоминается как «Текстовое представление этого экземпляра».
+Если вы измените DeliveryArea для соответствия CustomStringConvertible, вам потребуется обязательно добавить свойство `description` с «текстовым представлением» экземпляра. Иначе будет ошибка т.к если тип подписан на протокол, то обязательно должен соответствовать ему и иметь его свойства.
+
+```swift
 struct DeliveryArea: CustomStringConvertible {
   let center: Location
   var radius: Double
   var description: String {
     """
-    Area with center: (x: \(center.x), y: \(center.y)),
-    radius: \(radius)
+    Area with center: (x: \(center.x), y: \(center.y)), radius: \(radius)
     """
   }
 
@@ -3517,16 +3580,23 @@ struct DeliveryArea: CustomStringConvertible {
     (radius + area.radius)
   }
 }
-Так что же именно нужно делать в соответствии с протоколом? Поскольку любой тип, соответствующий CustomStringConvertible, должен определять description, поэтому вы можете вызывать description для любого экземпляра любого типа, который соответствует CustomStringConvertible. Любой именованный тип может использовать протоколы для расширения его поведения. 
+```
+
+Так что же именно нужно делать в соответствии с протоколом? Поскольку любой тип, соответствующий CustomStringConvertible, должен определять description, поэтому вы можете вызывать description для любого экземпляра любого типа, который соответствует CustomStringConvertible. **Любой именованный тип может использовать протоколы для расширения его поведения.** 
+
+```swift
 // по умолчанию print печатает именно с description 
 print(area1) // Area with center: (x: 3, y: 4), radius: 4.0
 print(area2) // Area with center: (x: 3, y: 4), radius: 2.5
 print(area1.radius) // 2.5
 print(area2.center) // Location(x: 3, y: 4)
+```
 
+### Собственные инициализаторы. Custom Initializers c example properties
 
-Собственные инициализаторы. Custom Initializers c example properties
 Instances created from the default initializer have a default value. The default String is “”, the default Int is 0, and the default Bool is false:
+
+```swift
 var string = String.init() // “”
 var integer = Int.init() // 0
 var bool = Bool.init() // false
@@ -3534,45 +3604,60 @@ var bool = Bool.init() // false
 var string = String() // “”
 var integer = Int() // 0
 var bool = Bool() // false
+```
 
-#Инициализатор – это специальный метод, который носит имя #init. Если вас не устраивают инициализаторы, которые создаются для структур автоматически, вы можете определить собственные. #Custom #Initializers
-Инициализатор настраивает экземпляр таким образом, чтобы он был готов к использованию. После объявления имени константы или переменной вы инициализируете константу или переменную, присваивая ей первое значение.
-Автоматически созданные встроенные инициализаторы (Memberwise initializers) удаляются при объявлении первого собственного инициализатора (Custom Initializers).
-Необходимо придерживаться требования: «после того, как будет создан экземпляр структуры, все ее свойства должны иметь значения». Вы можете создать инициализатор, который принимает в качестве входного параметра значения не для всех свойств, тогда остальным свойствам должны быть назначены значения либо внутри данного инициализатора, либо через значения по умолчанию. Несмотря на то, что инициализатор — это метод, он объявляется без использования ключевого слова func. При этом одна структура может содержать произвольное количество инициализаторов, каждый из которых должен иметь уникальный набор входных параметров.
+**#Инициализатор – это специальный метод, который носит имя #init.**
 
-Доступ к свойствам экземпляра внутри инициализатора осуществляется с помощью оператора self. Это связано с тем, что аргумент функции имеет то же самое имя (name), что и свойства структуры. В случае, если бы аргумент и свойства имели различные имена, то использование ключевого self не являлось бы обязательным. 
+Если вас не устраивают инициализаторы, которые создаются для структур автоматически, вы можете определить собственные. `#Custom #Initializers`
+***Инициализатор настраивает экземпляр таким образом, чтобы он был готов к использованию.*** После объявления имени константы или переменной вы инициализируете константу или переменную, присваивая ей первое значение.
+
+Автоматически созданные встроенные инициализаторы (#Memberwise #initializers) удаляются при объявлении первого собственного инициализатора (Custom Initializers).
+Необходимо придерживаться требования: «после того, как будет создан экземпляр структуры, все ее свойства должны иметь значения». Вы можете создать инициализатор, который принимает в качестве входного параметра значения не для всех свойств, тогда остальным свойствам должны быть назначены значения либо внутри данного инициализатора, либо через значения по умолчанию. **Несмотря на то, что инициализатор — это метод, он объявляется без использования ключевого слова func. При этом одна структура может содержать произвольное количество инициализаторов, каждый из которых должен иметь уникальный набор входных параметров.**
+
+Доступ к свойствам экземпляра внутри инициализатора осуществляется с помощью оператора `self`. Это связано с тем, что аргумент функции имеет то же самое имя (name), что и свойства структуры. В случае, если бы аргумент и свойства имели различные имена, то использование ключевого self не являлось бы обязательным. 
 
 Ключевое слово self относится к конкретному экземпляру объекта и используется при вызове метода, получении или настройке свойства в определении типа.
+
+```swift
 struct Car {
   var color: Color
-
   var description: String {
     return “This is a \(self.color) car.”
   }
 }
+```
+
 The Swift compiler распознает when property or method names существуют on the current object, and makes using self необязательным.
 Этот пример функционально такой же, как предыдущий пример
+
+```swift
 struct Car {
   var color: Color
-
   var description: String {
     return “This is a \(color) car.”
   }
 }
+```
+
 Использование self требуется в инициализаторах, имена параметров которых совпадают с именами свойств
+
+```swift
 struct Temperature {
   var celsius: Double
   init(celsius: Double) {
         self.celsius = celsius
   }
 }
+```
 
-Создадим инициализатор для структуры ChessPlayer, который принимает значение только для свойства name 
+Создадим инициализатор для структуры ChessPlayer, который принимает значение только для свойства `name`;;l;; 
+
+```swift
 struct ChessPlayer {
     var name: String = "Игрок"
     var victories: UInt = 0
     // инициализатор
-init(name: String){
+    init(name: String){
         self.name = name
     }
 }
@@ -3582,30 +3667,43 @@ playerHelgaPotaki.victories // 0
 // следующий код вызовет ошибку
 // структура больше не имеет встроенных инициализаторов
 var newPlayer = ChessPlayer()
+```
+
 Инициализатор принимает значение только для свойства name, при этом свойству victories будет проинициализировано значение по умолчанию. При создании экземпляра вам будет доступен исключительно разработанный вами инициализатор. 
 Помните, что создавать собственные инициализаторы для структур не обязательно, так как они уже имеют встроенные инициализаторы. 
-Если экземпляр структуры хранится в константе, модификация его свойств невозможна. Если же он хранится в переменной, то возможна модификация тех свойств, которые объявлены с помощью оператора var. 
+
+**Если экземпляр структуры хранится в константе, модификация его свойств невозможна. Если же он хранится в переменной, то возможна модификация тех свойств, которые объявлены с помощью оператора var.**
+
 Структуры – это типы-значения (Value type). При передаче экземпляра структуры от одного параметра в другой происходит его копирование. В примере создаются два независимых экземпляра одной и той же структуры: 
+
+```swift
      var olegMuhin = ChessPlayer(name: "Олег")
      var olegLapin = olegMuhin
 
-Another examples init
+// Another examples init
 struct Temperature {
   var celsius: Double
 }
+
 let temperature = Temperature(celsius: 30.0)
-But if you have access to a temperature in Fahrenheit, you would need to convert that value to Celsius before using the memberwise initializer.
+
+// But if you have access to a temperature in Fahrenheit, 
+// you would need to convert that value to Celsius
+// before using the memberwise initializer.
 let fahrenheitValue = 98.6
 let celsiusValue = (fahrenheitValue - 32) / 1.8
 let temperature = Temperature(celsius: celsiusValue)
-Вместо этого вы можете создать пользовательский инициализатор, который принимает значение Fahrenheit в качестве параметра, выполняет расчет и назначает значение свойства Celsius.
+```
+
+Вместо этого вы можете создать пользовательский инициализатор, который принимает значение Fahrenheit в качестве параметра, выполняет расчет и назначает значение
+свойства Celsius.
+
+```swift
 struct Temperature {
   var celsius: Double
-
   init(celsius: Double) {
     self.celsius = celsius
   }
-
   init(fahrenheit: Double) {
     celsius = (fahrenheit - 32) / 1.8
   }
@@ -3613,21 +3711,21 @@ struct Temperature {
 
 let currentTemperature = Temperature(celsius: 18.5)
 let boiling = Temperature(fahrenheit: 212.0)
+print(currentTemperature.celsius) 
+print(boiling.celsius) 
+```
 
-print(currentTemperature.celsius) // 18.5
-print(boiling.celsius) // 100.0
 и еще init
+
+```swift
 struct Temperature {
   var celsius: Double
-
   init(celsius: Double) {
     self.celsius = celsius
   }
-
   init(fahrenheit: Double) {
     celsius = (fahrenheit - 32) / 1.8
   }
-
   init(kelvin: Double) {
     celsius = kelvin - 273.15
   }
@@ -3637,20 +3735,26 @@ let currentTemperature = Temperature(celsius: 18.5)
 let boiling = Temperature(fahrenheit: 212.0)
 let freezing = Temperature(kelvin: 273.15)
 
-print(currentTemperature.celsius) // 18.5
-print(boiling.celsius) // 100.0
-print(freezing.celsius) // 0
+print(currentTemperature.celsius) 
+print(boiling.celsius) 
+print(freezing.celsius) 
+```
+
 Каждый случай Temperature создан с использованием другого инициализатора и другого значения, но каждый заканчивается как Temperature object требуемым свойством celsius.
 
-Computed Вычисляемые Properties
+### #Computed Вычисляемые Properties
+
+```swift
 struct Temperature {
   var celsius: Double
   var fahrenheit: Double
   var kelvin: Double
 } 
-let temperature = Temperature(celsius: 0, fahrenheit: 32.0,
-kelvin: 273.15)
-or an alternative would be to add multiple initializers that handle the calculations
+let temperature = Temperature(celsius: 0, fahrenheit: 32.0, kelvin: 273.15)
+```
+
+```swift
+// or an alternative would be to add multiple initializers that handle the calculations
 struct Temperature {
   var celsius: Double
   var fahrenheit: Double
@@ -3686,29 +3790,38 @@ print(boiling)
 let freezing = Temperature(kelvin: 273.15)
 print(freezing)
 // Temperature(celsius: 0.0, fahrenheit: 32.0, kelvin: 273.15)
+```
+
 Вышеупомянутый подход, использующий несколько инициализаторов, включает управление большим количеством состояний или информации. Каждый раз при изменении температуры вам потребуется обновить все три свойства. Такой подход подвержен ошибкам.
 Swift предоставляет более безопасный подход. При вычисленных свойствах (computed properties) вы можете создавать свойства, которые могут вычислить их значение на основе других свойств экземпляра или логики.
+
+```swift
 struct Temperature {
   var celsius: Double
-
   var fahrenheit: Double {
     celsius * 1.8 + 32
   }
-
   var kelvin: Double {
     celsius + 273.15
   }
 } 
+```
+
 To add a computed property, you declare the property as a variable (because its value can change). You must also явно объявлять the type. Then you use an open curly brace ({) and closing curly brace (}) to define the logic that calculates the value to return.
+
+```swift
 let currentTemperature = Temperature(celsius: 0.0)
 print(currentTemperature.fahrenheit)   // 32.0
 print(currentTemperature.kelvin)       // 273.15
+```
 
-Методы в структура, Объявление методов 
+### Методы в структуре, объявление методов 
 Named types can have their own variables and functions, which are called properties and methods.
 
 Помимо свойств, структуры, как и перечисления, могут содержать методы. Синтаксис объявления методов в структурах аналогичен объявлению методов в перечислениях. Они, как и обычные функции, могут принимать входные параметры. 
-Реализуем метод description(), который выводит справочную информацию об игроке в шахматы на консоль 
+Реализуем метод `description()`, который выводит справочную информацию об игроке в шахматы на консоль 
+
+```swift
 struct ChessPlayer {
     var name: String = "Игрок"
     var victories: UInt = 0
@@ -3721,36 +3834,38 @@ struct ChessPlayer {
 } 
 var andrey = ChessPlayer(name: "Андрей")
 andrey.description()
-Консоль Игрок Андрей имеет 0 побед
+```
+
+`Консоль Игрок Андрей имеет 0 побед`
 
 Another instances
+
+```swift
 struct Car {
   var make: String
   var model: String
   var year: Int
   var topSpeed: Int
-
   func startEngine() {
     print(”The \(year) \(make) \(model)’s engine has started.”)
 }
-
   func drive() {
     print(”The \(year) \(make) \(model) is moving.”)
   }
-
   func park() {
     print(”The \(year) \(make) \(model) is parked.”)
   }
 }
 
-let firstCar = Car(make: “Honda”, model: “Civic”, year: 2010, 
-topSpeed: 120) 
-let secondCar = Car(make: “Ford”, model: “Fusion”, year: 2013, 
-topSpeed: 125)
-
+let firstCar = Car(make: “Honda”, model: “Civic”, year: 2010, topSpeed: 120) 
+let secondCar = Car(make: “Ford”, model: “Fusion”, year: 2013, topSpeed: 125)
 firstCar.startEngine() // The 2010 Honda Civic’s engine has started.
 firstCar.drive() // The 2010 Honda Civic is moving
+```
+
 or 
+
+```swift
 struct Size {
   var width: Double
   var height: Double
@@ -3761,10 +3876,14 @@ struct Size {
 }
 let someSize = Size(width: 10.0, height: 5.5)
 let area = someSize.area() // Area is assigned a value of 55.0
+```
 
-Изменяющие методы 
-По умолчанию методы структур, кроме инициализаторов, не могут изменять значения свойств, объявленные в тех же самых структурах. Для того чтобы обойти данное ограничение, перед именем метода необходимо указать модификатор #mutating. 
-Создадим метод addVictories(count: ), который будет изменять значение свойства victories 
+### Изменяющие методы 
+По умолчанию методы структур, кроме инициализаторов, не могут изменять значения свойств, объявленные в тех же самых структурах. Для того чтобы обойти данное ограничение, перед именем метода необходимо указать модификатор `#mutating`. 
+
+Создадим метод `addVictories(count: )`, который будет изменять значение свойства `victories`
+
+```swift
 struct ChessPlayer {
     var name: String = "Игрок"
     var victories: UInt = 0
@@ -3774,7 +3893,7 @@ struct ChessPlayer {
     func description() {
         print("Игрок \(name) имеет \(victories) побед")
     }
-    mutating func addVictories( count: UInt = 1 ) {
+    mutating func addVictories(count: UInt = 1) {
         victories += count
     }
 }
@@ -3784,35 +3903,41 @@ harold.addVictories ()
 harold.victories // 1
 harold.addVictories(count: 3)
 harold.victories // 4
+```
+
 Структура может изменять значения свойств только в том случае, если экземпляр структуры хранится в переменной.
 
 Another instances
-Экземпляр odometer относится к типу Odometer, а increment () и increment (by :) – это методы экземпляра, которые добавляют мили к экземпляру. Метод экземпляра reset () сбрасывает счетчик пробега на ноль
-struct Odometer {
-  var count: Int = 0 // Assigns a default value to the `count` 
-  property. 
 
+Экземпляр `odometer` относится к типу Odometer, а `increment()` и `increment(by:)` – это методы экземпляра, которые добавляют мили к экземпляру. Метод экземпляра `reset()` сбрасывает счетчик пробега на ноль
+
+```swift
+struct Odometer {
+  var count: Int = 0 // Assigns a default value to the count property. 
   mutating func increment() {
     count += 1
   }
-
   mutating func increment(by amount: Int) {
     count += amount
   }
-
   mutating func reset() {
     count = 0
   }
 }
-var odometer = Odometer()   // odometer.count defaults to 0
-odometer.increment()            // odometer.count is incremented to 1
-odometer.increment(by: 15)  // odometer.count is incremented to 16 
-odometer.reset()                     // odometer.count is reset to 0
+var odometer = Odometer() // odometer.count defaults to 0
+odometer.increment() // odometer.count is incremented to 1
+odometer.increment(by: 15) // odometer.count is incremented to 16 
+odometer.reset() // odometer.count is reset to 0
+```
 
-Property Observers
-Смотри опеределение в гл 22 Свойства, пункт Наблюдатели или #Observers
-Swift позволяет вам наблюдать за любым свойством и реагировать на изменения его значения. Эти наблюдатели свойств вызываются каждый раз, когда устанавливается значение свойства, даже если новое значение совпадает с текущим значением свойства. Есть два блока кода, которые вы можете определить для любого данного свойства: willSet и didSet
-In the following example, a StepCounter has been defined with a totalSteps property. Both the willSet and didSet observers have been defined. Whenever totalSteps is modified, willSet will be called first, and you’ll have access to the new value that will be set to the property value in a constant named newValue. After the property’s value has been updated, didSet will be called, and you can access the previous property value using oldValue.
+### Property Observers
+Смотри опеределение в гл. 22 Свойства, пункт Наблюдатели или `#Observers`
+
+**Swift позволяет вам наблюдать за любым свойством и реагировать на изменения его значения.** Эти наблюдатели свойств вызываются каждый раз, когда устанавливается значение свойства, даже если новое значение совпадает с текущим значением свойства. Есть два блока кода, которые вы можете определить для любого данного свойства: `willSet` и `didSet`
+
+In the following example, a StepCounter has been defined with a totalSteps property. Both the willSet and didSet observers have been defined. Whenever totalSteps is modified, willSet will be called first, and you’ll have access to the new value that will be set to the property value in a constant named `newValue`. After the property’s value has been updated, didSet will be called, and you can access the previous property value using `oldValue`.
+
+```swift
 struct StepCounter {
     var totalSteps: Int = 0 {
         willSet {
@@ -3825,35 +3950,48 @@ struct StepCounter {
         }
     }
 }
+```
+
 Here’s the output when изменяется the totalSteps property of a new StepCounter:
+
+```swift
 var stepCounter = StepCounter()
 stepCounter.totalSteps = 40
 stepCounter.totalSteps = 100
+```
+
 Console Output:
+```bash
 About to set totalSteps to 40
 Added 40 steps
 About to set totalSteps to 100
 Added 60 steps 
+```
 
-Type Properties and Methods
+### Type Properties and Methods
 Свойства экземпляра являются данными об индивидуальном экземпляре типа, а методы экземпляра являются функциями, которые могут быть вызваны отдельными экземплярами типа.
-Swift также поддерживает добавление свойств и методов типа, которые могут быть доступны или вызываться на самом типе. Используйте ключевое слово #static, чтобы добавить свойство или метод в тип.
-Тип свойств полезен, когда свойство связано с типом, но не характерным для самого экземпляра.
-Следующий пример определяет Temperature structure, которая имеет static property named boilingPoint, которое является постоянным значением для всех экземпляров Temperature.
+
+Swift также поддерживает добавление свойств и методов типа, которые могут быть доступны или вызываться на самом типе. Используйте ключевое слово `#static`, чтобы добавить свойство или метод в тип.
+
+Тип свойств полезен, когда свойство связано с типом, но не характерным для самого экземпляра. 
+Следующий пример определяет Temperature structure, которая имеет static property named boilingPoint, которое является постоянным значением для всех экземпляров 
+Temperature.
+
+```swift
 struct Temperature {
   static var boilingPoint = 100
 }
 let boilingPoint = Temperature.boilingPoint
 print(boilingPoint)
-
 let smallerNumber = Double.minimum(100.0, -1000.0)
+```
 
-
-Challenges
-Delivery Pizza
+### Challenges
+Delivery Pizza. 
 В книге Swift Apprentice, есть пример расчета доставки от ресторана к клиенту пиццы с помощью теоремы #Пифагора Theorem #Pythagorean. Это вступление в тему Struct.
 distance(from:to:) will calculate how far away you are from your pizza. isInDeliveryRange(location:) will return true only if you’re not too far away.
 
+```swift
 let restaurantLocation = (3, 4)
 let restaurantRange = 2.5
 
@@ -3895,10 +4033,13 @@ func isInDeliveryRange(location: (x: Int, y: Int)) -> Bool {
 }
 isInDeliveryRange(location: (x: 5, y: 5)) // true
 isInDeliveryRange(location: (x: 10, y: 10)) // false
+```
 
 Rewrite isInDeliveryRange (ранее описанное) to use Location and DeliveryArea.
 В этом примере есть массив, области и функция, которая использует этот массив, чтобы определить, находится ли расположение клиента в любом из этих областей.
 Находится ли в диапазоне (зоне доставки) – это то, что вы хотите знать о конкретном ресторане. Было бы здорово, если бы DeliveryArea, могла сказать тебе, что ресторан мог доставить пиццу в это местоположение. Для этого мы добавим func contains в struct DeliveryArea, теперь эта функция является методом
+
+```swift
 struct Location {
   let x: Int
   let y: Int
@@ -3958,9 +4099,12 @@ func distance(from source: Location, to target: Location) -> Double {
   let distanceY = Double(source.y - target.y)
   return sqrt(distanceX * distanceX + distanceY * distanceY)
 }
+```
 
-Change contains(_:) to call the new distance(from:to:) with Location.
+Change contains(_:) to call the new distance(from:to:) with Location. 
 Add a method overlaps(with:) on DeliveryArea that can tell you if the area overlaps with another area
+
+```swift
 struct DeliveryArea {
   let center: Location
   var radius: Double
@@ -3981,21 +4125,28 @@ area1.overlaps(with: area2) // false
 let area3 = DeliveryArea(center: Location(x: 3, y: 4), radius: 2.5)
 let area4 = DeliveryArea(center: Location(x: 7, y: 7), radius: 2.5)
 area3.overlaps(with: area4) // true
+```
 
+Ordering Pizza.
 
-Ordering Pizza
 Write a structure that represents a pizza order. Include toppings, size and any other option you’d want for a pizza.
+
+```swift
 struct Pizza {
   let size: Int // Inches
   let toppings: [String] // Pepperoni, cheese
   let style: String // Thick, thin, hand-tossed
 }
 let pizza = Pizza(size: 14, toppings: ["Pepperoni", "Mushrooms", "Anchovies"], style: "Thin")
+```
 
 Challenge 1: Fruit tree farm
+
 Представьте, что вы находитесь на ферме с фруктовыми деревьями и выращиваете разные фрукты: груши, яблоки и апельсины. После того, как фрукты собраны, грузовик привозит их для обработки на центральном предприятии. Поскольку все фрукты смешиваются в грузовике, работники центрального предприятия должны по одному сортировать их в подходящую инвентарную тару.
 Реализуйте алгоритм, который получает грузовик, полный различных видов фруктов и помещает каждый фрукт в правильный контейнер инвентаризации.
 Следите за общим весом фруктов, обрабатываемых объектом и распечатайте, сколько всего вес фруктов в инвентаре.
+
+```swift
 // All kinds of fruit will share these attributes
 struct Fruit {
   let kind: String // e.g. Apple, Pear, Orange
@@ -4049,9 +4200,13 @@ Total weight: 497 grams
 Quantity of pears:		 2
 Quantity of apples:		 3
 Quantity of oranges:	 1
+```
 
 Challenge 2: A T-shirt model
+
 Создайте структуру футболки, которая имеет размер, цвет и материал. Предоставить метод для расчета стоимости рубашки на основе его атрибутов
+
+```swift
 typealias Size = String
 let small: Size = "Small"
 let medium: Size = "Medium"
@@ -4064,8 +4219,12 @@ let polyester: Material = "Polyester"
 let wool: Material = "Wool"
 
 typealias Color = String
-Float and Double хороши в данном примере для демонстрации, однако в реальности, в производстве лучше их не использовать, и вот почему:
+```
+
+Float and Double хороши в данном примере для демонстрации, однако в реальности лучше их не использовать, и вот почему:
 https://stackoverflow.com/questions/3730019/why-not-use-double-or-float-to-represent-currency 
+
+```swift
 struct TShirt {
   let size: Size
   let color: Color
@@ -4104,12 +4263,16 @@ struct TShirt {
 
 TShirt(size: medium, color: "Green", material: cotton).cost() // 10
 TShirt(size: xLarge, color: "Gray", material: wool).cost() // 16.5
+```
 
 Challenge 3: Battleship. Морской бой
+
 Напишите Battleship-like game. Подробно об игре http://bit.ly/2nt3jbu 
 Используйте систему координат (X, Y) для ваших мест, смоделированные с использованием структуры.
 Корабли также должны быть смоделированы со структурами. Запишите происхождение, направление и длину.
 Каждый корабль должен быть в состоянии сообщить, если «выстрел» привел к «попаданию».
+
+```swift
 struct Coordinate {
   let x: Int
   let y: Int
@@ -4163,10 +4326,14 @@ board.fire(location: Coordinate(x: 2, y: 3)) // Miss...
 board.fire(location: Coordinate(x: 5, y: 6)) // Hit on the battleship
 
 board.fire(location: Coordinate(x: 5, y: 7)) // Miss...
+```
 
 Challenges Apple
+
 Перевод дюймов в сантиметры и обратно. Создайте два настраиваемых инициализатора. Один инициализатор примет аргумент Double, который представляет высоту в дюймах. Другой инициализатор примет аргумент Double, который представляет высоту в сантиметрах. Каждый инициализатор должен принимать переданное значение и использовать его для установки свойства, соответствующего переданной единице измерения. Затем он должен установить другое свойство, вычисляя правильное значение из переданного значения. Подсказка: 1 дюйм = 2,54 сантиметра.
 If you use the initializer for inches to pass in a height of 65, the initializer should set heightInInches to 65 and heightInCentimeters to 165.1.
+
+```swift
 struct Height {
     var heigthInInches: Double
     var heigthInCentimeters: Double
@@ -4182,14 +4349,19 @@ struct Height {
     }
 }
 var someonesHeigth = Height(heigthInInches: 65)
-someonesHeigth.heigthInCentimeters //165.1
+someonesHeigth.heigthInCentimeters // 165.1
 someonesHeigth.heigthInInches // 65
 
 var myHeigth = Height(heigthInCentimeters: 195)
-myHeigth.heigthInCentimeters //195
+myHeigth.heigthInCentimeters // 195
 myHeigth.heigthInInches // 76.771
+```
 
-Likes. Ниже для вас была создана Post struct, представляющая собой общий пост в социальных сетях. Добавьте mutating method в пост под названием like(), который увеличит количество лайков на единицу. Затем создайте экземпляр Post и вызовите на нем функцию like(). Распечатайте свойство likes до и после вызова метода, чтобы узнать, было ли увеличено значение.
+Likes. 
+
+Ниже для вас была создана Post struct, представляющая собой общий пост в социальных сетях. Добавьте mutating method в пост под названием like(), который увеличит количество лайков на единицу. Затем создайте экземпляр Post и вызовите на нем функцию like(). Распечатайте свойство likes до и после вызова метода, чтобы узнать, было ли увеличено значение.
+
+```swift
 struct Post {
     var message: String
     var likes: Int
@@ -4202,8 +4374,11 @@ var somePost = Post(message: "Did anyone else notice what happened during that g
 print(somePost.likes) // 18
 somePost.like()
 print(somePost.likes) // 19
+```
 
 Area. Computed Properties
+
+```swift
 struct Rectangle {
     var width: Int
     var height: Int
@@ -4213,10 +4388,14 @@ struct Rectangle {
 }
 var one = Rectangle(width: 19, height: 10)
 one.area  // 190
+```
 
 Дюймы в см и обратно. Property Observers
+
 В приведенной ниже Height struct высота представлена как в дюймах, так и в сантиметрах. Однако, если heightInInches, то heightInCentimeters также должны подстраиваться под нее. Добавьте didSet к каждому свойству, который проверит, соответствует ли другое свойство тому, каким оно должно быть, и если нет, установит правильное значение. Если вы зададите значение другого свойства, даже если оно уже имеет правильное значение, вы получите бесконечный цикл, в котором каждое свойство задает другое.
 Создайте экземпляр Height, а затем измените одно из его свойств. Распечатайте другое свойство, чтобы убедиться, что оно было соответствующим образом скорректировано.
+
+```swift
 struct Height {
     var heightInInches: Double {
         didSet {
@@ -4247,15 +4426,17 @@ struct Height {
     }
 }
 
-
-
 var height = Height(heightInInches: 70)
 height.heightInInches = 75
 print(height.heightInCentimeters) // 190.5
+```
 
 Mile Times and Congratulations
+
 В приведенной ниже структуре RunningWorkout содержится информация о тренировках ваших пользователей по бегу. Однако вы решаете добавить информацию о среднем времени прохождения мили. Добавьте вычисляемое свойство (computed property) под названием averageMileTime, которое использует расстояние и время для вычисления среднего времени прохождения пользователем мили. Предположим, что расстояние измеряется в метрах, а 1600 метров это миля.
 Создайте экземпляр RunningWorkout и выведите свойство averageMileTime. Убедитесь, что он работает правильно.
+
+```swift
 struct RunningWorkout {
     var distance: Double
     var time: Double
@@ -4264,14 +4445,15 @@ struct RunningWorkout {
     var averageMileTime: Double {
         time/distance * 1600
     }
-
 }
-
-
 var run = RunningWorkout(distance: 5000, time: 1200, elevation: 13)
 print(run.averageMileTime)
+```
+
 В других упражнениях приложения вы предоставляли пользователю ободряющие сообщения в зависимости от того, сколько шагов они выполнили. Отличное место для проверки того, следует ли вам отображать что-либо пользователю, находится в наблюдателе свойств.
 В приведенной ниже Steps struct добавьте в свойство шаги набор параметров, который проверит, равно ли новое значение цели, и если да, то напечатает поздравительное сообщение. Создайте экземпляр Steps, где число шагов равно 9999, а цель 10000, затем вызовите функцию takeStep() и посмотрите, будет ли ваше сообщение распечатано на консоли.
+
+```swift
 struct Steps {
     var steps: Int {
         willSet {
@@ -4281,12 +4463,10 @@ struct Steps {
         }
     }
     var goal: Int
-    
     mutating func takeStep() {
         steps += 1
     }
 }
-
 
 var mySteps = Steps(steps: 9999, goal: 10000)
 mySteps.steps // 9999
@@ -4295,7 +4475,11 @@ mySteps.steps // 10000
 // Congratulations! You met your goal for the day!
 
 Type Properties (static) and Methods
+```
+
 Представьте, что у вас есть приложение, которое требует от пользователя входа в систему. У вас может быть структура пользователя, аналогичная показанной ниже. Однако в дополнение к отслеживанию конкретной информации о пользователе вам может потребоваться способ узнать, кто является текущим зарегистрированным пользователем. Создайте свойство текущего пользователя (currentUser) в структуре User ниже и назначьте его объекту пользователя, представляющему вас. Теперь вы можете получить доступ к текущему пользователю через структуру пользователя. Распечатайте свойства currentUser я.
+
+```swift
 struct User {
     static var currentUser: User = User(userName: "robocop", email: "rjt97@me.com", age: 23)
     
@@ -4308,44 +4492,41 @@ struct User {
     var email: String
     var age: Int
 }
-
-
 print(User.currentUser.userName)
 print(User.currentUser.email)
 print(User.currentUser.age)
+```
+
 Below, call the logIn(user:) method and pass in a different User instance than what you assigned to currentUser above. Observe the printout in the console.
+
 Существуют другие свойства и действия, связанные c User struct, которые могут быть хорошими кандидатами для свойства или метода типа. Одним из них может быть способ входа в систему. Вернитесь назад и создайте метод типа logIn(user:), где пользователь имеет тип User. В теле метода назначьте переданного пользователя свойству currentUser и распечатайте, используя имя пользователя, в которой говорится, что пользователь вошел в систему.
 Ниже вызовите метод logIn(user:) и передайте экземпляр пользователя, отличный от того, который вы назначили текущему пользователю выше. Обратите внимание на распечатку в консоли.
 let newUser = User(userName: "JumbalayaJoe", email: "jjisthebest@me.com", age: 31)
 User.logIn(user: newUser)
 
 Type Properties and Methods
+
 В другом упражнении вы добавили вычисленное свойство, представляющее среднее время прохождения мили от начала забега. Тем не менее, вы можете захотеть иметь своего рода калькулятор, который пользователи могут использовать перед пробегом, чтобы узнать, какое среднее время в миле им нужно, чтобы пробежать заданное расстояние за заданное время. В этом случае может быть полезно иметь метод типа в RunningWorkout, к которому можно получить доступ, не имея экземпляра RunningWorkout.
+
 Добавьте в RunningWorkout метод типа mileTimeFor(distance:time:), где расстояние и время имеют тип Double. Этот метод должен иметь возвращаемое значение типа Double. Основная часть метода должна рассчитать среднее время прохождения мили, необходимое для преодоления пройденного расстояния за прошедшее время. Предположим, что расстояние измеряется в метрах, а одна миля составляет 1600 метров.
 Вызовите метод извне структуры и распечатайте результат, чтобы убедиться, что он работает правильно.
 Может быть полезно иметь несколько свойств типа в RunningWorkout, представляющих преобразования единиц измерения (т. е Метры в милю, футы в метры и т. д.). Добавьте свойство типа для meterInFeet и назначьте его 3.28084. Затем добавьте свойство типа для mileInMeters и назначьте ему 1600.0. 
-struct RunningWorkout {
 
+```swift
+struct RunningWorkout {
     static var meterInFeet = 3.28084
     static var mileInMeters = 1600.0
-    
     static func mileTimeFor(distance: Double, time: Double) -> Double {
         time/distance * 1600
     }
-    
     var distance: Double
     var time: Double
     var elevation: Double
 }
-
-
-
 print(RunningWorkout.mileTimeFor(distance: 3200, time: 720))
 print(RunningWorkout.meterInFeet)
 print(RunningWorkout.mileInMeters)
-
-
-
+```
 
 ---
 
@@ -4353,11 +4534,16 @@ print(RunningWorkout.mileInMeters)
 
 ###  <a id="chapter21" /> Глава №21. Классы
 
-Тип #Класс #class — это ссылочный тип (reference type). Экземпляры класса передаются по ссылке, а не копированием. 
+**Тип #Класс #class — это ссылочный тип (reference type).** Экземпляры класса передаются по ссылке, а не копированием. 
 
-Экземпляр структуры является неизменяемым значением, в то время как экземпляр класса является изменяемым объектом. Классы являются ссылочными типами, поэтому переменная типа класса не хранит фактический экземпляр — она хранит ссылку на местоположение в памяти, в котором хранится экземпляр.
+Экземпляр структуры является неизменяемым значением, в то время как экземпляр класса является изменяемым объектом. 
+
+Классы являются ссылочными типами, поэтому переменная типа класса не хранит фактический экземпляр — она хранит **ссылку** на местоположение в памяти, в котором хранится экземпляр.
+
 Классы очень похожи на структуры. Оба могут определять свойства для хранения значений, определять методы для обеспечения функциональности и определять инициализаторы для настройки их начального состояния. Синтаксис для выполнения этих действий почти всегда одинаков.
 Если вы создали экземпляр класса SimplePerson только с таким именем:
+
+```swift
 class SimplePerson {
   let name: String
   init(name: String) {
@@ -4365,8 +4551,8 @@ class SimplePerson {
   }
 }
 var var1 = SimplePerson(name: "John")
-
 var var2 = var1
+```
 
 <img alt="image" src="images/classes var reference.jpg"/>
 
@@ -4384,48 +4570,60 @@ struct SimplePerson {
 
 <img alt="image" src="images/struct var value.jpg"/>
 
-Изменяемость. Экземпляр класса может изменять значения своих свойств, объявленных как переменная (var), даже если сам экземпляр хранится в константе (let). При этом использовать ключевое слово mutating для методов не требуется. 
-Наследование. Два класса могут быть в отношении «родительский — дочерний» друг к другу. При этом подкласс наследует и включает в себя все характеристики (свойства и методы) суперкласса и при необходимости может быть дополнительно расширен. 
-Инициализатор (конструктор). Класс имеет только пустой встроенный инициализатор init(), который не требует передачи значения входных параметров для их инициализации свойствам. 
-Деинициализатор (деструктор). Метод который автоматически вызывается при удалении экземпляра класса. 
-Приведение типов. В процессе выполнения программы вы можете проверить экземпляр класса на соответствие определенному типу данных. 
+- **Изменяемость**. Экземпляр класса может изменять значения своих свойств, объявленных как переменная (var), даже если сам экземпляр хранится в константе (let). При этом использовать ключевое слово `mutating` для методов не требуется. 
+
+- **Наследование**. Два класса могут быть в отношении «родительский — дочерний» друг к другу. При этом подкласс наследует и включает в себя все характеристики (свойства и методы) суперкласса и при необходимости может быть дополнительно расширен. 
+
+- **Инициализатор (конструктор)**. Класс имеет только пустой встроенный инициализатор `init()`, который не требует передачи значения входных параметров для их инициализации свойствам. 
+
+- **Деинициализатор (деструктор)**. Метод который автоматически вызывается при удалении экземпляра класса. 
+
+- **Приведение типов**. В процессе выполнения программы вы можете проверить экземпляр класса на соответствие определенному типу данных. 
 Instance – экземпляр, пример
 
-Синтаксис классов 
+### Синтаксис классов 
 Объявление классов:
+
+```swift
 class ИмяКласса {
        // свойства и методы класса
    }
+```
+
 Классы объявляются с помощью ключевого слова class, за которым следует имя создаваемого класса. Имя класса должно быть написано в верхнем верблюжьем регистре. 
 Тело класса заключается в фигурные скобки и может содержать методы и свойства, и др другие элементы. 
 При объявлении нового класса, как и при объявлении перечисления или структуры, создается новый тип данных, который может быть использован в дальнейшем.
 
-The heap vs. the stack
-Когда вы создаете ссылочный тип reference type, такой как класс, система сохраняет фактический экземпляр в области памяти, известной как куча heap. Экземпляры типа значения, такие как структура, находятся в области памяти, называемой стеком stack, если только значение не является частью экземпляра класса, и в этом случае значение хранится в куче вместе с остальной частью экземпляра класса
+### The heap vs. the stack
+Когда вы создаете ссылочный тип reference type, такой как класс, система сохраняет фактический экземпляр в области памяти, известной как куча `heap`. Экземпляры типа значения, такие как структура, находятся в области памяти, называемой стеком `stack`, если только значение не является частью экземпляра класса, и в этом случае значение хранится в куче вместе с остальной частью экземпляра класса
+
 How they work will help you visualize the functional differences between a class and a structure
-Система использует стек stack для хранения (value type) всего, что находится в непосредственном потоке выполнения; он жестко управляется и оптимизируется процессором. Функция выделяет переменные стека при входе и освобождает их при выходе. Поскольку стек так строго организован, он очень эффективен.
-Система использует кучу heap для хранения экземпляров ссылочных типов reference types. Куча, как правило, представляет собой большой пул памяти, из которого система может запрашивать и динамически выделять блоки памяти. Срок службы является гибким и динамичным.
+
+Система использует стек **stack для хранения (value type)** всего, что находится в непосредственном потоке выполнения; он жестко управляется и оптимизируется процессором. Функция выделяет переменные стека при входе и освобождает их при выходе. Поскольку стек так строго организован, он очень эффективен.
+
+Система использует кучу **heap для хранения экземпляров ссылочных типов reference types**. Куча, как правило, представляет собой большой пул памяти, из которого система может запрашивать и динамически выделять блоки памяти. Срок службы является гибким и динамичным.
+
 Куча не уничтожает свои данные автоматически, как это делает стек; для этого требуется дополнительная работа. Это делает создание и удаление данных в куче более медленным процессом по сравнению со стеком.
 Возможно, вы уже поняли, как это связано со структурами и классами. Взгляните на диаграмму ниже: 
 
 <img alt="image" src="images/stack-heap.jpg"/>
 
 Когда вы создаете экземпляр класса, ваш код запрашивает блок памяти в куче для хранения самого экземпляра; это имя и фамилия внутри экземпляра в правой части диаграммы. Он хранит адрес этой памяти в вашей именованной переменной в стеке; это ссылка, хранящаяся в левой части диаграммы.
+
 Когда вы создаете экземпляр структуры (который не является частью экземпляра класса), сам экземпляр хранится в стеке, и куча никогда не задействована.
+
+```swift
 class Person {
   var firstName: String
   var lastName: String
-
   init(firstName: String, lastName: String) {
     self.firstName = firstName
     self.lastName = lastName
   }
-
   var fullName: String {
     "\(firstName) \(lastName)"
   }
 }
-
 let john = Person(firstName: "Johnny", lastName: "Appleseed")
 var homeOwner = john
 john.firstName = "John" // John wants to use his short name!
@@ -4433,20 +4631,29 @@ john.firstName // "John"
 homeOwner.firstName // "John
 
 homeOwner.lastName = "Googleseed"
-print(john.fullName)               // Johnny Googleseed
+print(john.fullName) // Johnny Googleseed
 print(homeOwner.fullName)  // Johnny Googleseed
-Например, если объект john изменится, то все, что содержит ссылку на john, автоматически увидит обновление. Если бы вы использовали struct, вам пришлось бы обновлять каждую копию по отдельности, иначе она все равно имела бы старое значение "Johnny".
+```
 
-Object identity
+Например, **если объект john изменится, то все, что содержит ссылку на john, автоматически увидит обновление**. Если бы вы использовали struct, вам пришлось бы обновлять каждую копию по отдельности, иначе она все равно имела бы старое значение "Johnny".
+
+### Object identity
 В предыдущем примере кода легко увидеть, что john и homeOwner указывают на один и тот же объект. Код короткий, и обе ссылки являются именованными переменными. Что делать, если вы хотите узнать, является ли значение переменной John?
-Вам может прийти в голову проверить значение имени, но как вы узнаете, что это тот Джон, которого вы ищете, а не самозванец? Или, что еще хуже, что, если Джон снова изменит свое имя?
-В Swift оператор === позволяет проверить, совпадает ли #идентичность #identity #тождественность одного объекта с идентичностью другого (#===):
-john === homeOwner // true
-Принадлежат ли экземпляры одной ячейки памяти
-Точно так же, как оператор == проверяет, равны ли два значения, оператор === identity operator сравнивает адрес памяти двух ссылок.
-Это означает, что этот === оператор может определить разницу между John, которого вы ищете, и самозванцем imposterJohn:
-let imposterJohn = Person(firstName: "Johnny", lastName: "Appleseed")
 
+Вам может прийти в голову проверить значение имени, но как вы узнаете, что это тот Джон, которого вы ищете, а не самозванец? Или, что еще хуже, что, если Джон снова изменит свое имя?
+
+В Swift оператор `===` позволяет проверить, совпадает ли #идентичность #identity #тождественность одного объекта с идентичностью другого (#===):
+
+`john === homeOwner // true`
+
+Принадлежат ли экземпляры одной ячейки памяти
+
+Точно так же, как оператор == проверяет, равны ли два значения, оператор `===` identity operator **сравнивает адрес памяти двух ссылок**.
+
+Это означает, что этот `===` оператор может определить разницу между John, которого вы ищете, и самозванцем imposterJohn:
+
+```swift
+let imposterJohn = Person(firstName: "Johnny", lastName: "Appleseed")
 john === homeOwner // true
 john === imposterJohn // false
 imposterJohn === homeOwner // false
@@ -4457,7 +4664,11 @@ john === homeOwner // false
 
 homeOwner = john
 john === homeOwner // true
+```
+
 Это может быть особенно полезно, когда вы не можете полагаться на регулярное равенство (==) для сравнения и идентификации объектов, которые вам небезразличны
+
+```swift
 // Create fake, imposter Johns. Use === to see if any of these imposters are our real John.
 var imposters = (0...100).map { _ in
   Person(firstName: "John", lastName: "Appleseed")
@@ -4466,12 +4677,16 @@ var imposters = (0...100).map { _ in
 // Equality (==) is not effective when John cannot be identified by his name alone
 imposters.contains {
   $0.firstName == john.firstName && $0.lastName == john.lastName
-}                       // true
+}  // true
+```
+
 Используя оператор идентификации, вы можете убедиться, что сами ссылки равны, и отделить нашего настоящего John от толпы:
+
+```swift
 // Проверьте, чтобы настоящий Джон не был найден среди самозванцев.
 imposters.contains {
   $0 === john
-}                      // false
+} // false
 
 // Теперь спрячьте "настоящего" Джона где-нибудь среди самозванцев.
 imposters.insert(john, at: Int.random(in: 0..<100))
@@ -4479,7 +4694,7 @@ imposters.insert(john, at: Int.random(in: 0..<100))
 // Джона теперь можно найти среди самозванцев.
 imposters.contains {
   $0 === john
-}                     // true
+} // true
 
 // Поскольку `Person` является ссылочным типом, вы можете использовать ===, чтобы извлечь настоящего John из списка самозванцев и изменить значение.
 // Исходная переменная `john` выведет новую фамилию!
@@ -4487,27 +4702,26 @@ if let indexOfJohn = imposters.firstIndex(where: { $0 === john }) {
   imposters[indexOfJohn].lastName = "Bananapeel"
 }
 john.fullName // John Bananapeel
+```
 
 Mini-exercise
+
 Write a function memberOf(person: Person, group: [Person]) -> Bool that will return true if person can be found inside group, and false if it can not.
 Test it by creating two arrays of five Person objects for group and using john as the person. Put john in one of the arrays, but not in the other.
+
+```swift
 class Person {
   var firstName: String
   var lastName: String
-
   init(firstName: String, lastName: String) {
     self.firstName = firstName
     self.lastName = lastName
   }
-
   var fullName: String {
     "\(firstName) \(lastName)"
   }
 }
-
 let john = Person(firstName: "Johnny", lastName: "Appleseed")
-
-
 func memberOf(person: Person, group: [Person]) -> Bool {
   group.contains(where: { $0 === person })
 }
@@ -4523,7 +4737,7 @@ let group2 = [johnny, john, anonymous1, anonymous2, anonymous3]
 
 memberOf(person: john, group: group1) // false
 memberOf(person: john, group: group2) // true
-
+```
 
 ---
 
