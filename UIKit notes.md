@@ -654,6 +654,86 @@ collectionView.collectionViewLayout = layout
 
 ---
 
+### [#WKWebView](https://developer.apple.com/documentation/webkit/wkwebview) 
+An object that displays interactive web content, such as for an in-app browser.
+
+- [#WebKit](https://developer.apple.com/documentation/webkit) - integrate web content seamlessly into your app, and customize content interactions to meet your app’s needs.
+- [Creating a simple browser with WKWebView, by hackingwithswift](https://www.hackingwithswift.com/read/4/2/creating-a-simple-browser-with-wkwebview)
+- [#WKNavigationDelegate](https://developer.apple.com/documentation/webkit/wknavigationdelegate) - methods for accepting or rejecting navigation changes, and for tracking the progress of navigation requests.
+- [#UITextFieldDelegate](https://developer.apple.com/documentation/uikit/uitextfielddelegate) - a set of optional methods to manage the editing and validation of text in a text field object.
+- [#URL](https://developer.apple.com/documentation/foundation/url)
+- [#URLRequest](https://developer.apple.com/documentation/foundation/urlrequest)
+- [#load(_:)](https://developer.apple.com/documentation/webkit/wkwebview/1414954-load) - loads the web content that the specified URL request object references and navigates to that content.
+```swift
+let homePage = "https://www.apple.com"
+let url = URL(string: homePage)
+let request = URLRequest(url: url!)
+urlTextField.text = homePage
+webView.load(request)
+```
+- [webView.#allowsBackForwardNavigationGestures](https://developer.apple.com/documentation/webkit/wkwebview/1414995-allowsbackforwardnavigationgestu) - Boolean value that indicates whether horizontal swipe gestures trigger backward and forward page navigation. Добавим свайпы вперед и назад
+```swift
+// добавим свайпы вперед и назад
+webView.allowsBackForwardNavigationGestures = true
+```
+
+Свойства `webView`
+- `#canGoBack` -  Boolean value that indicates whether there is a valid back item in the back-forward list.
+- `#canGoForward` - a Boolean value that indicates whether there is a valid forward item in the back-forward list.
+И методы `webView`
+- `#goBack()` - navigates to the back item in the back-forward list. New navigation to the requested item, or nil if there is no back item in the back-forward list.
+- `#goForward()` - navigates to the forward item in the back-forward list. New navigation to the requested item, or nil if there is no forward item in the back-forward list.
+```swift
+    // добавим функционал кнопок при возможности их использования
+    @IBAction func backButtonAction(_ sender: UIButton) {
+        if webView.canGoBack {
+            webView.goBack()
+        }
+    }
+    @IBAction func forwardButtonAction(_ sender: UIButton) {
+        if webView.canGoForward {
+            webView.goForward()
+        }
+    }
+```
+and
+```swift
+backButton.isEnabled = webView.canGoBack
+forwardButton.isEnabled = webView.canGoForward
+```
+
+- [#resignFirstResponder()](https://developer.apple.com/documentation/uikit/uiresponder/1621097-resignfirstresponder) - notifies this object that it has been asked to relinquish its status as first responder in its window. Им "скрываем" клавиатуру после ввода нужного адреса ссылки.
+```swift
+textField.resignFirstResponder()
+```
+
+
+- [#textFieldShouldReturn(_:)](https://developer.apple.com/documentation/uikit/uitextfielddelegate/1619603-textfieldshouldreturn) - asks the delegate whether to process the pressing of the Return button for the text field. Работает благодаря протоколу UITextFieldDelegate.
+
+- [#webView(_:#didFinish:)](https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455629-webview) - tells the delegate that navigation is complete (завершена).
+
+```swift
+extension ViewController: UITextFieldDelegate, WKNavigationDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        let urlString = textField.text!
+        let url = URL(string: urlString)!
+        let request = URLRequest(url: url)
+        webView.load(request)
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        urlTextField.text = webView.url?.absoluteString
+        // реализуем свайпы вперед и назад
+        backButton.isEnabled = webView.canGoBack
+        forwardButton.isEnabled = webView.canGoForward
+    }
+}
+```
+
+---
+
 ### []()
 
 ```swift
@@ -663,5 +743,4 @@ collectionView.collectionViewLayout = layout
 ```swift
 
 ```
-
 
