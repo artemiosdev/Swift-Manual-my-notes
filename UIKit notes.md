@@ -565,6 +565,32 @@ cell.contentConfiguration = content
     }
 ```
 
+- [tableView(_:didSelectRowAt:)](https://developer.apple.com/documentation/uikit/uitableviewdelegate/1614877-tableview) - tells the delegate a row is selected.
+
+tableView - informing the delegate about the new row selection.
+
+indexPath - locating the new selected row in tableView.
+
+В примере ниже используется [UIContainerView](https://github.com/artemiosdev/Small-projects/tree/main/UIContainerView/UIContainerView) для ipad. UIContainerView - определяет область в иерархии представлений контроллера представления для размещения дочернего child view controller. The child view controller указывается с помощью встроенного перехода segue. Встраивается наш TableView отвечающий за список song in ContainerView, все на одном экране ipad который визуально разделен на условные 2 области для пользователя. 
+
+```swift
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let viewController = parent as? ViewController {
+            let track = imageNameArray[indexPath.row]
+            viewController.artistLabel.text = track.artist
+            viewController.songLabel.text = track.song
+            viewController.imageCover.image = UIImage(named: track.title)
+        }
+    }
+```
+
+и здесь же используется свойство [#parent](https://developer.apple.com/documentation/uikit/uiviewcontroller/1621362-parent)
+Instance Property #parent - The parent view controller of the recipient.
+
+`weak var parent: UIViewController? { get }`
+
+` if let viewController = parent as? ViewController { ... } `
+
 - [#prepare(for:sender:)](https://developer.apple.com/documentation/uikit/uiviewcontroller/1621490-prepare) - уведомляет контроллер представления о том, что переход вот-вот будет выполнен. При тапе на трек, сделаем переход #seque, добавим #identifier, на новый view controller 
 
 ```swift
