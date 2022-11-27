@@ -4745,7 +4745,7 @@ memberOf(person: john, group: group2) // true
 Как отмечалось ранее, класс имеет один встроенный инициализатор, который является пустым. 
 
 В отличие от структуры, **класс не предоставляет инициализатор автоматически по элементам, это означает, что вы должны предоставить его самостоятельно**, если вам это нужно. Если вы забудете указать инициализатор, компилятор Swift отметит это как ошибку
- 
+
 **Если у структуры инициализатор генерируется автоматически вместе с изменением состава ее свойств, то у класса для инициализации значений свойств обязательно требуется разрабатывать инциализаторы самостоятельно.** 
 Например:
 
@@ -4917,7 +4917,7 @@ jane.recordGrade(math)
 
 ### Mutability and constants
 Предыдущий пример, возможно, заставил вас задуматься, как вы смогли изменить jane, даже если она была определена как let. Когда вы определяете let, значение let не может быть изменено. Если вы вернетесь к обсуждению типов значений и ссылочных типов, важно помнить, что для ссылочных типов reference types значение является ссылкой.
- 
+
 `var reference1 = Student("Jane") `
 
 Значение “reference1”  – это значение, сохраненное в jane. Это значение является ссылкой, и поскольку jane объявлена как константа, эта ссылка является постоянной и constant. Если бы вы попытались назначить jane другого ученика, вы получили бы ошибку компилятора:
@@ -4935,7 +4935,7 @@ jane = Student(firstName: "John", lastName: "Appleseed")
 ```
 
 После назначения jane another Student значение ссылки, стоящее за jane, будет обновлено, чтобы указать на new Student object
- 
+
 Поскольку ничто не будет ссылаться на исходный объект “Jane”, его память будет освобождена для использования в другом месте.
 
 **Любой отдельный член класса может быть защищен от модификации с помощью constants, но поскольку reference types сами по себе не рассматриваются как значения, они в целом не защищены от изменений.**
@@ -4988,6 +4988,413 @@ student.recordGrade(math)
 
 student.gpa // 3.57142
 ```
+
+Understanding state and side effects (побочных эффектов)
+Поскольку сама природа классов заключается в том, что они являются ссылочными и изменяемыми referenced and mutable, существует множество возможностей, а также множество проблем для программистов. Помните: если вы обновите экземпляр класса новым значением, каждая ссылка на этот экземпляр также будет видеть это новое значение.
+Вы можете использовать это в своих интересах. Возможно, вы передаете instance ученика в спортивную команду, табель успеваемости и список классов. Представьте, что все эти сущности должны знать оценки учащегося, и поскольку все они указывают на один и тот же экземпляр, все они будут видеть новые оценки по мере их записи в экземпляре.
+ 
+«The result of this sharing is that class instances have. Changes in state can sometimes be obvious, but often they’re not.
+Результатом этого совместного использования является то, что экземпляры классов имеют #состояние #state. Изменения в состоянии иногда могут быть очевидными, но часто это не так.
+Чтобы проиллюстрировать это, добавьте свойство credits в класс Student.
+var credits = 0.0
+and update recordGrade(_:) to use this new property:
+func recordGrade(_ grade: Grade) {
+  grades.append(grade)
+  credits += grade.credits
+}
+В этом слегка измененном example of Student recordGrade(_:) теперь добавляет количество кредитов к свойству credits. Вызов recordGrade(_:) имеет побочный эффект обновления кредитов.
+Теперь посмотрите, как #побочные эффекты #side effects могут привести к неочевидному поведению:
+jane.credits // 7
+
+// The teacher made a mistake; math has 5 credits
+math = Grade(letter: "A", points: 20.0, credits: 5.0)
+jane.recordGrade(math)
+
+jane.credits // 12, not 8!
+Тот, кто написал modified Student class, поступил наивно, предположив, что одна и та же оценка не будет записана дважды!
+Поскольку экземпляры классов изменчивы, вам нужно быть осторожным в отношении неожиданного поведения в отношении общих ссылок.
+Хотя это и сбивает с толку в небольшом примере, подобном этому, изменчивость и состояние могут быть чрезвычайно неприятными по мере увеличения размеров и сложности классов.
+Подобные ситуации были бы гораздо более распространены в классе учащихся, который масштабируется до 20 сохраненных свойств и имеет 10 методов.
+
+Инициализаторы классов 
+Класс может содержать произвольное количество разработанных инициализаторов, различающихся лишь набором входных аргументов. Это никоим образом не влияет на работу самого класса, а лишь дает нам более широкие возможности при создании его экземпляров. 
+Рассмотрим процесс создания дополнительного инициализатора. Существующий класс Chessman не позволяет одним выражением создать фигуру и выставить ее на поле. Сейчас для этого используются два независимых выражения. Давайте разработаем второй инициализатор, который будет дополнительно принимать координаты фигуры.
+class Chessman {
+    let type: ChessmanType
+    let color: ChessmanColor
+    var coordinates: (String, Int)? = nil
+    let figureSymbol: Character
+    init(type: ChessmanType, color: ChessmanColor, figure: Character){
+        self.type = type
+        self.color = color
+        figureSymbol = figure
+    }
+    init(type: ChessmanType, color: ChessmanColor, figure: Character,
+               coordinates: (String, Int)) {
+        self.type = type
+        self.color = color
+        figureSymbol = figure
+        setCoordinates(char: coordinates.0, num: coordinates.1)
+} 
+
+    func setCoordinates(char c:String, num n: Int){
+        coordinates = (c, n)
+    }
+    func kill() { 
+        coordinates = nil
+    }
+}
+var queenBlack = Chessman(type: .queen, color: .black, figure: "\u{2655}",
+coordinates: ("A", 6))
+Так как код установки координат уже написан в методе setCoordinates(char: num: ), то во избежание дублирования в инициализаторе этот метод просто вызывается. При объявлении нового экземпляра в окне автодополнения будут предлагаться на выбор два инициализатора, объявленные в классе Chessman. 
+
+Вложенные в класс типы 
+Очень часто перечисления, структуры и классы создаются для того, чтобы расширить функциональность и удобство использования определенного типа данных. Такой подход мы встречали, когда разрабатывали перечисления ChessmanColor и ChessmanType, использующиеся в классе Chessman. В данном случае перечисления нужны исключительно в контексте класса, описывающего шахматную фигуру, и нигде больше. Поэтому можно вложить перечисления в класс, то есть описать их не глобально, а в пределах тела класса
+class Chessman {
+    enum ChessmanType {
+        case king, castle, bishop, pawn, knight, queen
+    }
+    enum ChessmanColor {
+        case black, white
+    }
+    let type: ChessmanType
+    let color: ChessmanColor
+    var coordinates: (String, Int)? = nil
+    let figureSymbol: Character
+    init(type: ChessmanType, color: ChessmanColor, figure: Character) {
+        self.type = type
+        self.color = color
+        figureSymbol = figure
+} 
+    init(type: ChessmanType, color: ChessmanColor, figure:
+        Character, coordinates: (String, Int)) {
+        self.type = type
+        self.color = color
+        figureSymbol = figure
+        setCoordinates(char: coordinates.0, num:coordinates.1)
+    }
+    func setCoordinates(char c: String, num n: Int) {
+        coordinates = (c, n)
+    }
+     func kill() { 
+        coordinates = nil
+    }
+} 
+Структуры ChessmanColor и ChessmanType теперь являются вложенными в класс Chessman и существуют только в пределах области видимости класса.
+
+Ссылки на вложенные типы 
+В некоторых ситуациях может возникнуть необходимость использовать вложенные типы вне определяющего их контекста. Для этого необходимо указать имя родительского типа, после которого должно следовать имя требуемого типа данных. Ниже в примере мы получаем доступ к одному из членов перечисления ChessmanType, объявленного в контексте класса Chessman. 
+let linkToEnumValue = Chessman.ChessmanType.bishop
+
+Extending (расширения) a class using an extension
+Расширение класса с помощью #расширения #extension
+Как вы видели в случае со structs, классы можно повторно открыть и дополнить с помощью ключевого слова extension для добавления methods and computed properties. Добавьте вычисляемое свойство FullName в Student:
+extension Student {
+  var fullName: String {
+    "\(firstName) \(lastName)"
+  }
+}
+Функциональные возможности также могут быть добавлены в классы с помощью наследования inheritance. Вы даже можете добавлять новые сохраненные свойства в наследуемые классы
+
+When to use a class versus a struct
+Values vs. objects
+Четких правил не существует, поэтому вам следует подумать о семантике значений и ссылок и использовать structures в качестве значений, а classes в качестве объектов с идентичностью.
+Объект является экземпляром ссылочного типа (object is an instance of a reference type), и такие экземпляры имеют идентичность, означающую, что каждый объект уникален. Никакие два объекта не считаются равными просто потому, что они находятся в одном и том же состоянии. Следовательно, вы используете ===, чтобы увидеть, действительно ли объекты равны, а именно (оператор === позволяет проверить, совпадает ли #идентичность #identity #тождественность одного объекта с идентичностью другого. Принадлежат ли экземпляры класса одной ячейки памяти),  а не просто содержат одно и то же состояние. Напротив, экземпляры типов значений (instances of value types), которые являются значениями, считаются равными, если они имеют одинаковое значение.
+Например: Диапазон доставки – это значение, поэтому вы реализуете его как struct. Студент – это объект, поэтому вы реализуете его как class. Проще говоря нет идентичных студентов, и они не могут быть равны, даже если имеют одинаковые имена.
+
+Speed
+Соображения скорости – это важно, поскольку struct полагаются на более быстрый стек stack, в то время как classes полагаются на более медленную кучу heap. Если у вас будет много экземпляров (сотни и более) или если эти экземпляры будут существовать в памяти только в течение короткого времени – выбирайте struct. Если ваш экземпляр будет иметь более длительный жизненный цикл в памяти или если вы создадите относительно немного экземпляров, то экземпляры classes в куче не должны создавать больших проблем и расходов памяти.
+Например, вы могли бы использовать struct для расчета общего расстояния бегущего пользователя по маршруту, используя множество waypoints точек на основе GPS, таких как Location struct, которую вы использовали в Chapter “Structures”. Вы создадите много waypoints точек, но они будут создаваться и уничтожаться быстро по мере изменения маршрута.
+Вы также можете использовать class для объекта для хранения истории маршрутов, так как для каждого пользователя будет только один объект, и вы, скорее всего, будете использовать один и тот же объект истории в течение всего срока службы пользователя.
+
+Minimalist подход
+Другой подход состоит в том, чтобы использовать только то, что вам нужно. Если ваши данные никогда не изменятся или вам нужно простое хранилище данных, используйте structures. Если вам нужно обновить свои данные и вам нужно, чтобы они содержали логику для обновления собственного состояния, используйте classes. Часто лучше всего начинать со struct. Если вам понадобятся дополнительные возможности класса когда-нибудь позже, вы просто преобразуете структуру в класс.
+
+Structures vs. classes recap (резюмируя)
+Structures
+-Useful for representing представления values.
+-Implicit неявное copying of values.
+-Становится полностью неизменным immutable when declared with let.
+-Быстрое выделение памяти (stack).
+Classes
+-Полезно для представления объектов с идентификатором
+-Implicit sharing of objects. Неявное совместное использование объектов
+-Внутренние компоненты могут оставаться изменяемыми, даже если они объявлены с помощью let.
+-Более медленное выделение памяти (heap).
+
+-Class instances are called objects. Экземпляры класса называются объектами.
+-Objects are mutable.
+-Mutability introduces state, which adds complexity when managing your objects. Изменчивость вводит состояние, что усложняет управление вашими объектами.
+-Используйте classes, когда вам нужна reference semantics; struct для value semantics.
+
+Challenges
+Challenge 1: Movie lists
+Представьте, что вы пишете приложение для просмотра фильмов в Swift. Пользователи могут создавать списки фильмов и делиться этими списками с другими пользователями. Создайте User и List classes, которые использует reference semantics, чтобы помочь поддерживать списки между пользователями.
+User: метод addList (_:), который добавляет список в dictionary of List objects (используя имя в качестве ключа), и list(forName:) -> List?  и that returns the List для указанного имени.
+List: Contains a name and an array названий фильмов. A print method напечатает все фильмы в списке
+Create jane and john users и попросите их создавать списки и обмениваться ими. Попросите jane and john изменить один и тот же список и вызвать печать от обоих пользователей users. Отражены ли все изменения?
+class User {
+  var lists: [String: List] = [:]
+
+  func addList(_ list: List) {
+    lists[list.name] = list
+  }
+
+  func list(forName name: String) -> List? {
+    lists[name]
+  }
+}
+
+class List {
+  let name: String
+  var movies: [String] = []
+
+  init(name: String) {
+    self.name = name
+  }
+
+  func print() {
+    Swift.print("Movie List: \(name)") 
+// Префикс Swift требуется для устранения неоднозначности
+    for movie in movies {
+      Swift.print(movie)
+    }
+    Swift.print("\n")
+  }
+}
+
+// Give John and Jane an "Action" list
+let jane = User()
+let john = User()
+var actionList = List(name: "Action")
+
+jane.addList(actionList)
+john.addList(actionList)
+
+// Add Jane's favorites
+jane.lists["Action"]?.movies.append("Rambo")
+jane.lists["Action"]?.movies.append("Terminator")
+
+// Add John's favorites
+john.lists["Action"]?.movies.append("Die Hard")
+
+// See John's list:
+john.lists["Action"]?.print()
+/*Консоль:
+Movie List: Action
+Rambo
+Terminator
+Die Hard */
+
+// See Jane's list:
+jane.lists["Action"]?.print()
+/*Консоль:
+Movie List: Action
+Rambo
+Terminator
+Die Hard */
+
+Что происходит, когда вы реализуете то же самое со структурами, и с какими проблемами вы сталкиваетесь?
+ Решение: С помощью structs and copy semantics, как только John and Jane получат список действий с помощью addList (_:), каждый из них получит копию вместо совместного использования одного и того же списка. Таким образом, когда один добавляет фильм – другой его не видит
+
+Challenge 2: T-shirt store
+Ваша задача здесь состоит в том, чтобы создать набор объектов для поддержки магазина футболок T-shirt store. Решите, должен ли каждый объект быть классом или структурой и почему.
+TShirt: Представляет стиль рубашки, который вы можете купить. Каждая футболка имеет размер, цвет, цену и дополнительное изображение спереди.
+Ответ: Футболку можно рассматривать как value, потому что она не представляет собой настоящую рубашку, а только описание рубашки. Например, футболка будет представлять собой "заказ на большую зеленую рубашку", а не "настоящую большую зеленую рубашку". 
+
+User: Зарегистрированный пользователь приложения "Магазин футболок". У пользователя есть имя, адрес электронной почты и карта покупок (см. Ниже).
+Ответ: Пользователь представляет реального человека. Это означает, что каждый пользователь уникален, поэтому пользователя лучше всего реализовывать как класс.
+
+Address: Представляет адрес доставки и содержит название, улицу, город и почтовый индекс.
+Ответ: Адреса группируют несколько значений вместе, и два адреса могут считаться равными, если они содержат одинаковые значения. Это означает, что адрес лучше всего работает как тип значения (структура).
+
+ShoppingCart – Корзина покупок: Содержит текущий заказ, состоящий из массива футболок, которые Пользователь хочет купить, а также метод расчета общей стоимости. Кроме того, есть адрес, который указывает, куда будет отправлен заказ.
+Ответ: Корзина для покупок немного сложнее. Хотя можно утверждать, что это можно сделать как тип значения, лучше всего подумать о семантике реального мира, которую вы моделируете. Если вы добавите товар в корзину, ожидаете ли вы получить новую корзину для покупок? Или поместите новый товар в существующую корзину? Используя класс, ссылочная семантика помогает моделировать поведение в реальном мире. Использование класса также упрощает совместное использование одного объекта ShoppingCart между несколькими компонентами вашего приложения (покупки, заказы, выставление счетов, и тп
+
+Challenges Apple
+Exercise - Define a Base Class
+Приведенные ниже упражнения основаны на игре, в которой космический корабль избегает препятствий в космосе. Корабль расположен в нижней части системы координат и может двигаться только влево и вправо, в то время как препятствия "падают" сверху вниз. На протяжении всех упражнений вы будете создавать классы для представления различных типов космических кораблей, которые можно использовать в игре.
+Создайте класс космического корабля с тремя переменными свойствами: name, health, and position. Значение name по умолчанию должно быть пустой строкой, а health должно быть равно 0. Position будет представлена Int, где отрицательные числа помещают корабль дальше влево, а положительные числа помещают корабль дальше вправо. Значение позиции по умолчанию должно быть равно 0.
+Вернитесь назад и добавьте метод moveLeft() в определение Spaceship. Этот метод должен регулировать положение космического корабля влево на единицу. Добавьте аналогичный метод, называемый moveRight(), который перемещает космический корабль вправо. Как только эти методы появятся, используйте их, чтобы дважды переместить falcon влево и один раз вправо. Выводите новое положение falcon после каждого изменения положения. Последнее, что нужно Spaceship для этого примера – это метод обработки того, что произойдет, если корабль попадет под удар. Вернитесь и добавьте метод wasHit() к Spaceship, который уменьшит здоровье корабля на 5, а затем, если здоровье меньше или равно 0, выведет "Извините, ваш корабль был поражен слишком много раз. Ты хочешь снова поиграть?" Как только этот метод появится, вызовите его на falcon и распечатайте значение здоровья.
+class Spaceship {
+    var name: String = ""
+    var health = 100
+    var position = 0
+    
+    func moveLeft() {
+        position -= 1
+    }
+    
+    func moveRight() {
+        position += 1
+    }
+    
+    func wasHit() {
+        health -= 5
+        if health <= 0 {
+            print("Sorry, your ship was hit one too many times. Do you want to play again?")
+        }
+    }
+}
+let falcon = Spaceship()
+falcon.name = "Falcon"
+
+print(falcon.position) // 0
+falcon.moveLeft()
+print(falcon.position) // -1
+falcon.moveLeft()
+print(falcon.position) // -2
+falcon.moveRight()
+print(falcon.position) // -1
+
+falcon.wasHit()
+print(falcon.health) // 95
+Создайте новый экземпляр Fighter под названием destroyer. Fighter сможет стрелять по входящим объектам, чтобы избежать столкновения с ними. После инициализации установите оружие на "Laser", а оставшуюся огневую мощь remainingFirePower на 10. Обратите внимание, что, поскольку Fighter наследуется от Spaceship, он также имеет свойства name, health, and position, а также методы moveLeft(), moveRight() и wasHit. 
+Зная это, задайте имя "Destroyer", print, затем вызовите moveRight() и снова print.  Добавьте в fighter метод под названием fire(). Это должно проверить, не превышает ли remainingFirePower больше 0, и если да, то следует уменьшить remainingFirePower на единицу. Если remainingFirePower не превышает 0, выведите "У вас больше нет огневой мощи". Вызовите fire() на destroyer несколько раз и распечатайте оставшуюся мощность огня после каждого вызова метода.
+class Fighter: Spaceship {
+    var weapon: String = ""
+    var remainingFirePower: Int = 5
+    func fire() {
+        if remainingFirePower > 0 {
+            remainingFirePower -= 1
+        }
+        else {
+            print("You have no more fire power.")
+        }
+    }
+}
+let destroyer = Fighter()
+destroyer.weapon = "Laser"
+print(destroyer.weapon)
+destroyer.remainingFirePower = 5
+destroyer.name = "Destroyer"
+print(destroyer.name)
+destroyer.position = 0
+destroyer.health = 90
+destroyer.moveLeft()
+print(destroyer.position)
+destroyer.fire()
+print(destroyer.remainingFirePower)
+destroyer.fire()
+destroyer.fire()
+print(destroyer.remainingFirePower)
+destroyer.fire()
+destroyer.fire()
+destroyer.fire() 
+print(destroyer.remainingFirePower) // You have no more fire power.
+Определите новый класс ShieldedShip, который наследуется от Fighter. Добавьте переменное свойство shieldStrength, значение по умолчанию которого равно 25. Создайте новый экземпляр ShieldedShip под названием defender. Установите имя "Defender", а оружие "Cannon". Вызовите moveRight() и print, затем вызовите fire() и print remainingFirePower. Вернитесь к ShieldedShip и переопределите wasHit(). Проверьте не превышает ли shieldStrength сила защиты 0. Если это так, уменьшите shieldStrength на 5. В противном случае уменьшите health на 5. Вызовите функцию wasHit() на defender и print shieldStrength and health. Когда shieldStrength равна 0, все, что делает wasHit() – это уменьшает health на 5. Это именно то, что делает реализация wasHit() на Spaceship! Вместо того, чтобы переписывать это, вы можете обратиться к реализации суперкласса wasHit(). Вернитесь к своей реализации wasHit() на ShieldedShip и удалите код, в котором вы уменьшаете health на 5, и замените его вызовом реализации метода суперкласса superclass. Вызовите функцию wasHit() на defender, затем print shieldStrength and health.
+class ShieldedShip: Fighter {
+    var shieldStrength = 25
+    
+    override func wasHit() {
+        if shieldStrength > 0 {
+            shieldStrength -= 5
+        } else {
+            super.wasHit()
+        }
+    }
+}
+
+let defender = ShieldedShip()
+defender.name = "Defender"
+defender.weapon = "Cannon"
+defender.moveRight()
+print(defender.position)
+defender.fire()
+print(defender.remainingFirePower)
+
+defender.wasHit()
+print(defender.shieldStrength)
+print(defender.health)
+
+defender.wasHit()
+print(defender.shieldStrength)
+print(defender.health)
+Обратите внимание, что каждый класс выше имеет ошибку в объявлении класса, в котором говорится: "Class has no initializers." В отличие от структур, классы не поставляются с инициализаторами по элементам, поскольку стандартные инициализаторы по элементам не всегда хорошо сочетаются с наследованием. Вы можете избавиться от ошибки, указав значения по умолчанию для всего, но обычно и лучше всего просто написать свой собственный инициализатор. Перейдите к объявлению космического корабля Spaceship и добавьте инициализатор, который принимает аргумент для каждого свойства Spaceship и устанавливает свойства соответственно.
+
+Затем создайте экземпляр Spaceship ниже под названием falcon. Используйте только что созданный инициализатор. Название корабля должно быть "Falcon". Написание инициализаторов для подклассов может оказаться непростым делом. Вашему инициализатору необходимо не только задать свойства, объявленные в подклассе, но и задать все неинициализированные свойства классов, от которых он наследует. Перейдите к объявлению Fighter и напишите инициализатор, который принимает аргумент для каждого свойства Fighter и для каждого свойства Spaceship. Установите свойства соответствующим образом. (Подсказка: вы можете вызвать инициализатор superclass с помощью super.init после инициализации всех свойств подкласса).
+
+Затем создайте экземпляр Fighter ниже под названием destroyer. Используйте только что созданный инициализатор. Название корабля должно быть " Destroyer". Теперь добавьте инициализатор в ShieldedShip, который принимает аргумент для каждого свойства на ShieldedShip, Fighter и Spaceship и устанавливает свойства соответственно. Помните, что вы можете вызвать инициализатор на Fighter с помощью super.init.
+
+Then create an instance of ShieldedShip below called defender. Use the memberwise initializer you just created. The ship's name should be "." Create a new constant named sameShip and set it equal to falcon. Did both positions change? Why? If both were structs instead of classes, would it be the same? Why or why not? Provide your answer in a comment or print statement below.
+Затем создайте экземпляр ShieldedShip ниже под названием defender. Используйте только что созданный инициализатор. Название корабля должно быть "Defender". Создайте новую константу с именем sameShip и установите ее равной falcon. Print out the position of sameShip and falcon, then call moveLeft() on sameShip and print out the position of sameShip and falcon again. Изменились ли обе позиции? Почему? Если бы оба были структурами, а не классами, было бы это одно и то же? 
+class Spaceship {
+    let name: String
+    var health: Int
+    var position: Int
+
+    init(name: String, health: Int, position: Int) {
+        self.name = name
+        self.health = health
+        self.position = position
+    }
+
+    func moveLeft() {
+        position -= 1
+    }
+
+    func moveRight() {
+        position += 1
+    }
+
+    func wasHit() {
+        health -= 5
+        if health <= 0 {
+            print("Sorry, your ship was hit one too many times. Do you want to play again?")
+        }
+    }
+}
+
+class Fighter: Spaceship {
+    let weapon: String
+    var remainingFirePower: Int
+
+    init(weapon: String, remainingFirePower: Int, name: String, health: Int, position: Int) {
+        self.weapon = weapon
+        self.remainingFirePower = remainingFirePower
+ super.init(name: name, health: health, position: position)
+    }
+
+    func fire() {
+        if remainingFirePower > 0 {
+            remainingFirePower -= 1
+        } else {
+            print("You have no more fire power.")
+        }
+    }
+}
+
+class ShieldedShip: Fighter {
+    var shieldStrength: Int
+
+    init(shieldStrength: Int, weapon: String, remainingFirePower: Int, name: String, health: Int, position: Int) {
+        self.shieldStrength = shieldStrength
+        super.init(weapon: weapon, remainingFirePower: remainingFirePower, name: name, health: health, position: position)
+    }
+
+    override func wasHit() {
+        if shieldStrength > 0 {
+            shieldStrength -= 5
+        } else {
+            super.wasHit()
+        }
+    }
+}
+let falcon = Spaceship(name: "Falcon", health: 100, position: 0)
+
+let destroyer = Fighter(weapon: "Laser", remainingFirePower: 10, name: "Destroyer", health: 60, position: 0)
+
+let defender = ShieldedShip(shieldStrength: 20, weapon: "Cannon", remainingFirePower: 8, name: "Defender", health: 80, position: 0)
+
+
+let sameShip = falcon
+print(falcon.position)
+print(sameShip.position)
+sameShip.moveLeft()
+print(falcon.position)
+print(sameShip.position)
+sameShip and falcon ссылаются на один и тот же экземпляр в памяти, поэтому все, что сделано с одним, будет отражено на другом, потому что на самом деле они являются одним и тем же объектом.
+Напротив, если бы мы имели дело со структурами, экземпляр `falcon` был бы скопирован при назначении, и поэтому изменение одного не повлияло бы на другое, потому что они были бы двумя отдельными объектами.
 
 ---
 

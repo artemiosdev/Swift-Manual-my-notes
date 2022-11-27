@@ -565,7 +565,7 @@ cell.contentConfiguration = content
     }
 ```
 
-- ### [#tableView(_:didSelectRowAt:)](https://developer.apple.com/documentation/uikit/uitableviewdelegate/1614877-tableview) - tells the delegate a row is selected.
+- [#tableView(_:didSelectRowAt:)](https://developer.apple.com/documentation/uikit/uitableviewdelegate/1614877-tableview) - tells the delegate a row is selected.
 
 tableView - informing the delegate about the new row selection.
 
@@ -591,7 +591,7 @@ Instance Property #parent - The parent view controller of the recipient.
 
 ` if let viewController = parent as? ViewController { ... } `
 
-- #### [#prepare(for:sender:)](https://developer.apple.com/documentation/uikit/uiviewcontroller/1621490-prepare) - уведомляет контроллер представления о том, что переход вот-вот будет выполнен. При тапе на трек, сделаем переход #seque, добавим #identifier, на новый view controller 
+- [#prepare(for:sender:)](https://developer.apple.com/documentation/uikit/uiviewcontroller/1621490-prepare) - уведомляет контроллер представления о том, что переход вот-вот будет выполнен. При тапе на трек, сделаем переход #seque, добавим #identifier, на новый view controller 
 
 ```swift
     // MARK: - Navigation
