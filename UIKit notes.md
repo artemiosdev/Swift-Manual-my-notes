@@ -760,13 +760,147 @@ extension ViewController: UITextFieldDelegate, WKNavigationDelegate {
 
 ---
 
-### []()
+### [#UIGestureRecognizer](https://developer.apple.com/documentation/uikit/uigesturerecognizer)
+
+The base class for concrete #gesture #recognizers. 
+
+- [#UISwipeGestureRecognizer](https://developer.apple.com/documentation/uikit/uiswipegesturerecognizer) - a discrete gesture recognizer that interprets swiping gestures in one or more directions.
+- [.#direction](https://developer.apple.com/documentation/uikit/uiswipegesturerecognizer/1619178-direction) - the permitted direction of the swipe for this gesture recognizer.
+- [#addGestureRecognizer(_:)](https://developer.apple.com/documentation/uikit/uiview/1622496-addgesturerecognizer) - прикрепляет a gesture recognizer to the view.
 
 ```swift
-
+    func swipeObservers() {
+        // создаем наблюдателей для каждого свайпа
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes))
+        swipeRight.direction = .right
+       self.view.addGestureRecognizer(swipeRight)
+    }
+    
+    @objc func handleSwipes(gester: UISwipeGestureRecognizer) {
+        switch gester.direction {
+        case .right:
+            label.text = "Right swipe was recognized"
+        default:
+            break
+        }
+    }
 ```
 
-```swift
+- [#UITapGestureRecognizer](https://developer.apple.com/documentation/uikit/uitapgesturerecognizer) - a discrete gesture recognizer that interprets single or multiple taps.
+- [#numberOfTapsRequired](https://developer.apple.com/documentation/uikit/uitapgesturerecognizer/1623581-numberoftapsrequired) - the number of taps necessary for gesture recognition.
+- [#require(toFail:)](https://developer.apple.com/documentation/uikit/uigesturerecognizer/1624203-require) - creates a dependency relationship between the gesture recognizer and another gesture recognizer when the objects are created.
 
+```swift
+func tapObservers() {
+        // создаем наблюдателей для каждого тапа
+        let tripleTap = UITapGestureRecognizer(target: self, action: #selector(tripleTapAction))
+        // кол-во отслеживаемых тапов
+        tripleTap.numberOfTapsRequired = 3
+        self.view.addGestureRecognizer(tripleTap)
+        
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapAction))
+        // для того чтобы проигнорировать двойной тап, если тапаем трижды
+        doubleTap.require(toFail: tripleTap)
+        
+        doubleTap.numberOfTapsRequired = 2
+        self.view.addGestureRecognizer(doubleTap )
+    }
+    
+        @objc func tripleTapAction() {
+        label.text = "Triple taped was recognized"
+    }
+    @objc func doubleTapAction() {
+        label.text = "Double taped was recognized"
+    }
+```
+
+---
+
+### UIPageView
+[Пример использования](https://github.com/artemiosdev/Small-projects/tree/main/UIPageView/UIPageView). 
+
+C его помощью можно сделать ознакомительный функционал ввиде некой презентации для пользователя который впервые скачал ваше приложение
+
+- [#UIPageViewController](https://developer.apple.com/documentation/uikit/uipageviewcontroller) - a container view controller  that manages navigation between pages of content, where a child view controller manages each page
+
+- [#UIPageViewControllerDataSource](https://developer.apple.com/documentation/uikit/uipageviewcontrollerdatasource ) – протокол UIPageViewControllerDataSource принимается объектом, который предоставляет контроллеры просмотра контроллеру просмотра страницы по мере необходимости в ответ на жесты навигации. 
+
+Благодаря ему будем листать нашу презентацию. С ним идут 2 обязательных для протокола метода (`viewControllerBefore` and `viewControllerAfter`, вперед и назад по презентации)
+
+```swift
+extension PageViewController: UIPageViewControllerDataSource {
+    // возврат к странице которая была до текущей (назад)
+
+    func pageViewController(_ pageViewController: UIPageViewController,
+                            viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        var pageNumber = (viewController as! ContentViewController).currentPage
+        pageNumber -= 1
+        return showViewControllerAtIndex(pageNumber)
+    }
+    
+    // переход к след странице после текущей (вперед)
+    func pageViewController(_ pageViewController: UIPageViewController,
+                            viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        var pageNumber = (viewController as! ContentViewController).currentPage
+        pageNumber += 1
+        return showViewControllerAtIndex(pageNumber)
+    }
+}
+```
+
+- [#viewDidAppear(_:)](https://developer.apple.com/documentation/uikit/uiviewcontroller/1621423-viewdidappear) - уведомляет контроллер представления о том, что его представление было добавлено в иерархию представлений.
+```swift
+    // срабатывает сразу же после загрузки и отображения view
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        startPresentation()
+    }
+```
+
+- [class #UserDefaults](https://developer.apple.com/documentation/foundation/userdefaults) - интерфейс к базе данных пользователя по умолчанию, где вы постоянно сохраняете пары ключ-значение при запуске вашего приложения. 
+- [#set(_:forKey:)](https://developer.apple.com/documentation/foundation/userdefaults/1408905-set) - sets the value of the specified default key to the specified Boolean value.
+- [#dismiss(animated:completion:)](https://developer.apple.com/documentation/uikit/uiviewcontroller/1621505-dismiss) - oтклоняет контроллер представления, который был представлен модально контроллером представления.
+
+```swift
+    @IBAction func closePresentation(_ sender: UIButton) {
+        // создадим экземпляр class UserDefaults
+        // некий ключ по которому будем закрывать презентацию
+        let userDefaults = UserDefaults.standard
+        userDefaults.set(true, forKey: "presentationWasViewed")
+        // метод закрывающий view controller
+        dismiss(animated: true, completion: nil)
+    }
+```
+
+- [#instantiateViewController(withIdentifier:)](https://developer.apple.com/documentation/uikit/uistoryboard/1616214-instantiateviewcontroller) - cоздает контроллер представления с указанным идентификатором и инициализирует его данными из раскадровки. На основе storyboard with identifier.
+
+- [#present(_:animated:completion:)](https://developer.apple.com/documentation/uikit/uiviewcontroller/1621380-present) - presents a view controller modally.
+```swift     
+     func startPresentation() {
+        let userDefaults = UserDefaults.standard
+        // если key есть в системе, то будет true
+        let presentationWasViewed = userDefaults.bool(forKey: "presentationWasViewed")
+        if presentationWasViewed == false {
+            // создаем нужный нам для отображения view controller
+            if let pageViewPresentation = storyboard?.instantiateViewController(
+                withIdentifier: "PageViewController") as? PageViewController {
+                // используем инициализатор
+                present(pageViewPresentation, animated: true, completion: nil)
+            }
+        }
+     }
+```
+
+- [#setViewControllers(_:direction:animated:completion:)](https://developer.apple.com/documentation/uikit/uipageviewcontroller/1614087-setviewcontrollers) - sets the view controllers to be displayed.
+```swift
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        dataSource = self
+        if let contentViewController = showViewControllerAtIndex(0) {
+            // создает массив из view controllers
+            setViewControllers([contentViewController], direction: .forward, animated: true, completion: nil)
+        }
+        
+    }
 ```
 
