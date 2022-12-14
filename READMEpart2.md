@@ -5536,6 +5536,136 @@ struct Circle {
     } 
     } 
 
+Наблюдатели (observers) хранимых свойств 
+Геттер и сеттер позволяют выполнять код при установке и чтении значения вычисляемого свойства. Другими словами, у вас имеются механизмы контроля значений свойств. Наделив такими полезными механизмами вычисляемые свойства, разработчики Swift не могли обойти стороной и хранимые свойства. Специально для них были реализованы #наблюдатели #observers, также называемые #обсерверами. 
+Наблюдатели – это специальные функции, которые вызываются либо непосредственно перед установкой нового значения хранимого свойства, либо сразу после нее.  Выделяют два вида наблюдателей:
+-Наблюдатель #willSet вызывается перед установкой нового значения.
+-Наблюдатель #didSet вызывается после установки нового значения. 
+   var имяСвойства: ТипЗначения {
+       willSet (ассоциированныйПараметр) {
+           // тело обсервера
+       }
+       didSet (ассоциированныйПараметр) {
+          // тело обсервера
+       }
+} 
+Наблюдатели объявляются с помощью ключевых слов willSet и didSet, после которых в скобках указывается имя входного аргумента. В наблюдатель willSet в данный аргумент записывается устанавливаемое значение, в наблюдатель didSet – старое, уже стертое. 
+При объявлении наблюдателей можно использовать сокращенный синтаксис, в котором не требуется указывать входные аргументы (точно так же, как сокращенный синтаксис сеттера). При этом новое значение в willSet присваивается параметру #newValue, а старое в didSet – параметру oldValue. 
+В структуру, описывающую окружность, добавим функциональность, выводящую при изменении радиуса окружности инфо об этом на консоль.
+struct Circle {
+    var coordinates: (x: Int, y: Int)
+
+    var radius: Float {
+        willSet (newValueOfRadius) {
+            print("Вместо значения \(radius) будет установлено
+                  значение \(newValueOfRadius)")
+        }
+        didSet (oldValueOfRadius) {
+            print("Значение \(oldValueOfRadius) изменено на \(radius)")
+        }
+    }
+
+    var perimeter: Float {
+    get { 
+            return 2.0 * 3.14 * radius
+            }
+    set { 
+            radius = newValue / (2 * 3.14)
+            }
+    } 
+} 
+var myNewCircle = Circle(coordinates: (0,0), radius: 10)
+myNewCircle.perimeter // выводит 62.8
+myNewCircle.perimeter = 31.4
+myNewCircle.radius // выводит 5
+Консоль 
+Вместо значения 10.0 будет установлено значение 5.0
+Значение 10.0 изменено на 5.0
+
+class SecretLabEmployee {
+    var accessLevel = 0 {
+        willSet(newValue) {
+            print("new boss is about to come")
+            print("new access level is \(newValue)")
+        }
+        didSet {
+            if accessLevel > 0 {
+                accessToDB = true
+            } else {
+                accessToDB = false
+            }
+            print("new boss just come")
+            print("last time I had access level \(oldValue)")
+        }
+    }
+    var accessToDB = false
+}
+
+let employee = SecretLabEmployee()
+employee.accessLevel // 0
+employee.accessToDB // false
+employee.accessLevel = 1
+employee.accessToDB // true
+
+new boss is about to come
+new access level is 1
+new boss just come
+last time I had access level 0
+
+Свойства типа, static
+Ранее мы рассматривали свойства, которые позволяют каждому отдельному экземпляру хранить свой, независимый от др. экземпляров набор значений. Иначе, свойства экземпляра описывают характеристики определенного экземпляра и принадлежат определенному экземпляру. 
+Дополнительно к свойствам экземпляров вы можете объявлять свойства, относящиеся непосредственно к типу данных. Значения этих свойств едины для всех экземпляров данного типа. 
+Свойства типа данных очень полезны в том случае, когда существуют значения, которые являются универсальными для всего типа целиком. Они могут быть как хранимыми, так и вычисляемыми. При этом если значение хранимого свойства типа является переменной и изменяется в одном экземпляре, то измененное значение становится доступно во всех других экземплярах типа. 
+Для хранимых свойств типа в обязательном порядке должны быть указаны значения по умолчанию. Это связано с тем, что сам по себе тип не имеет инициализатора, который бы мог сработать еще во время определения типа и установить требуемые значения для свойств. 
+Хранимые свойства типа всегда являются ленивыми, при этом они не нуждаются в использовании ключевого слова lazy. 
+Свойства типа могут быть созданы для перечислений, структур и классов. 
+   struct SomeStructure {
+        static var storedTypeProperty = "Some value"
+        static var computedTypeProperty: Int {
+                return 1 
+        } 
+   }
+   enum SomeEnumeration {
+        static var storedTypeProperty = "Some value"
+        static var computedTypeProperty: Int {
+                return 2 
+        } 
+   }
+   class SomeClass {
+        static var storedTypeProperty = "Some value"
+        static var computedTypeProperty: Int {
+                return 3 
+        } 
+        class var overrideableComputedTypeProperty: Int {
+                return 4 
+        } 
+} 
+Свойства типа объявляются с использованием ключевого слова #static для перечислений, классов и структур. Единственным исключением являются маркируемые словом class вычисляемые свойства класса, которые могут быть переопределены в подклассе.
+Создадим структуру для демонстрации работы свойств типа. Класс AudioChannel моделирует аудиоканал, у которого есть два параметра: 
+-максимально возможная громкость ограничена для всех каналов в целом;
+-текущая громкость ограничена максимальной громкостью. 
+struct AudioChannel {
+    static var maxVolume = 5
+    var volume: Int {
+        didSet {
+            if volume > AudioChannel.maxVolume {
+                volume = AudioChannel.maxVolume
+            }
+        } 
+    } 
+}
+var LeftChannel = AudioChannel(volume: 2)
+var RightChannel = AudioChannel(volume: 3)
+RightChannel.volume = 6
+RightChannel.volume                   // 5
+AudioChannel.maxVolume          // 5
+AudioChannel.maxVolume = 10
+AudioChannel.maxVolume          // 10
+RightChannel.volume = 8
+RightChannel.volume                   // 8
+Мы использовали тип AudioChannel для создания двух каналов: левого и правого. Свойству volume не удается установить значение 6, так как оно превышает значения свойства типа maxVolume. 
+Обратите внимание, что при обращении к свойству типа используется не имя экземпляра данного типа, а имя самого типа. 
+
 
 
 ---
