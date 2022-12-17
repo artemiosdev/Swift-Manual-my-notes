@@ -6013,11 +6013,11 @@ woof
 Another example
 class Vehicle {
     var currentSpeed = 0.0
- 
+
     var description: String {
         “traveling at \(currentSpeed) miles per hour”
     }
- 
+     
     func makeNoise() {
         // do nothing - an arbitrary vehicle doesn’t necessarily 
         make a noise
@@ -6034,7 +6034,7 @@ class Car: Vehicle {
         super.description + “ in gear \(gear)”
     }
 }
- 
+
 let car = Car()
 car.currentSpeed = 25.0
 car.gear = 3
@@ -6062,7 +6062,7 @@ class StudentAthlete: Student {
 В этом примере класс StudentAthlete переопределяет значение recordGrade (_:), чтобы он мог отслеживать любые курсы, которые студент не прошел. У StudentAthlete есть собственное вычисляемое свойство isEligible, которое использует эту информацию для определения соответствия спортсмена требованиям.
 При переопределении метода используйте ключевое слово override перед объявлением метода.
 Если бы у вашего подкласса было такое же объявление метода, как и у его суперкласса, но вы опустили ключевое слово override, Swift выдал бы ошибку компилятора:
- 
+
 Становится ясно является ли метод переопределением существующ или нет
 
 super.recordGrade(grade)
@@ -6086,6 +6086,257 @@ override func recordGrade(_ grade: Grade) {
 }
 Эта версия recordGrade(_:) использует массив оценок для поиска текущего списка неудачных классов. Поскольку вы вызываете super в конце, если новая буква grade.letter будет буквой F, код не обновит failedClasses properly.
 Рекомендуется сначала вызывать super версию метода при переопределении. Таким образом, superclass не будет испытывать никаких побочных эффектов, вызванных его подклассом, и подклассу не нужно будет знать детали реализации суперкласса.
+
+Переопределение инициализаторов 
+Инициализаторы такие же наследуемые элементами, как и методы. Если в подклассе набор свойств, требующих установки значений, не отличается, то наследуемый инициализатор может быть использован для создания экземпляра подкласса.
+Вы можете создать свою реализацию наследуемого инициализатора. Запомните, что если вы определяете инициализатор с уникальным для суперкласса и подкласса набором входных аргументов, то не переопределяете инициализатор, а объявляете новый. 
+Если подкласс имеет хотя бы один собственный инициализатор, то инициализаторы родительского класса не наследуются. 
+Для вызова инициализатора суперкласса внутри инициализатора подкласса необходимо использовать конструкцию #super.init()
+В качестве примера переопределим наследуемый от суперкласса Quadruped пустой инициализатор. В классе Dog значение наследуемого свойства type всегда должно быть равно "dog". В связи с этим перепишем реализацию инициализатора таким образом, чтобы в нем устанавливалось значение данного свойства 
+class Dog: Quadruped {
+    override init() {
+        super.init()
+        self.type = "dog"
+    }
+    func bark() { 
+        print("woof")
+    }
+    func printName() {
+        print(self.name)
+    }
+} 
+Прежде чем получать доступ к наследуемым свойствам в переопределенном инициализаторе, необходимо вызвать инициализатор родителя. Он выполняет инициализацию всех наследуемых свойств. 
+Если в подклассе есть собственные свойства, которых нет в суперклассе, то их значения в инициализаторе необходимо указать до вызова инициализатора родительского класса.
+
+Another example
+Suppose you have a Person class with a name property. The initializer sets the name to the parameter specified.
+class Person {
+  let name: String
+
+  init(name: String) {
+    self.name = name
+  }
+}
+Now imagine you want to create a Student, which is a subclass of Person. Each Student includes an additional property, favoriteSubject.
+class Student: Person {
+  var favoriteSubject: String
+}
+Если вы попытаетесь скомпилировать этот код, Student потерпит неудачу, потому что вы не предоставили инициализатор, который устанавливает свойству favoriteSubject начальное значение. Поскольку суперкласс Person уже выполняет работу по инициализации свойства name, инициализатор учащегося может вызвать инициализатор суперкласса с помощью super.init(). Вы должны вызвать этот инициализатор после того, как вы указали значения для любых свойств, добавленных в ваш подкласс.
+class Student: Person {
+  var favoriteSubject: String
+
+  init(name: String, favoriteSubject: String) {
+    self.favoriteSubject = favoriteSubject
+    super.init(name: name)
+  }
+}
+Вызывая инициализатор суперкласса, классу Student не нужно дублировать работу, которая уже была написана в инициализаторе Person.
+
+Another example
+Modify the StudentAthlete class to add a list of sports an athlete plays:
+class StudentAthlete: Student {
+  var sports: [String]
+  // original code
+}
+Because sports doesn’t have an initial value, StudentAthlete must provide one in its own initializer:
+class StudentAthlete: Student {
+  var sports: [String]
+
+  init(sports: [String]) {
+    self.sports = sports
+    // Build error - super.init isn’t called before
+    // returning from initializer
+  }
+  // original code
+}
+
+Инициализаторы в подклассах обязаны вызывать super.init, потому что без него суперкласс не сможет предоставить начальные состояния для всех своих сохраненных свойств — в данном случае, firstName and lastName.
+class StudentAthlete: Student {
+  var sports: [String]
+
+  init(firstName: String, lastName: String, sports: [String]) {
+    self.sports = sports
+    super.init(firstName: firstName, lastName: lastName)
+  }
+  // original code
+}
+Инициализатор теперь вызывает инициализатор своего суперкласса, и ошибка сборки исчезла. Обратите внимание, что инициализатор теперь принимает firstName и lastName, чтобы удовлетворить требованиям для вызова инициализатора Person.
+
+Two-phase initialization
+Phase one: Initialize all of the stored properties in the class instance, from the bottom to the top of the class hierarchy. You can’t use properties and methods until phase one is complete.
+Phase two: You can now use properties, methods and initializations that require the use of self.
+Without, methods and operations on the class might interact with properties before they’ve been initialized.
+The transition from phase one to phase two happens after you’ve initialized all stored properties in the base class of a class hierarchy
+Из-за требования Swift, чтобы все хранящиеся свойства имели начальные значения, инициализаторы в подклассах subclasses должны придерживаться соглашения Swift о двухэтапной инициализации (two-phase initialization)
+Этап первый: инициализируйте все сохраненные свойства в экземпляре класса, начиная снизу вверх иерархии классов. Вы не можете использовать свойства и методы до завершения первого этапа.
+Этап второй: теперь вы можете использовать свойства, методы и инициализации, которые требуют использования self.
+Без двухэтапной инициализации two-phase initialization методы и операции над классом могут взаимодействовать со свойствами до их инициализации.
+Переход от первого этапа ко второму происходит после инициализации всех сохраненных свойств в базовом классе иерархии классов
+В области инициализатора подкласса вы можете считать, что это происходит после вызова super.init. 
+ 
+<img alt="image" src="images/hierarchy initialized.jpg"/>
+
+Вот снова класс StudentAthlete, где спортсмены автоматически получают стартовый балл:
+
+class StudentAthlete: Student {
+  var sports: [String]
+
+  init(firstName: String, lastName: String, sports: [String]) {
+    // 1
+    self.sports = sports
+    // 2
+    let passGrade = Grade(letter: "P", points: 0.0, credits: 0.0)
+    // 3
+    super.init(firstName: firstName, lastName: lastName)
+    // 4
+    recordGrade(passGrade)
+  }
+  // original code
+}
+1.Сначала вы инициализируете спортивное свойство StudentAthlete. Это часть первой фазы инициализации, и ее необходимо выполнить на ранней стадии, до вызова инициализатора суперкласса.
+2.Хотя вы можете создавать локальные переменные для таких вещей, как оценки, вы пока не можете вызвать recordGrade (_:), потому что объект все еще находится на первом этапе.
+3.Call super.init. Когда это returns, вы будете знать, что вы также инициализировали каждый класс в иерархии, потому что на каждом уровне применяются одни и те же правила.
+4.После возврата super.init инициализатор находится в фазе 2, поэтому вы вызываете recordGrade(_:).
+
+Переопределение наследуемых свойств 
+Как отмечалось ранее, вы можете переопределять любые наследуемые элементы. Наследуемые свойства иногда ограничивают функциональные возможности подкласса. В таком случае можно переписать геттер get или сеттер set данного свойства или при необходимости добавить #наблюдатель #observers. 
+С помощью механизма переопределения вы можете расширить наследуемое «только для чтения» свойство до «чтение-запись», реализовав в нем и геттер и сеттер. Но обратное невозможно: если у наследуемого свойства реализованы и геттер и сеттер, вы не сможете сделать из него свойство «только для чтения». 
+Хранимые свойства переопределять нельзя, так как вызываемый или наследуемый инициализатор родительского класса попытается установить их значения, но не найдет их. 
+Подкласс не знает деталей реализации наследуемого свойства в суперклассе, он знает лишь имя и тип наследуемого свойства. Поэтому необходимо всегда указывать и имя, и тип переопределяемого свойства. 
+
+Preventing модификатор final, Предотвращение наследования
+Swift позволяет защитить реализацию класса целиком или его отдельных элементов. Для этого необходимо использовать #превентивный модификатор #preventing#final, который указывается перед объявлением класса или его отдельных элементов: 
+final class для классов;
+final var для свойств;
+final func для методов;
+final subscript для сабскриптов. 
+При защите реализации класса его наследование в другие классы становится невозможным. Для элементов класса их наследование происходит, но переопределение становится недоступным. 
+Иногда вам захочется запретить подклассы определенного класса. Swift предоставляет ключевое слово для вас, чтобы гарантировать, что класс никогда не получит подкласс:
+final class FinalStudent: Person {}
+class FinalStudentAthlete: FinalStudent {} // Build error!
+Пометив класс FinalStudent final, вы указываете компилятору запретить наследование каких-либо классов от FinalStudent. Это может напомнить вам, что класс не был разработан, чтобы иметь подклассы.
+Кроме того, вы можете пометить отдельные методы как окончательные, если хотите разрешить классу иметь подклассы, но защитить отдельные методы от переопределения:
+class AnotherStudent: Person {
+  final func recordGrade(_ grade: Grade) {}
+}
+
+class AnotherStudentAthlete: AnotherStudent {
+  override func recordGrade(_ grade: Grade) {} // Build error!
+}
+Есть преимущества в том, чтобы изначально отмечать любой новый класс, который вы пишете, как final. Это говорит компилятору, что ему больше не нужно искать подклассы, что может сократить время компиляции, а также требует, чтобы вы были очень четкими при принятии решения о подклассе класса, ранее отмеченного как final.
+
+Подмена экземпляров классов 
+Наследование, помимо всех перечисленных возможностей, позволяет заменять требуемые экземпляры определенного класса экземплярами одного из подклассов. 
+Объявим массив элементов типа Quadruped и добавим в него несколько элементов. 
+var animalsArray: [Quadruped] = []
+var someAnimal = Quadruped()
+var myDog = Dog()
+var sadDog = NoisyDog()
+animalsArray.append(someAnimal)
+animalsArray.append(myDog)
+animalsArray.append(sadDog)
+В массив animalsArray добавляются элементы типов Dog и NoisyDog. 
+Это несмотря на то, что в качестве типа массива указан класс Quadruped. 
+
+Приведение типов 
+Ранее нами были созданы три класса: Quadruped, Dog и NoisyDog, а также определен массив animalsArray, содержащий элементы всех трех типов данных. Этот набор типов представляет собой иерархию классов, поскольку между всеми классами можно указать четкие зависимости (кто кого наследует). Для анализа классов в единой #иерархии существует специальный механизм, называемый #приведением типов. 
+Путем приведения типов вы можете выполнить следующие операции: 
+-проверить тип конкретного экземпляра класса на соответствие некоторому типу или протоколу; 
+-преобразовать тип конкретно экземпляра в др тип той же иерархии классов
+
+Проверка типа operator – is
+Проверка типа экземпляра класса производится оператором #is. Данный оператор возвращает true в случае, когда тип проверяемого экземпляра является указанным после оператора is классом или наследует его. Для анализа возьмем определенный и заполненный ранее массив animalsArray.
+for item in animalsArray {
+    if item is Dog {
+        print("Yap")
+    }
+}
+// Yap выводится 2 раза
+Данный код перебирает все элементы массива animalsArray и проверяет их на соответствие классу Dog. В результате выясняется, что ему соответствуют только два элемента массива: экземпляр класса Dog и экземпляр класса NoisyDog. 
+
+Преобразование типа as  as!  as?
+Как отмечалось ранее, массив animalsArray имеет элементы разных типов данных из одной иерархической структуры. Несмотря на это, при получении очередного элемента вы будете работать исключительно с использованием методов класса, указанного в типе массива (в данном случае Quadruped). То есть, получив элемент типа Dog, вы не увидите определенный в нем метод bark(), поскольку Swift подразумевает, что вы работаете именно с экземпляром типа Quadruped. 
+К счастью, Swift предоставляет оператор as для обработки свойства или переменной как другого типа:
+Для того чтобы преобразовать тип и сообщить Swift, что данный элемент является экземпляром определенного типа, используется оператор as, точнее, две его вариации: as? и as!. Данный оператор ставится после имени экземпляра, а после него указывает имя класса, в который преобразуется экземпляр. 
+Между обеими формами оператора существует разница:
+as: Приведение к определенному типу, успех которого известен во время компиляции, например приведение к супертипу supertype
+-as? (#as?) ИмяКласса возвращает либо экземпляр типа ИмяКласса? (опционал), либо nil в случае неудачного преобразования; An optional downcast (to a subtype). If the downcast не удастся, the result of the expression will be nil
+-as! (#as!) ИмяКласса производит принудительное извлечение значения и возвращает экземпляр типа ИмяКласса или, в случае неудачи, вызывает ошибку. Используем когда уверены в успехе и возврате значения. A forced принудительное downcast. If the downcast не удастся, программа выйдет из строя. Use this rarely, and only when you are certain the cast will never не подведет.
+Тип данных может быть преобразован только в пределах собственной иерархии классов. 
+Снова приступим к перебору массива animalsArray. На этот раз будем вызывать метод bark(), который не существует в суперклассе Quadruped, но присутствует в подклассах Dog и NoisyDog 
+for item in animalsArray {
+    if var animal = item as? NoisyDog {
+        animal.bark()
+    } else if var animal = item as? Dog {
+        animal.bark()
+    } else {
+        item.walk()
+    }
+} 
+Каждый элемент массива animalArray связывается с параметром item. Далее в теле цикла, данный параметр с использованием оператора as? пытается преобразоваться в каждый из типов данных нашей структуры классов. Если item преобразуется в тип NoisyDog или Dog, то ему становится доступным метод bark(). 
+
+Пример использования
+class Furniture {
+  let material: String
+  
+  init(material: String) {
+    self.material = material
+  }
+}
+
+class Bed: Furniture {
+  let numberOfPlaces: Int
+  
+  init(numberOfPlaces: Int, material: String) {
+    self.numberOfPlaces = numberOfPlaces
+    super.init(material: material)
+  }
+}
+
+class Cupboard: Furniture {
+  let numberOfShelves: Int
+  
+  init(numberOfShelves: Int, material: String) {
+    self.numberOfShelves = numberOfShelves
+    super.init(material: material)
+  }
+}
+
+var arrayOfFurniture = [Furniture]()
+
+arrayOfFurniture.append(Bed(numberOfPlaces: 2, material: "Wood"))
+arrayOfFurniture.append(Bed(numberOfPlaces: 1, material: "Steel"))
+arrayOfFurniture.append(Bed(numberOfPlaces: 2, material: "Wood"))
+
+arrayOfFurniture.append(Cupboard(numberOfShelves: 4, material: "Wood"))
+arrayOfFurniture.append(Cupboard(numberOfShelves: 6, material: "Steel"))
+arrayOfFurniture.append(Cupboard(numberOfShelves: 3, material: "Wood"))
+arrayOfFurniture.append(Cupboard(numberOfShelves: 5, material: "Steel"))
+
+var bed = 0
+var cupboard = 0
+
+//for item in arrayOfFurniture {
+//  if item is Bed {
+//    bed += 1
+//  } else {
+//    cupboard += 1
+//  }
+//}
+
+for item in arrayOfFurniture {
+//  if item is Bed {
+//    let bedForSure = item as! Bed
+//    bed += 1
+//  }
+  
+  if let bedForSure = item as? Bed {
+    bed += 1
+    bedForSure.numberOfPlaces
+  }
+}
+
+
 
 
 
