@@ -6173,7 +6173,7 @@ The transition from phase one to phase two happens after you’ve initialized al
 Без двухэтапной инициализации two-phase initialization методы и операции над классом могут взаимодействовать со свойствами до их инициализации.
 Переход от первого этапа ко второму происходит после инициализации всех сохраненных свойств в базовом классе иерархии классов
 В области инициализатора подкласса вы можете считать, что это происходит после вызова super.init. 
- 
+
 <img alt="image" src="images/hierarchy initialized.jpg"/>
 
 Вот снова класс StudentAthlete, где спортсмены автоматически получают стартовый балл:
@@ -6278,7 +6278,7 @@ for item in animalsArray {
 Пример использования
 class Furniture {
   let material: String
-  
+
   init(material: String) {
     self.material = material
   }
@@ -6286,7 +6286,7 @@ class Furniture {
 
 class Bed: Furniture {
   let numberOfPlaces: Int
-  
+
   init(numberOfPlaces: Int, material: String) {
     self.numberOfPlaces = numberOfPlaces
     super.init(material: material)
@@ -6295,7 +6295,7 @@ class Bed: Furniture {
 
 class Cupboard: Furniture {
   let numberOfShelves: Int
-  
+
   init(numberOfShelves: Int, material: String) {
     self.numberOfShelves = numberOfShelves
     super.init(material: material)
@@ -6329,14 +6329,444 @@ for item in arrayOfFurniture {
 //    let bedForSure = item as! Bed
 //    bed += 1
 //  }
-  
+
   if let bedForSure = item as? Bed {
     bed += 1
     bedForSure.numberOfPlaces
   }
 }
 
+**Another** **example****:**
 
+**Runtime hierarchy checks**
+
+Этот код дублируется из пункта Introducing inheritance, для лучшего понимания
+
+struct Grade {
+
+ var letter: Character
+
+ var points: Double
+
+ var credits: Double
+
+}
+
+ 
+
+class Person {
+
+ var firstName: String
+
+ var lastName: String
+
+ 
+
+ init(firstName: String, lastName: String) {
+
+  self.firstName = firstName
+
+  self.lastName = lastName
+
+ }
+
+}
+
+ 
+
+class Student: Person {
+
+ var grades: [Grade] = []
+
+ 
+
+ func recordGrade(_ grade: Grade) {
+
+  grades.append(grade)
+
+ }
+
+}
+
+Правила для подклассов довольно просты:
+
+-class Swift может наследовать только от одного другого class, концепция, известная как #**единое наследование** **single** **inheritance**.
+
+Глубина подклассов subclassing не ограничена, это означает, что вы можете создать подкласс из класса, который также является подклассом subclass, как показано ниже:
+
+class BandMember: Student {
+
+ var minimumPracticeTime = 2
+
+}
+
+ 
+
+class OboePlayer: BandMember {
+
+ // This is an example of an override, which we’ll cover soon.
+
+ override var minimumPracticeTime: Int {
+
+  get {
+
+   super.minimumPracticeTime * 2
+
+  }
+
+  set {
+
+   super.minimumPracticeTime = newValue / 2
+
+  }
+
+ }
+
+}
+
+ 
+
+Теперь, когда вы кодируете с помощью полиморфизма, вы, вероятно, столкнетесь с ситуациями, когда конкретный тип переменной может отличаться. Например, вы можете определить переменную hallMonitor как Student:
+
+var hallMonitor = Student(firstName: "Jill", lastName: "Bananapeel")
+
+Но что, если бы hallMonitor был более производным типом, таким как OboePlayer?
+
+hallMonitor = oboePlayer
+
+Поскольку hallMonitor определен как Student, компилятор не позволит вам пытаться вызывать свойства или методы для более производного типа.
+
+Они могут использоваться в различных контекстах, чтобы рассматривать hallMonitor как BandMember или oboePlayer как менее производного Student.
+
+oboePlayer as Student
+
+(oboePlayer as Student).minimumPracticeTime // ERROR: No longer a band member!
+
+ 
+
+hallMonitor as? BandMember
+
+(hallMonitor as? BandMember)?.minimumPracticeTime // 4 (optional)
+
+ 
+
+hallMonitor as! BandMember // Careful! Failure would lead to a runtime crash.
+
+(hallMonitor as! BandMember).minimumPracticeTime // 4 (force unwrapped)
+
+The optional downcast **as?** is useful in **if let** or **guard** statements:
+
+if let hallMonitor = hallMonitor as? BandMember {
+
+ print("This hall monitor is a band member and practices at least \(hallMonitor.minimumPracticeTime) hours per week.")
+
+}
+
+Вам может быть интересно, в каких контекстах вы бы использовали оператор **as** сам по себе. Любой объект содержит все свойства и методы своего родительского класса, так какой смысл приводить его к тому, чем он уже является?
+
+Swift имеет сильную систему типов, и интерпретация определенного типа может повлиять на static dispatch статическую отправку, то есть на процесс принятия решения о том, какую операцию использовать во время компиляции.
+
+Звучит сбивающе? Давайте рассмотрим пример.
+
+Предположим, у вас есть две функции с одинаковыми именами и именами параметров для двух разных типов параметров:
+
+func afterClassActivity(for student: Student) -> String {
+
+ "Goes home!"
+
+}
+
+ 
+
+func afterClassActivity(for student: BandMember) -> String {
+
+ "Goes to practice!"
+
+}
+
+If you were to pass oboePlayer into afterClassActivity(:), which one of these implementations would get called? The answer lies in Swift’s dispatch rules, which in this case will select the more specific version that takes in an.
+
+If instead you were to cast, 
+
+Если бы вы передали oboePlayer в afterClassActivity(for:), какая из этих реализаций была бы вызвана? Ответ кроется в правилах отправки Swift, которые в этом случае будут выбирать более конкретную версию, использующую OboePlayer.
+
+Если бы вместо этого вы использовали oboePlayer для Student, the Student version would be called:
+
+afterClassActivity(for: oboePlayer) // Goes to practice!
+
+afterClassActivity(for: oboePlayer as Student) // Goes home!
+
+ 
+
+### When and why to subclass
+
+ “When should I subclass?”
+
+Rarely is there a right or wrong answer, so you need an understanding of the компромиссов чтобы вы могли принять обоснованное решение для конкретного случая.
+
+Используя классы Student и StudentAthlete в качестве примера, вы можете решить, что можете просто поместить все характеристики StudentAthlete в Student:
+
+class Student: Person {
+
+ var grades: [Grade]
+
+ var sports: [Sport]
+
+ // original code
+
+}
+
+На самом деле это может решить все варианты использования для ваших нужд. У студента, который не занимается спортом, просто будет пустой спортивный массив, и вы избежите некоторых дополнительных сложностей, связанных с подклассами.
+
+ 
+
+**Strong** **types**
+
+Подклассы создают дополнительный тип. С помощью системы типов Swift вы можете объявлять свойства или поведение на основе объектов, которые являются студентами-спортсменами, а не обычными студентами:
+
+class Team {
+
+ var players: [StudentAthlete] = []
+
+ 
+
+ var isEligible: Bool {
+
+  for player in players {
+
+   if !player.isEligible {
+
+​    return false
+
+   }
+
+  }
+
+  return true
+
+ }
+
+}
+
+В команде есть игроки, которые являются студентами-спортсменами. Если бы вы попытались добавить обычный объект Student в массив игроков, система типов не позволила бы этого. Это может быть полезно, так как компилятор может помочь вам обеспечить соблюдение логики и требований вашей системы.
+
+ 
+
+**Shared base classes Общие базовые классы**
+
+// A button that can be pressed.
+
+class Button {
+
+ func press() {}
+
+}
+
+ 
+
+// An image that can be rendered on a button
+
+class Image {}
+
+ 
+
+// Кнопка, полностью состоящая из изображения
+
+class ImageButton: Button {
+
+ var image: Image
+
+ 
+
+ init(image: Image) {
+
+  self.image = image
+
+ }
+
+}
+
+ 
+
+// A button that предоставляет as text.
+
+class TextButton: Button {
+
+ var text: String
+
+ init(text: String) {
+
+  self.text = text
+
+ }
+
+}
+
+В этом примере вы можете представить себе множество подклассов кнопок, которые разделяют только тот факт, что их можно нажимать. Классы ImageButton и TextButton, вероятно, используют разные механизмы для визуализации данной кнопки, поэтому им, возможно, придется реализовать свое собственное поведение для обработки нажатий.
+
+Здесь вы можете увидеть, как хранение изображения и текста в классе кнопок — не говоря уже о любых других возможных кнопках — быстро станет непрактичным. Имеет смысл, чтобы кнопка была связана с поведением при нажатии, а подклассы обрабатывали фактический внешний вид кнопки.
+
+ 
+
+**Extensibility Расширяемость**
+
+Иногда вам нужно расширить поведение кода, которым вы не владеете. В приведенном выше примере возможно, что Button является частью используемой вами платформы, поэтому вы не можете изменить или расширить исходный код в соответствии с вашим конкретным случаем.
+
+But you can subclass Button and add your custom subclass to use with code that’s ожидает an object of type Button.
+
+Note: In addition to flagging a class as final, you can use access control, which you’ll learn in Chapter 18, “Access Control and Code Organization”, чтобы обозначить, может ли кто-либо из членов класса subclassed — aka overridden — or not.
+
+ 
+
+**Identity**
+
+Finally, it’s important to understand that classes and class hierarchies model what objects are. If your goal is to share behavior (what objects can do) between types, more often than not you should prefer protocols over subclassing. You’ll learn about protocols, “Protocols”.
+
+ 
+
+**Stable** **Identity**
+
+Бывают случаи, когда вы хотите использовать один экземпляр объекта в нескольких местах, но копировать экземпляр не имеет смысла. Поскольку каждая let или var класса является адресом, указывающим на одни и те же данные, данные имеют стабильную идентичность.
+
+Рассмотрим MessageCell ячейку сообщения подкласс UITableViewCell, которая представляет строку в tableView. Ячейка предназначена для отображения информации о сообщении электронной почты. Как вы увидите, доступ к каждому экземпляру MessageCell будет осуществляться во многих местах кода.
+
+class MessageCell: UITableViewCell {
+
+ func update(message: Message) {
+
+  // Update `UITableViewCell` properties with information about the message 
+
+  textLabel.text = message.subject
+
+  detailTextLabel.text = message.previewText
+
+ }
+
+}
+
+ Когда tableView готовится к отображению ячеек, оно вызывает функцию cellForRow(at: IndexPath), чтобы запросить ячейку, которую оно должно отображать в каждой позиции в списке. Все ячейки для tableView инициализируются (и помещаются в память) во время этого вызова функции.
+
+override func tableView(_ tableView: UITableView, cellForRowAt 
+
+indexPath: IndexPath) -> UITableViewCell { 
+
+ let cell = MessageCell(style: .default, reuseIdentifier: “MessageCell”)
+
+ cell.update(message: message)
+
+ // Returns the cell to the table view that called this method to request it
+
+ return cell
+
+} 
+
+Когда пользователь просматривает список сообщений в table view, вызывается метод, позволяющий вашей программе настраивать, обновлять или изменять ячейку cell по мере ее отображения. Функция передает ссылку на ячейку в качестве параметра.
+
+override func tableView(_ tableView: UITableView, willDisplay 
+
+cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+
+ // Perform any operations you want to take on the cell here
+
+}
+
+Функция вызывается для каждой ячейки, которая вот-вот появится в table view. Также обратите внимание, что функция передает три параметра: ссылку на tableView которое уже существует; ячейку, которая уже существует, но должна быть отображена; и что-то, называемое indexPath.
+
+Поскольку tableView и cell являются классами, параметры являются ссылками на tableView и cell в памяти. Если вы обновляете параметр ячейки, вы обновляете ту же ячейку, которая была инициализирована в функции cellForRow, ту же ячейку, которая будет отображаться.
+
+Рассмотрим, как класс работает иначе, чем структура. Если бы ячейка была структурой или value type, параметром была бы новая копия cell, которая должна быть отображена. Поэтому, если вы обновили cell, вы не увидите своих изменений, потому что вы обновили копию, а не ячейку, которая будет отображаться.
+
+ 
+
+### Challenges
+
+**Challenge 4: To subclass or not**
+
+Create a subclass of StudentAthlete called StudentBaseballPlayer and include properties for position, number, and battingAverage. What are the преимущества и недостатки of subclassing StudentAthlete in this сценарии scenario?
+
+**class** Person {
+
+ **var** firstName: String
+
+ **var** lastName: String
+
+ 
+
+ **init**(firstName: String, lastName: String) {
+
+  **self**.firstName = firstName
+
+  **self**.lastName = lastName
+
+ }
+
+}
+
+ 
+
+**struct** Grade {
+
+ **let** letter: String
+
+ **let** points: Double
+
+}
+
+ 
+
+**class** Student: Person {
+
+ **var** grades: [Grade] = []
+
+}
+
+ 
+
+**class** StudentAthlete: Student {
+
+ **var** sports: [String] = []
+
+}
+
+ 
+
+**class** StudentBaseballPlayer: StudentAthlete {
+
+ **var** battingAverage = 0.0
+
+ **var** number: Int
+
+ **var** position: String
+
+ 
+
+ **init**(firstName: String, lastName: String, number: Int, position: String) {
+
+  **self**.number = number
+
+  **self**.position = position
+
+  **super**.init(firstName: firstName, lastName: lastName)
+
+ }
+
+}
+
+ Benefits (Преимущества):
+
+ -Automatically get properties all student atheletes will have –grades and names
+
+ -Type отношения with superclasses. StudentBaseballPlayer _is_ a Student
+
+ 
+
+ Drawbacks (Недостатоки):
+
+-Инициализатор, который начинает раздуваться
+
+-Иерархия глубоких классов сделает подобные классы трудными. Например, почти идентичный класс должен быть сделан для `SoftballPlayer`, который присоединился к лиге после окончания выпускного курса. Они больше не будут `Student`, только `Person`!
+
+ 
 
 
 
