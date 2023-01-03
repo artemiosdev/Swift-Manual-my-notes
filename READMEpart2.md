@@ -5283,6 +5283,8 @@ destroyer.fire()
 destroyer.fire() 
 print(destroyer.remainingFirePower) // You have no more fire power.
 Определите новый класс ShieldedShip, который наследуется от Fighter. Добавьте переменное свойство shieldStrength, значение по умолчанию которого равно 25. Создайте новый экземпляр ShieldedShip под названием defender. Установите имя "Defender", а оружие "Cannon". Вызовите moveRight() и print, затем вызовите fire() и print remainingFirePower. Вернитесь к ShieldedShip и переопределите wasHit(). Проверьте не превышает ли shieldStrength сила защиты 0. Если это так, уменьшите shieldStrength на 5. В противном случае уменьшите health на 5. Вызовите функцию wasHit() на defender и print shieldStrength and health. Когда shieldStrength равна 0, все, что делает wasHit() – это уменьшает health на 5. Это именно то, что делает реализация wasHit() на Spaceship! Вместо того, чтобы переписывать это, вы можете обратиться к реализации суперкласса wasHit(). Вернитесь к своей реализации wasHit() на ShieldedShip и удалите код, в котором вы уменьшаете health на 5, и замените его вызовом реализации метода суперкласса superclass. Вызовите функцию wasHit() на defender, затем print shieldStrength and health.
+
+```swift
 class ShieldedShip: Fighter {
     var shieldStrength = 25
     
@@ -5310,6 +5312,8 @@ print(defender.health)
 defender.wasHit()
 print(defender.shieldStrength)
 print(defender.health)
+```
+
 Обратите внимание, что каждый класс выше имеет ошибку в объявлении класса, в котором говорится: "Class has no initializers." В отличие от структур, классы не поставляются с инициализаторами по элементам, поскольку стандартные инициализаторы по элементам не всегда хорошо сочетаются с наследованием. Вы можете избавиться от ошибки, указав значения по умолчанию для всего, но обычно и лучше всего просто написать свой собственный инициализатор. Перейдите к объявлению космического корабля Spaceship и добавьте инициализатор, который принимает аргумент для каждого свойства Spaceship и устанавливает свойства соответственно.
 
 Затем создайте экземпляр Spaceship ниже под названием falcon. Используйте только что созданный инициализатор. Название корабля должно быть "Falcon". Написание инициализаторов для подклассов может оказаться непростым делом. Вашему инициализатору необходимо не только задать свойства, объявленные в подклассе, но и задать все неинициализированные свойства классов, от которых он наследует. Перейдите к объявлению Fighter и напишите инициализатор, который принимает аргумент для каждого свойства Fighter и для каждого свойства Spaceship. Установите свойства соответствующим образом. (Подсказка: вы можете вызвать инициализатор superclass с помощью super.init после инициализации всех свойств подкласса).
@@ -6738,8 +6742,8 @@ Create a subclass of StudentAthlete called StudentBaseballPlayer and include pro
 
  **var** position: String
 
- 
 
+```
  **init**(firstName: String, lastName: String, number: Int, position: String) {
 
   **self**.number = number
@@ -6751,7 +6755,7 @@ Create a subclass of StudentAthlete called StudentBaseballPlayer and include pro
  }
 
 }
-
+```
  Benefits (Преимущества):
 
  -Automatically get properties all student atheletes will have –grades and names
@@ -6792,3 +6796,32 @@ Create a subclass of StudentAthlete called StudentBaseballPlayer and include pro
 [К оглавлению](#contents)
 
 ###  <a id="chapter27" /> Глава №27. 
+
+
+---
+
+[К оглавлению](#contents)
+
+###  <a id="chapter27" /> Глава №28. 39. Memory Management
+
+<img alt="image" src="images/Memory 1.jpg"/> 
+
+<img alt="image" src="images/Memory 2.jpeg"/> 
+
+Типы значений - копии экземпляров типов значений являются самостоятельными объектами, каждый из которых занимает отдельное место в памяти устройства Примеры: Базовые типы
+данных (String, Int, Bool), структуры, перечисления, массивы, словари и т.д.
+Имеют разные адреса в памяти, для каждого значения.
+Каждый раз передавая значение экземпляра куда-то еще, мы создаем новую копию объекта с его конкретным адресом и значением. И это будет копия с отдельным адресом, т.е самостоятельная.
+
+Ссылочные типы - копии экземпляров ссылочных типов ссылаются на один объект в базе и не являются уникальными Примеры: все классы являются ссылочными типами данных.
+Имеют один адрес в памяти, и все значения-копии ссылаются на него. Передаем не сам объект, а ссылку которая ведет на него (на сам объект который имеет адрес). 
+
+Пример: создание 2 ярлыков на рабочем столе на одну папку.
+
+<img alt="image" src="images/Memory 3.jpeg"/> 
+
+<img alt="image" src="images/Memory 4.jpeg"/> 
+
+<img alt="image" src="images/Memory 5.jpeg"/> 
+
+<img alt="image" src="images/Memory .jpeg"/> 
