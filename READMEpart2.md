@@ -7440,7 +7440,7 @@ class Person {
     print("\(firstName) \(lastName) is being removed from memory!")
   }
 }
-#deinit – это специальный метод, который обрабатывает deinitialization. В отличие от init, deinit не нуждается и автоматически вызывается Swift. Вы также не должны переопределять override его или вызвать super внутри него. Swift обязательно позвонить каждому классу deinitializer.
+#deinit – это специальный метод, который обрабатывает deinitialization. В отличие от init, deinit не нуждается и автоматически вызывается Swift. Вы также не должны переопределять override его или вызвать super внутри него. Swift обязательно вызывает каждому классу deinitializer.
 Если вы добавляете этот deinitializer, вы увидите сообщение «Johnnny Appleseed удаляется из памяти!»
 Часто вы будете использовать deinitializer для очистки других ресурсов, сохранить состояние на диск или выполнить любую другую логику, которую вы можете захотеть, когда объект выходит из сферы действия.
 
@@ -7533,7 +7533,7 @@ do {
 
 ###  <a id="chapter27" /> Глава №28. Управление памятью в Swift. Stack and heap (куча) 
 
-### 39. Memory Management
+### Memory Management
 
 <img alt="image" src="images/Memory 1.jpg"/> 
 
@@ -7549,13 +7549,39 @@ do {
 
 Пример: создание 2 ярлыков на рабочем столе на одну папку.
 
-<img alt="image" src="images/Memory 3.jpeg" height = 710 width = 700/> 
+<img alt="image" src="images/Memory 3.jpeg" height = 610 width = 450/> 
 
-<img alt="image" src="images/Memory 4.jpeg" height = 710 width = 700/> 
+<img alt="image" src="images/Memory 4.jpeg" height = 610 width = 550/> 
 
 <img alt="image" src="images/Memory 5.jpeg" height = 510 width = 700/> 
 
-<img alt="image" src="images/Memory .jpeg"/> 
+Когда удаляется ссылочный тип из памяти? Когда на него нет ни одной ссылки (свойства) которое бы ссылалось на него.
+
+Automatic Reference Counting #ARC – это специальный механизм автоматического подсчета ссылок.
+
+<img alt="image" src="images/arc1.jpeg"/> 
+
+<img alt="image" src="images/arc2.jpeg"/> 
+
+Когда на объек нет ссылок, то он выгружается из памяти
+
+<img alt="image" src="images/arc3.jpeg"/> 
+
+<img alt="image" src="images/arc4.jpeg"/> 
+
+<img alt="image" src="images/arc5.jpeg"/> 
+
+Swift благодаря ARC удаляет большую часть ненужного мусора, но это не 100%, и некоторые такие объекты могут привести к утечки памяти.
+
+<img alt="image" src="images/arc6.jpeg"/> 
+
+<img alt="image" src="images/arc7.jpeg"/>
+
+<img alt="image" src="images/arc.jpeg"/>
+
+<img alt="image" src="images/arc.jpeg"/>
+
+<img alt="image" src="images/arc.jpeg"/>
 
 ### Материалы с книги
 Утечка памяти — это программная ошибка, приводящая к излишнему расходованию оперативной памяти. 
