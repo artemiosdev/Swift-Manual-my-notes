@@ -7577,11 +7577,80 @@ Swift благодаря ARC удаляет большую часть ненуж
 
 <img alt="image" src="images/arc7.jpeg"/>
 
-<img alt="image" src="images/arc.jpeg"/>
+### Циклические ссылки
+Когда оба объекта ссылаются друг на друга.
 
-<img alt="image" src="images/arc.jpeg"/>
+<img alt="image" src="images/цикличные ссылки.jpeg"/>
 
-<img alt="image" src="images/arc.jpeg"/>
+```swift
+import UIKit
+
+class ViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        var alexey: Person?
+        var swiftbook: Job?
+        alexey = Person()
+        swiftbook = Job()
+        alexey?.job = swiftbook
+        swiftbook?.person = alexey
+        alexey = nil
+        swiftbook = nil
+    }
+}
+// Parent
+class Person {
+    var job: Job?
+    deinit {
+        print("Person will be deallocated")
+    }
+}
+// Child
+class Job {
+    var person: Person?
+    deinit {
+        print("Job will be deallocated")
+    }
+}
+```
+
+<img alt="image" src="images/цикличные ссылки1.jpeg"/>
+
+В итоге deinit не работают, объекты не выгружаются из памяти, и произходит ее утечка.
+
+Чтобы отследить утечку, есть отдельный инструмент "Leaks" выбираем `Product -> Profile -> Leaks` и запуск на текущем проекте. 
+
+Если ошибки можно поменять версию ios, устройство, пересобрать проект, или сделать его очистку `Product -> Clean Build Folder`
+
+<img alt="image" src="images/memoryLeaks.jpeg"/>
+
+При создании экземпляра класса создается сильная #strong ссылка. И тогда мы имеем 2 сильные ссылки которые считает компилятор. Решить проблему можно добавлением не сильной, а слабой #weak ссылки в нужном месте, после того как мы определимся с взаимноотношениями между двумя объектами, т.е кто от кого зависит, и от куда все начинается.
+
+<img alt="image" src="images/solveMemoryLeaks.jpeg"/>
+
+Добавим weak 
+
+```swift
+// Parent
+class Person {
+    var job: Job?
+}
+// Child
+class Job {
+    weak var person: Person?
+}
+```
+
+И теперь утечек нет и объекты выгружаются из памяти, о чем свидетельствуют prints в наших deinit (`Person will be deallocated` and `Job will be deallocated`)
+
+<img alt="image" src="images/type links.jpeg"/>
+
+<img alt="image" src="images/"/>
+<img alt="image" src="images/"/>
+<img alt="image" src="images/"/>
+<img alt="image" src="images/"/>
+<img alt="image" src="images/"/>
+
 
 ### Материалы с книги
 Утечка памяти — это программная ошибка, приводящая к излишнему расходованию оперативной памяти. 
