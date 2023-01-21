@@ -7628,7 +7628,7 @@ class Job {
 
 <img alt="image" src="images/solveMemoryLeaks.jpeg"/>
 
-Добавим weak 
+Добавим `weak` 
 
 ```swift
 // Parent
@@ -7645,14 +7645,65 @@ class Job {
 
 <img alt="image" src="images/type links.jpeg"/>
 
-<img alt="image" src="images/"/>
-<img alt="image" src="images/"/>
-<img alt="image" src="images/"/>
-<img alt="image" src="images/"/>
-<img alt="image" src="images/"/>
+### Цикличные ссылки в замыканиях
 
+```swift
+import UIKit
 
-### Материалы с книги
+class SecondViewController: UIViewController {
+    private lazy var closure: (() -> ()) = {
+        self.view.backgroundColor = UIColor.blue
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        closure()
+    }
+    @IBAction func closeVCPressed() {
+        dismiss(animated: true)
+    }
+    deinit {
+        print("deinit", SecondViewController.self )
+    }
+}
+```
+
+В замыкании, после self мы снова обращаемся к view и получается зацикленная ссылка. Мы уже обращались к инициализированному классу, и еще свойство которое снова к нему обращается, это и есть утечка памяти и `deinit` не сработает.
+
+```swift
+import UIKit
+class SecondViewController: UIViewController {
+    private lazy var closure: (() -> ()) = { [unowned self] in
+        self.view.backgroundColor = UIColor.blue
+    }
+    
+//    else optional type
+//        private lazy var closure: (() -> ())? = { [weak self] in
+//            guard let self = self else { return }
+//            self.view.backgroundColor = UIColor.blue
+//        }
+        
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            closure()
+            
+            // closure()!
+        }
+        @IBAction func closeVCPressed() {
+            dismiss(animated: true)
+        }
+        deinit {
+            print("deinit", SecondViewController.self )
+        }
+}
+```
+
+Однако! Методы в параметрах которых используются замыкания, не  создают сильных strong ссылок на объект самого класса. 
+
+С помощью #deinit можно проверить утечки памяти в своих приложениях, так как инструмент Leaks иногда не находит их, в нем возможны баги и ошибки поиска утечек.
+
+---
+
+### Материалы с книг
 Утечка памяти — это программная ошибка, приводящая к излишнему расходованию оперативной памяти. 
 Типовая ячейка оперативной памяти построена на основе полупроводниковых электронных компонентов (транзисторов и конденсаторов), объединенных в группу. Она способна хранить значения размером в 1 байт, то есть 8 бит (8 нулей и единиц). На одной планке памяти расположены миллиарды таких ячеек, и для навигации каждая из них имеет уникальный порядковый номер, который является ее физическим адресом. По данному адресу ячейка может быть найдена во всем множестве ячеек, доступных в памяти. 
 
