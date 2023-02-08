@@ -49,6 +49,8 @@
 - [Глава  №27. Инициализаторы и деинициализаторы. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter27)
 - [Глава  №28. Управление памятью в Swift. Stack and heap. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter28)
 
+Из-за ограничений Github, третья часть конспекта содержится в отдельном файле [READMEpart3.md](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md) начиная с этой главы
+
 ЧАСТЬ VII Фреймворки
 
 - [Глава  №. Core Data. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#coredata)
