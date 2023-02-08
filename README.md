@@ -2,7 +2,6 @@
 
 ### [UIKit notes](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/UIKit%20notes.md) - краткий коспект по фреймворку.
 
-
 ***Конспект из разных источников***
 
 <a id="contents" />Оглавление
@@ -42,12 +41,19 @@
 - [Глава  №19. Перечисления. Синтаксис перечислений. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter19)
 - [Глава  №20. Структуры. Struct. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter20)
 - [Глава  №21. Классы. Class. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter21)
-- [Глава  №22. . ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter22)
-- [Глава  №23. . ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter23)
-- [Глава  №24. . ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter24)
-- [Глава  №25. . ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter25)
-- [Глава  №26. . ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter26)
-- [Глава  №27. . ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter27)
+- [Глава  №22. Свойства. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter22)
+- [Глава  №23. Сабскрипты. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter23)
+- [Глава  №24. Inheritance in classes. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter24)
+- [Глава  №25. Контроль доступа. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter25)
+- [Глава  №26. Псевдонимы Any и AnyObject. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter26)
+- [Глава  №27. Инициализаторы и деинициализаторы. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter27)
+- [Глава  №28. Управление памятью в Swift. Stack and heap. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter28)
+
+ЧАСТЬ VII Фреймворки
+
+- [Глава  №. Core Data. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#coredata)
+
+---
 
 [К оглавлению](#contents)
 ###  <a id="chapter1" /> Глава №1. Основные понятия. Начало работы с Xcode
