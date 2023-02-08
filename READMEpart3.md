@@ -18,13 +18,7 @@
 
 [#CoreData](https://developer.apple.com/documentation/coredata) – нативный фреймворк от Apple для хранения данных пользователя у него на устройстве. Это не база данных.
 
-<img alt="image" src="images/СoreDataStack1.jpg"/>
-
-<img alt="image" src="images/coredata.jpg"/>
-
-<img alt="image" src="images/coredata1.jpg"/>
-
-Необходимый код в проекте для работы с CoreData. Можно добавить при создании приложения, или уже к созданному опционально. Вставляется код ниже в файлы, создается файл с расширением `.xcdatamodeld`
+Необходимый код в проекте для работы с CoreData. Можно добавить при создании приложения, или уже к созданному опционально. Вставляется код ниже в файлы, создается файл с расширением [.xcdatamodeld](https://developer.apple.com/documentation/coredata/creating_a_core_data_model) для сущностей-entity.
 
 AppDelegate.swift
 ```swift
@@ -37,7 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 ...
 
 // MARK: - Core Data stack
-    
     lazy var persistentContainer: NSPersistentContainer = {
         /*
          The persistent container for the application. This implementation
@@ -45,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
          application to it. This property is optional since there are legitimate
          error conditions that could cause the creation of the store to fail.
          */
-        let container = NSPersistentContainer(name: "MyCars")
+        let container = NSPersistentContainer(name: "ProjectName")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.
@@ -99,11 +92,97 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // Save changes in the application's managed object context when the application transitions to the background.
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
-    }
-    
-    
+    } 
 }
 ```
 
 
+Создадим новую сущность-класс Name она будет моделью. 
+
+<img alt="image" src="images/entity.jpg"/>
+
+- [Generating Code](https://developer.apple.com/documentation/coredata/modeling_data/generating_code ) автоматически или вручную создавайте подклассы управляемых объектов из сущностей (entities).
+    - **Class #Definition** – класс будет существовать в системе, к нему нет прямого доступа из Navigator, не виден в Xcode.
+    - **#Manual/None** – полный ручной контроль над классом, можно добавить свою логику. Нужно вручную добавить. Class будет в проекте. Будут созданы 2 файла для сущности, сам класс и расширение к нему со свойствами
+    - **#Category/Extension** – только Extension
+
+Данные классы и файлы по сборкам лежат в папке `DerivedData`, при ошибках почистить данную папку, проваливаясь вглубь можно найти сами классы если выбрано "Class Definition"
+
+Почистить можно вручную (Xcode -> Настройки ->Locations) или в консоле 
+`rm -rf ~/Library/Developer/Xcode/DerivedData/*`
+
+Пример файлов:
+
+Name+CoreDataClass.swift
+```swift
+import Foundation
+import CoreData
+
+@objc(Name)
+public class Name: NSManagedObject {
+
+}
+```
+
+Task+CoreDataProperties.swift
+```swift
+import Foundation
+import CoreData
+extension Name {
+   @nonobjc public class func fetchRequest() -> NSFetchRequest<Name> {
+        return NSFetchRequest<Name>(entityName: "Name")
+    }
+    @NSManaged public var title: String?
+
+}
+extension Name : Identifiable {
+}
+```
+
+<img alt="image" src="images/coredata.jpg"/>
+
+- [#CoreDataStack](https://developer.apple.com/documentation/coredata/core_data_stack) – механизм внутри фреймворка Core Data, который позволяет хранить данные на постоянной основе. Persistent Store – постоянное хранилище информации. Весь механизм внутри Persistent Container. И состоит из 3 основных классов с которыми мы сталкиваемся: 
+    - **Managed Object Context** – это наш контекст который нужно сохранить, это изменения. 
+    - **Persistent Store Coordinator** – определяет на основек какой модели (Managed Object Model) мы будем хранить данные 
+    - **Managed Object Model** - сама модель
+    - **Persistent Store** – постоянное хранилище информации
+
+<img alt="image" src="images/СoreDataStack1.jpg"/>
+
+Внутри **Persistent #Container** и есть наш **CoreDataStack**
+
+<img alt="image" src="images/PersistentContainer.jpg"/>
+
+<img alt="image" src="images/CoreDataStack2.jpg"/>
+
+[Здесь больше информации о типах](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreData/PersistentStoreFeatures.html)
+
+<img alt="image" src="images/Persistent Store Types.jpg"/>
+
+
+- [Core Data Stack](https://developer.apple.com/documentation/coredata/core_data_stack) - manage and persist your app’s model layer.
+    - Экземпляр **#NSManagedObjectModel** описывает типы вашего приложения, включая их свойства и взаимосвязи.
+    - Экземпляр **#NSManagedObjectContext** отслеживает изменения в экземплярах типов вашего приложения.
+    - Экземпляр **#NSPersistentStoreCoordinator** сохраняет и извлекает экземпляры типов вашего приложения из хранилищ.
+
+<img alt="image" src="images/coredata1.jpg"/>
+
+Сохранение `context.save()` и удаление `context.delete(...)` данных CoreData
+
+- [Class NSManagedObject](https://developer.apple.com/documentation/coredata/nsmanagedobject) - A base class that implements the behavior for a Core Data model object
+- [Class NSPersistentContainer](https://developer.apple.com/documentation/coredata/nspersistentcontainer) - A container that encapsulates the Core Data stack in your app.
+- [NSFetchRequest](https://developer.apple.com/documentation/coredata/nsfetchrequest) - A description of search criteria used to retrieve data from a persistent store.
+
+Примеры использования в `Small-projects`:
+- [MyCars](https://github.com/artemiosdev/Small-projects/tree/main/MyCars/MyCars)
+- [MealTime](https://github.com/artemiosdev/Small-projects/tree/main/MealTime/MealTime)
+- [ToDoList](https://github.com/artemiosdev/Small-projects/tree/main/ToDoList/ToDoList)
+
+---
+
+
+
+<img alt="image" src="images/"/>
+<img alt="image" src="images/"/>
+<img alt="image" src="images/"/>
 
