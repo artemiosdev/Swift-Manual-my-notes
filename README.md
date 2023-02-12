@@ -6,12 +6,12 @@
 
 <a id="contents" />Оглавление
 
-Часть I БАЗОВЫЕ ВОЗМОЖНОСТИ SWIFT 
+### Часть I БАЗОВЫЕ ВОЗМОЖНОСТИ SWIFT 
 
 - [Глава №1. Основные понятия. Начало работы с Xcode.](#chapter1)
 - [Глава  №2. Фундаментальные типы данных.](#chapter2)
 
-Часть II КОНТЕЙНЕРНЫЕ ТИПЫ ДАННЫХ 
+### Часть II КОНТЕЙНЕРНЫЕ ТИПЫ ДАННЫХ 
 
 - [Глава  №3. Кортежи – Tuple.](#chapter3)
 - [Глава  №4. Последовательности и Коллекции. ](#chapter4)
@@ -21,7 +21,7 @@
 - [Глава  №8. Словари (Dictionary). ](#chapter8)
 - [Глава  №9. Строка — коллекция символов (String). ](#chapter9)
 
-Часть III. ОСНОВНЫЕ ВОЗМОЖНОСТИ SWIFT 
+### Часть III. ОСНОВНЫЕ ВОЗМОЖНОСТИ SWIFT 
 
 - [Глава  №10. Операторы управления Basic Control Flow. ](#chapter10)
 
@@ -33,7 +33,7 @@
 - [Глава  №14. Дополнительные возможности. Методы. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter14)
 - [Глава  №15. Ленивые вычисления. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter15)
 
-Часть IV ВВЕДЕНИЕ В РАЗРАБОТКУ ПРИЛОЖЕНИЙ
+### Часть IV ВВЕДЕНИЕ В РАЗРАБОТКУ ПРИЛОЖЕНИЙ
 
 - [Глава  №16. Консольные приложения. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter16)
 - [Глава  №17. Консольные приложение "Угадай число". ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#chapter17)
@@ -51,9 +51,14 @@
 
 Из-за ограничений Github, третья часть конспекта содержится в отдельном файле [READMEpart3.md](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md) начиная с этой главы
 
-ЧАСТЬ VII Фреймворки
+### ЧАСТЬ V Фреймворки
 
+- [Глава  №. UIKit. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/UIKit%20notes.md)
 - [Глава  №. Core Data. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#coredata)
+
+### ЧАСТЬ VI 
+
+- [Глава №. Grand Central Dispatch](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#gcd)
 
 ---
 

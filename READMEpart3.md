@@ -194,9 +194,9 @@ extension Name : Identifiable {
 
 [К оглавлению](#contents)
 
-###  <a id="gcd" /> Глава №. Grand Central Dispatch
+###  <a id="gcd" /> Глава №. Grand Central Dispatch 
 
-### [Папка с примерами использования](https://github.com/artemiosdev/Small-projects/tree/main/GCD) 
+### [Папка с примерами использования #GCD](https://github.com/artemiosdev/Small-projects/tree/main/GCD) 
 
 Многопоточность – #multithreading
 
@@ -206,7 +206,7 @@ extension Name : Identifiable {
 
 <img alt="image" src="images/gcd1.jpg"/>
 
-### Очереди
+### #Очереди, #Queue
 #Serial #Queue – последовательная очередь. FIFO (first in, first out)
 
 <img alt="image" src="images/gcd2.jpg"/>
@@ -225,7 +225,7 @@ extension Name : Identifiable {
 
 <img alt="image" src="images/gcd6.jpg"/>
 
-### Синхронность sync и асинхронность async
+### Синхронность #sync и асинхронность #async
 
 #async – задачи могут начинаются вместе, независимо друг от друга
 
@@ -241,7 +241,7 @@ extension Name : Identifiable {
 
 <img alt="image" src="images/gcd10.jpg"/>
 
-### Задержка asyncAfter
+### Задержка #asyncAfter
 
 Позволяет выполнять какие-либо участки кода через определенное время.
 
@@ -253,7 +253,7 @@ extension Name : Identifiable {
 } 
 ```
 
-### Новая очередь. Барьеры отправки
+### Новая очередь. Барьеры #barriers отправки
 #Queue #creation – создание очередей
 
 <img alt="image" src="images/gcd11.jpg"/>
@@ -275,7 +275,7 @@ extension Name : Identifiable {
 
 Task 2 наш барьер, перед ее выполнением все задачи должны быть выполнены, она выполняется только одна, и все другие задачи ждут ее завершения, и не начинаются пока она не закончит, это критическая секция.
 
-### Практика с барьерами
+### Практика с барьерами #barriers
 ```swift
 import UIKit
 import PlaygroundSupport
@@ -327,7 +327,7 @@ print("array: \(array)")
 
 <img alt="image" src="images/gcd19.jpg"/>
 
-### Группы отправки. Практика
+### Группы #groups отправки. Практика
 
 [#notify(queue:work:)](https://developer.apple.com/documentation/dispatch/dispatchgroup/2016084-notify) – планирует отправку блока в очередь, когда все задачи в текущей группе завершат выполнение.
 
@@ -440,7 +440,7 @@ workItem.isCancelled
 workItem.wait()
 ```
 
-### Семафоры #Semaphores отправк
+### Семафоры #semaphores отправки
 
 <img alt="image" src="images/gcd23.jpg"/>
 
@@ -452,7 +452,7 @@ workItem.wait()
 
 <img alt="image" src="images/gcd26.jpg"/>
 
-### Семафоры отправки. Практика
+### Семафоры #semaphores отправки. Практика
 
 ```swift
 import UIKit
@@ -569,7 +569,7 @@ Block 4
 
 <img alt="image" src="images/gcd29.jpg"/>
 
-### Источники отправки. Практика
+### Источники #dispatch #sources отправки. Практика
 
 ```swift
 import UIKit
