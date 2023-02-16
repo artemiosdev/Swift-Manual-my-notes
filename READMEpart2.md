@@ -9,7 +9,7 @@
 - [Глава  №14. Дополнительные возможности. Методы. ](#chapter14)
 - [Глава  №15. Ленивые вычисления. ](#chapter15)
 
-Часть IV ВВЕДЕНИЕ В РАЗРАБОТКУ ПРИЛОЖЕНИЙ
+### Часть IV ВВЕДЕНИЕ В РАЗРАБОТКУ ПРИЛОЖЕНИЙ
 
 - [Глава  №16. Консольные приложения. ](#chapter16)
 - [Глава  №17. Консольные приложение "Угадай число". ](#chapter17)
@@ -25,9 +25,15 @@
 - [Глава  №27. Инициализаторы и деинициализаторы. ](#chapter27)
 - [Глава №28. Управление памятью в Swift. Stack and heap](#chapter28)
 
-ЧАСТЬ V Фреймворки
+### ЧАСТЬ V Фреймворки
 
-- [Глава  №. Core Data. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#coredata)
+- [Глава  №29. UIKit. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/UIKit%20notes.md)
+- [Глава  №30. Core Data. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#coredata)
+
+### ЧАСТЬ VI 
+
+- [Глава №31. Grand Central Dispatch](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#gcd)
+- [Глава №32. API – Application Programming Interface]()
 
 ---
 
@@ -8174,7 +8180,7 @@ class House {
 Использование модификатора `weak` привносит некоторые особенности:
 - Так как значение свойства переводится в nil, оно должно быть опциональным. В нашем примере свойство `owner` имеет опциональный тип Human?
 - Так как свойство изменяет свое значение (на nil), оно не может быть константой. Только `var`
- 
+
 Если необходимо сделать слабую ссылку на экземпляр неопционального типа данных, то используется модификатор `#unowned` вместо `weak`. Такие ссылки называются #бесхозными (не может указывать на nil). 
 
 ```swift

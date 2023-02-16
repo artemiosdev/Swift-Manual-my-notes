@@ -10,12 +10,12 @@
 
 ### ЧАСТЬ V Фреймворки
 
-- [Глава №. Core Data](#coredata)
+- [Глава №31. Core Data](#coredata)
 
 
 ### ЧАСТЬ VI 
 
-- [Глава №. Grand Central Dispatch](#gcd)
+- [Глава №.32 Grand Central Dispatch](#gcd)
 
 ---
 
@@ -604,5 +604,183 @@ timer.resume()
 
 [К оглавлению](#contents)
 
-###  <a id="" /> Глава №. 
+###  <a id="" /> Глава №. API – Application Programming Interface
+
+**#API – Application Programming Interface**, програмный интерфейс приложения. По сути это документация описывающая что мы можем получить от сервиса и какие запросы нужно отправить чтобы получить ту или иную информацию (аналогия с меню блюд, когда мы сидим в ресторане).
+
+Это программный интерфейс приложения — это набор инструментов, который позволяет одним программам работать с другими. API предусматривает, что программы могут работать в том числе и на разных компьютерах
+
+**#CRUD** (сокр. от англ. create, read-retrieve, update, delete — «создать, прочесть-получить, обновить-редактирование, удалить») —четыре базовые функции, используемые при работе с персистентными хранилищами данных:
+
+<img alt="image" src="images/api example.jpg"/>
+
+<img alt="image" src="images/api example2.jpg"/>
+
+<img alt="image" src="images/api example3.jpg"/>
+
+**#RestAPI - REpresentational State Transfer**, апишка которая предоставляет нам интерфейс взаимодействия с веб-сервисом, это фактически архитектура на которой построено веб-приложение которое предоставляет нам api. 
+
+**Rest** – это обозначение свидетельствующее о том, что каждый раз отправляя запрос на веб-сервис мы должны отправить все необходимые данные для запроса, этот сервис не запоминает состояние пользователя отправляющего запрос.
+
+Форматы получения данных: #JSON(JavaScriptObjectNotation), XML
+
+Транспорт: всегда HTTP. REST полностью построен на основе HTTP.
+
+**Representational State Transfer (#REST)** — это передача состояния представления. Технология позволяет получать и модифицировать данные и состояния удаленных приложений, передавая HTTP-вызовы через интернет или любую другую сеть.
+
+Если проще, REST API — это когда серверное приложение дает доступ к своим данным клиентскому приложению по определенному URL. 
+
+Пример:
+Бухгалтерское приложение для выставления счетов. Счета хранятся на сервере: мобильное приложение обращается к нему через API и показывает на экране то, что нужно.
+
+REST API позволяет использовать для общения между программами протокол #HTTP (зашифрованная версия — #HTTPS), с помощью которого мы получаем и отправляем большую часть информации в интернете.
+
+HTTP довольно прост. Допустим, есть адрес http://website.com/something. Он состоит из двух частей: первая — это адрес сайта или сервера, то есть http://website.com. Вторая — адрес ресурса на удаленном сервере, в данном примере — /something.
+Вбивая в адресную строку URL-адрес http://website.com/something, мы на самом деле идем на сервер website.com и запрашиваем ресурс под названием /something. «Пойди вот туда, принеси мне вот то» — и есть HTTP-запрос.
+
+### Для чего используют REST API
+Архитектура REST API — самое популярное решение для организации взаимодействия между различными программами. Так произошло, поскольку HTTP-протокол реализован во всех языках программирования и всех операционных системах, в отличие от проприетарных протоколов.
+
+Чаще всего REST API применяют:
+- Для связи мобильных приложений с серверными.
+- Для построения микросервисных серверных приложений. Это архитектурный подход, при котором большие приложения разбиваются на много маленьких частей.
+- Для предоставления доступа к программам сторонних разработчиков. Например, Stripe API позволяет программистам встраивать обработку платежей в свои приложения.
+
+Пример погодной апишки [OpenWeather](https://openweathermap.org/current#name)
+ `
+### Что такое JSON
+Текстовый формат обмена данными, основанный на JS. Все данные между `{…}`, где внутри могут быть отдельные свойства, а также `{…}` – отдельный тип, или `[ { … } ]` – массив объекта
+
+#Распарсить json – это значит разложить полученные данные по созданной нами модели
+
+Чтобы распарсить можно использовать сайт [quicktype](https://app.quicktype.io/)
+
+Пример
+
+```js
+{
+"coord": {
+"lon": -0.1257,
+"lat": 51.5085
+},
+"weather": [
+{
+"id": 800,
+"main": "Clear",
+"description": "clear sky",
+"icon": "01d"
+}
+],
+"base": "stations",
+"main": {
+"temp": 11.96,
+"feels_like": 10.99,
+"temp_min": 10.31,
+"temp_max": 13.06,
+"pressure": 1031,
+"humidity": 68
+},
+"visibility": 10000,
+"wind": {
+"speed": 2.57,
+"deg": 140
+},
+"clouds": {
+"all": 0
+},
+"dt": 1676303427,
+"sys": {
+"type": 2,
+"id": 2075535,
+"country": "GB",
+"sunrise": 1676272749,
+"sunset": 1676308230
+},
+"timezone": 0,
+"id": 2643743,
+"name": "London",
+"cod": 200
+}
+```
+Превращается в swift модель (можно выбрать любой язык)
+
+```swift
+// This file was generated from JSON Schema using quicktype, do not modify it directly.
+// To parse the JSON, add this file to your project and do:
+//
+//   let welcome = try? JSONDecoder().decode(Welcome.self, from: jsonData)
+
+import Foundation
+
+// MARK: - Welcome
+struct Welcome: Codable {
+    let coord: Coord
+    let weather: [Weather]
+    let base: String
+    let main: Main
+    let visibility: Int
+    let wind: Wind
+    let clouds: Clouds
+    let dt: Int
+    let sys: Sys
+    let timezone, id: Int
+    let name: String
+    let cod: Int
+}
+
+// MARK: - Clouds
+struct Clouds: Codable {
+    let all: Int
+}
+
+// MARK: - Coord
+struct Coord: Codable {
+    let lon, lat: Double
+}
+
+// MARK: - Main
+struct Main: Codable {
+    let temp, feelsLike, tempMin, tempMax: Double
+    let pressure, humidity: Int
+
+    enum CodingKeys: String, CodingKey {
+        case temp
+        case feelsLike = "feels_like"
+        case tempMin = "temp_min"
+        case tempMax = "temp_max"
+        case pressure, humidity
+    }
+}
+
+// MARK: - Sys
+struct Sys: Codable {
+    let type, id: Int
+    let country: String
+    let sunrise, sunset: Int
+}
+
+// MARK: - Weather
+struct Weather: Codable {
+    let id: Int
+    let main, description, icon: String
+}
+
+// MARK: - Wind
+struct Wind: Codable {
+    let speed: Double
+    let deg: Int
+}
+```
+
+---
+
+[К оглавлению](#contents)
+
+###  <a id="" /> Глава №.
+
+<img alt="image" src="images/"/>
+
+<img alt="image" src="images/"/>
+
+
 

@@ -53,12 +53,13 @@
 
 ### ЧАСТЬ V Фреймворки
 
-- [Глава  №. UIKit. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/UIKit%20notes.md)
-- [Глава  №. Core Data. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart2.md#coredata)
+- [Глава  №29. UIKit. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/UIKit%20notes.md)
+- [Глава  №30. Core Data. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#coredata)
 
 ### ЧАСТЬ VI 
 
-- [Глава №. Grand Central Dispatch](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#gcd)
+- [Глава №31. Grand Central Dispatch](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#gcd)
+- [Глава №32. API – Application Programming Interface]()
 
 ---
 
