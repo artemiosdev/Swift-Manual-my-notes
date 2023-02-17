@@ -16,6 +16,7 @@
 ### ЧАСТЬ VI 
 
 - [Глава №.32 Grand Central Dispatch](#gcd)
+- [Глава №.33 API – Application Programming Interface](#api)
 
 ---
 
@@ -604,7 +605,7 @@ timer.resume()
 
 [К оглавлению](#contents)
 
-###  <a id="" /> Глава №. API – Application Programming Interface
+###  <a id="api" /> Глава №. API – Application Programming Interface
 
 **#API – Application Programming Interface**, програмный интерфейс приложения. По сути это документация описывающая что мы можем получить от сервиса и какие запросы нужно отправить чтобы получить ту или иную информацию (аналогия с меню блюд, когда мы сидим в ресторане).
 
