@@ -17,12 +17,13 @@
 
 - [Глава №.32 Grand Central Dispatch](#gcd)
 - [Глава №.33 API – Application Programming Interface](#api)
+- [Глава №.34 Паттерны проектирования](#patterns)
 
 ---
 
 [К оглавлению](#contents)
 
-###  <a id="coredata" /> Глава №. Core Data
+###  <a id="coredata" /> Глава №.31 Core Data
 
 [#CoreData](https://developer.apple.com/documentation/coredata) – нативный фреймворк от Apple для хранения данных пользователя у него на устройстве. Это не база данных.
 
@@ -195,7 +196,7 @@ extension Name : Identifiable {
 
 [К оглавлению](#contents)
 
-###  <a id="gcd" /> Глава №. Grand Central Dispatch 
+###  <a id="gcd" /> Глава №.32 Grand Central Dispatch 
 
 ### [Папка с примерами использования #GCD](https://github.com/artemiosdev/Small-projects/tree/main/GCD) 
 
@@ -605,7 +606,7 @@ timer.resume()
 
 [К оглавлению](#contents)
 
-###  <a id="api" /> Глава №. API – Application Programming Interface
+###  <a id="api" /> Глава №.33 API – Application Programming Interface
 
 **#API – Application Programming Interface**, програмный интерфейс приложения. По сути это документация описывающая что мы можем получить от сервиса и какие запросы нужно отправить чтобы получить ту или иную информацию (аналогия с меню блюд, когда мы сидим в ресторане).
 
@@ -777,7 +778,143 @@ struct Wind: Codable {
 
 [К оглавлению](#contents)
 
-###  <a id="" /> Глава №.
+###  <a id="patterns" /> Глава №. Глава №.34 Паттерны проектирования
+
+Примеры в папке [additional materials->Паттерны проектирования]()
+
+Существует три категории паттернов: порождающие, структурные, поведенческие
+
+**Порождающие паттерны** – работают с инициализацией объектов. Абстрагируются от самой инициализации конкретного типа в какой-то абстрактный тип (протокол к примеру)
+
+**Структурные паттерны** – работает с интерфейсами, и преобразует их 
+
+**Поведенческие паттерны** – обеспечивают гибкое взаимодействие между типами/объектами
+
+### Strategy
+Поведенческий паттерн. Позволяет не плодить классы с подклассами, а сделать более гибкое решение.
+
+<img alt="image" src="images/Strategy1.jpeg"/>
+
+Используем протокол как тип, для свойств class Human
+
+```swift
+protocol SwimBehavior {
+    func swim()
+}
+
+class ProfessionalSwimmer: SwimBehavior {
+    func swim() {
+        print("professional swimming")
+    }
+}
+
+class NewbieSwimmer: SwimBehavior {
+    func swim() {
+        print("newbie swimming")
+    }
+}
+
+class NonSwimmer: SwimBehavior {
+    func swim() {
+        print("non-swimming")
+    }
+}
+
+
+protocol DiveBehavior {
+    func dive()
+}
+
+
+class ProfessionalDiver: DiveBehavior {
+    func dive() {
+        print("professional diving")
+    }
+}
+
+
+class NewbieDiver: DiveBehavior {
+    func dive() {
+        print("newbie diving")
+    }
+}
+
+class NonDiver: DiveBehavior {
+    func dive() {
+        print("non-diving")
+    }
+}
+
+
+class Human {
+    private var diveBehavior: DiveBehavior
+    private var swimBehavior: SwimBehavior
+    
+    func performSwim() {
+        swimBehavior.swim()
+    }
+    
+    func performDive() {
+        diveBehavior.dive()
+    }
+    
+    func setSwimBehavior(sb: SwimBehavior) {
+        self.swimBehavior = sb
+    }
+    
+    func setDiveBehavior(db: DiveBehavior) {
+        self.diveBehavior = db
+    }
+    
+    func run() {
+        print("running")
+    }
+    
+    init(swimBehavior: SwimBehavior, diveBehavior: DiveBehavior) {
+        self.swimBehavior = swimBehavior
+        self.diveBehavior = diveBehavior
+    }
+}
+
+let human = Human(swimBehavior: ProfessionalSwimmer(), diveBehavior: ProfessionalDiver())
+human.performSwim() // professional swimming
+human.performDive() // professional diving
+human.setSwimBehavior(sb: NonSwimmer())
+human.performSwim() // non-swimming
+```
+
+<img alt="image" src="images/Strategy2.jpeg"/>
+
+### Observer
+
+```swift
+
+```
+
+```swift
+
+```
+
+```swift
+
+```
+
+```swift
+
+```
+
+```swift
+
+```
+
+```swift
+
+```
+
+
+
+
+
 
 <img alt="image" src="images/"/>
 
