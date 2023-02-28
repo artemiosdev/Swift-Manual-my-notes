@@ -15,15 +15,15 @@
 
 ### ЧАСТЬ VI 
 
-- [Глава №.32 Grand Central Dispatch](#gcd)
-- [Глава №.33 API – Application Programming Interface](#api)
-- [Глава №.34 Паттерны проектирования](#patterns)
+- [Глава №32. Grand Central Dispatch](#gcd)
+- [Глава №33. API – Application Programming Interface](#api)
+- [Глава №34. Паттерны проектирования](#patterns)
 
 ---
 
 [К оглавлению](#contents)
 
-###  <a id="coredata" /> Глава №.31 Core Data
+###  <a id="coredata" /> Глава №31. Core Data
 
 [#CoreData](https://developer.apple.com/documentation/coredata) – нативный фреймворк от Apple для хранения данных пользователя у него на устройстве. Это не база данных.
 
@@ -196,7 +196,7 @@ extension Name : Identifiable {
 
 [К оглавлению](#contents)
 
-###  <a id="gcd" /> Глава №.32 Grand Central Dispatch 
+###  <a id="gcd" /> Глава №32. Grand Central Dispatch 
 
 ### [Папка с примерами использования #GCD](https://github.com/artemiosdev/Small-projects/tree/main/GCD) 
 
@@ -606,7 +606,7 @@ timer.resume()
 
 [К оглавлению](#contents)
 
-###  <a id="api" /> Глава №.33 API – Application Programming Interface
+###  <a id="api" /> Глава №33. API – Application Programming Interface
 
 **#API – Application Programming Interface**, програмный интерфейс приложения. По сути это документация описывающая что мы можем получить от сервиса и какие запросы нужно отправить чтобы получить ту или иную информацию (аналогия с меню блюд, когда мы сидим в ресторане).
 
@@ -778,9 +778,7 @@ struct Wind: Codable {
 
 [К оглавлению](#contents)
 
-###  <a id="patterns" /> Глава №. Глава №.34 Паттерны проектирования
-
-Примеры в папке [additional materials->Паттерны проектирования]()
+###  <a id="patterns" /> Глава №34. Паттерны проектирования
 
 Существует три категории паттернов: порождающие, структурные, поведенческие
 
@@ -885,7 +883,95 @@ human.performSwim() // non-swimming
 
 <img alt="image" src="images/Strategy2.jpeg"/>
 
-### Observer
+---
+
+### Observer - наблюдатель
+Поведенческий паттерн.
+
+Один ко многим, то есть один объект за которым наблюдают  другие объекты. Аналогия с учителем, где все ученики следят за ним т.е он главный объект, а они наблюдатели, он раздаёт всем домашнее задание, а ученики его получают.
+
+<img alt="image" src="images/Observer1.jpeg"/>
+
+```swift
+import Foundation
+
+// протокол учителя
+protocol Subject {
+    // добавляем нового ученика-наблюдателя
+    func add(observer: PropertyObserver)
+    // убираем ученика-наблюдателя
+    func remove(observer: PropertyObserver)
+    // уведомляем наших наблюдателей об изменениях (дз, новости)
+    func notify(withString string: String)
+}
+
+// сам учитель
+class Teacher: Subject {
+    
+    // изменяемая коллекция наблюдателей, каждый элемент единственный
+    // аналогия с "журналом учителя"
+    // объекты которые "подписаны" под изменения дз
+    var observerCollection = NSMutableSet()
+    
+    // домашняя работа
+    // при появлении дз идет уведомление для всех учеников-наблюдателей
+    var homeTask = "" {
+        didSet {
+            notify(withString: homeTask)
+        }
+    }
+    
+    func add(observer: PropertyObserver) {
+        observerCollection.add(observer)
+    }
+
+    func remove(observer: PropertyObserver) {
+        observerCollection.remove(observer)
+    }
+    
+    func notify(withString string: String) {
+        for observer in observerCollection {
+            (observer as! PropertyObserver).didGet(newTask: string)
+        }
+    }
+}
+
+
+protocol PropertyObserver {
+    // получаем дз
+    func didGet(newTask task: String)
+}
+
+class Pupil: NSObject, PropertyObserver {
+    
+    var homeTask = ""
+    
+    func didGet(newTask task: String) {
+        homeTask = task
+        print("Получена новая домашняя работа: \(homeTask)")
+    }
+}
+
+let teacher = Teacher()
+let newPupil = Pupil()
+
+teacher.add(observer: newPupil)
+teacher.homeTask = "Повторить паттерны проектирования для успешного прохождения собеседования"
+
+newPupil.homeTask
+// Получена новая домашняя работа:
+// Повторить паттерны проектирования для успешного прохождения собеседования
+```
+
+<img alt="image" src="images/Observer2.jpeg"/>
+
+---
+
+### 
+
+
+
+
 
 ```swift
 
@@ -907,18 +993,14 @@ human.performSwim() // non-swimming
 
 ```
 
-```swift
-
-```
 
 
 
 
 
+<img alt="image" src="images/.jpeg"/>
 
-<img alt="image" src="images/"/>
-
-<img alt="image" src="images/"/>
+<img alt="image" src="images/.jpeg"/>
 
 
 
