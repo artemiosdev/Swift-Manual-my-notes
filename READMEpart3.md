@@ -967,15 +967,97 @@ newPupil.homeTask
 
 ---
 
-### 
+### Decorator
+https://refactoring.guru/ru/design-patterns/decorator 
 
-
-
-
+<img alt="image" src="images/Decorator1.jpeg"/>
 
 ```swift
+// Decorator
+protocol Porsche {
+    func getPrice() -> Double
+    func getDescription() -> String
+}
 
+class Boxster: Porsche {
+    func getPrice() -> Double {
+        return 120
+    }
+    func getDescription() -> String {
+        return "Porsche Boxster"
+    }
+}
+
+// отвечает за все опции которые будут предусмотрены для данных автомобилей
+class PorscheDecorator: Porsche {
+    // добавляем к автомобилю опцию
+    private let decoratedPorsche: Porsche
+    
+    required init(dp: Porsche) {
+        self.decoratedPorsche = dp
+    }
+    
+    func getPrice() -> Double {
+        return decoratedPorsche.getPrice()
+    }
+    
+    func getDescription() -> String {
+        return decoratedPorsche.getDescription()
+    }
+}
+
+class PremiumAudioSystem: PorscheDecorator {
+    required init(dp: Porsche) {
+        super.init(dp: dp)
+    }
+    
+    override func getPrice() -> Double {
+        return super.getPrice() + 30
+    }
+    
+    override func getDescription() -> String {
+        return super.getDescription() + " with premium audio system"
+    }
+}
+
+
+class PanoramicSunroof: PorscheDecorator {
+    required init(dp: Porsche) {
+        super.init(dp: dp)
+    }
+    
+    override func getPrice() -> Double {
+        return super.getPrice() + 20
+    }
+    
+    override func getDescription() -> String {
+        return super.getDescription() + " with panoramic sunroof"
+    }
+}
+
+var porscheBoxster: Porsche = Boxster()
+porscheBoxster.getDescription() // Porsche Boxster
+porscheBoxster.getPrice() // 120
+
+porscheBoxster = PremiumAudioSystem(dp: porscheBoxster)
+porscheBoxster.getDescription()
+// Porsche Boxster with premium audio system
+
+porscheBoxster.getPrice() // 150
+
+porscheBoxster = PanoramicSunroof(dp: porscheBoxster)
+porscheBoxster.getDescription()
+
+// Porsche Boxster with premium audio system with panoramic sunroof
+porscheBoxster.getPrice() // 170
 ```
+
+<img alt="image" src="images/Decorator2.jpeg"/>
+
+---
+
+### Simple Factory
+
 
 ```swift
 
