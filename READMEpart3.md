@@ -1155,6 +1155,9 @@ let fastCar1 = CarFactory.produceCar(type: .fast)
 ---
 
 ### Factory Method
+
+https://refactoring.guru/ru/design-patterns/factory-method
+
 Порождающий паттерн.
 
 #Фабричный метод, #фабрика — это порождающий паттерн проектирования, который определяет общий интерфейс для создания объектов в суперклассе, позволяя подклассам изменять тип создаваемых объектов.
@@ -1227,17 +1230,219 @@ let bus = busFactory.produce() // bus is created
 
 ---
 
+### Abstract Factory
+https://refactoring.guru/ru/design-patterns/abstract-factory
+
+Пораждающий паттерн.
+
+#Абстрактная фабрика — это порождающий паттерн проектирования, который позволяет создавать семейства связанных объектов, не привязываясь к конкретным классам создаваемых объектов.
+
+Проблема:
+
+Представьте, что вы пишете симулятор мебельного магазина. Ваш код содержит:
+
+Семейство зависимых продуктов. Скажем, Кресло + Диван + Столик.
+
+Несколько вариаций этого семейства. Например, продукты Кресло, Диван и Столик представлены в трёх разных стилях: Ар-деко, Викторианском и Модерне.
+
+Вам нужен такой способ создавать объекты продуктов, чтобы они сочетались с другими продуктами того же семейства. Это важно, так как клиенты расстраиваются, если получают несочетающуюся мебель.
+
+<img alt="image" src="images/AbstractFactory1.jpeg"/>
+
+```swift
+// Abstract Factory
+protocol Car {
+    func drive()
+}
+
+class LittleSizeCar: Car {
+    func drive() {
+        print("drive a little car")
+    }
+}
+
+class MiddleSizeCar: Car {
+    func drive() {
+        print("drive a middle car")
+    }
+}
+
+protocol Bus {
+    func drive()
+}
+
+class LittleSizeBus: Bus {
+    func drive() {
+        print("drive a little bus")
+    }
+}
+
+class MiddleSizeBus: Bus {
+    func drive() {
+        print("drive a middle size bus")
+    }
+}
+
+
+protocol Factory {
+    func produceBus() -> Bus
+    func produceCar() -> Car
+}
+
+class LittleSizeFactory: Factory {
+    func produceBus() -> Bus {
+        print("Little bus is created")
+        return LittleSizeBus()
+    }
+    
+    func produceCar() -> Car {
+        print("Little size car is creates")
+        return LittleSizeCar()
+    }
+}
+
+class MiddleSizeFactory: Factory {
+    func produceBus() -> Bus {
+        print("Middle size bus is created")
+        return MiddleSizeBus()
+    }
+    
+    func produceCar() -> Car {
+        print("Middle size car is creates")
+        return MiddleSizeCar()
+    }
+}
+
+let littleFactory = LittleSizeFactory()
+littleFactory.produceCar() // Little size car is creates
+
+let middleFactory = MiddleSizeFactory()
+middleFactory.produceBus() // Middle size bus is creates
+```
+
+<img alt="image" src="images/AbstractFactory2.jpeg"/>
+
+---
+
+
+
+<img alt="image" src="images/.jpeg"/>
+
+```swift
+
+```
+
+<img alt="image" src="images/.jpeg"/>
+
+---
+
 ### 
 
-```swift
-
-```
+<img alt="image" src="images/.jpeg"/>
 
 ```swift
 
 ```
 
+<img alt="image" src="images/.jpeg"/>
 
+---
+
+### 
+
+<img alt="image" src="images/.jpeg"/>
+
+```swift
+
+```
+
+<img alt="image" src="images/.jpeg"/>
+
+---
+
+### 
+
+<img alt="image" src="images/.jpeg"/>
+
+```swift
+
+```
+
+<img alt="image" src="images/.jpeg"/>
+
+---
+
+### 
+
+<img alt="image" src="images/.jpeg"/>
+
+```swift
+
+```
+
+<img alt="image" src="images/.jpeg"/>
+
+---
+
+### 
+
+<img alt="image" src="images/.jpeg"/>
+
+```swift
+
+```
+
+<img alt="image" src="images/.jpeg"/>
+
+---
+
+### 
+
+<img alt="image" src="images/.jpeg"/>
+
+```swift
+
+```
+
+<img alt="image" src="images/.jpeg"/>
+
+---
+
+### 
+
+<img alt="image" src="images/.jpeg"/>
+
+```swift
+
+```
+
+<img alt="image" src="images/.jpeg"/>
+
+---
+
+### 
+
+<img alt="image" src="images/.jpeg"/>
+
+```swift
+
+```
+
+<img alt="image" src="images/.jpeg"/>
+
+---
+
+### 
+
+<img alt="image" src="images/.jpeg"/>
+
+```swift
+
+```
+
+<img alt="image" src="images/.jpeg"/>
+
+---
 
 
 
