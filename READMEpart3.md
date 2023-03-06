@@ -788,6 +788,12 @@ struct Wind: Codable {
 
 **Поведенческие паттерны** – обеспечивают гибкое взаимодействие между типами/объектами
 
+<img alt="image" src="images/паттерны1.jpeg"/>
+
+<img alt="image" src="images/паттерны2.jpeg"/>
+
+---
+
 ### Strategy
 Поведенческий паттерн. Позволяет не плодить классы с подклассами, а сделать более гибкое решение.
 
@@ -1149,16 +1155,75 @@ let fastCar1 = CarFactory.produceCar(type: .fast)
 ---
 
 ### Factory Method
+Порождающий паттерн.
 
+#Фабричный метод, #фабрика — это порождающий паттерн проектирования, который определяет общий интерфейс для создания объектов в суперклассе, позволяя подклассам изменять тип создаваемых объектов.
 
+<img alt="image" src="images/FactoryMethod1.jpeg"/>
 
-<img alt="image" src="images/.jpeg"/>
+Для каждого транспортного средства создадим свою отдельную фабрику (для легковых, для грузовых, для автобусов).
 
 ```swift
+// интерфейс для транспортных средств
+protocol Vehicle {
+    func drive()
+}
 
+class Car: Vehicle {
+    func drive() {
+        print("drive a car")
+    }
+}
+
+class Truck: Vehicle {
+    func drive() {
+        print("drive a truck")
+    }
+}
+
+class Bus: Vehicle {
+    func drive() {
+        print("drive a bus")
+    }
+}
+
+// протокол создания фабрик для различных транспортных средств
+protocol VehicleFactory {
+    func produce() -> Vehicle
+}
+
+class CarFactory: VehicleFactory {
+        func produce() -> Vehicle {
+        print("car is created")
+        return Car()
+    }
+}
+
+class TruckFactory: VehicleFactory {
+    func produce() -> Vehicle {
+        print("truck is created")
+        return Truck()
+    }
+}
+
+class  BusFactory: VehicleFactory {
+    func produce() -> Vehicle {
+        print("bus is created")
+        return Bus()
+    }
+}
+
+let carFacory = CarFactory()
+let car = carFacory.produce() // car is created
+
+let truckFactory = TruckFactory()
+let truck = truckFactory.produce() // truck is created
+
+let busFactory = BusFactory()
+let bus = busFactory.produce() // bus is created
 ```
 
-<img alt="image" src="images/.jpeg"/>
+<img alt="image" src="images/FactoryMethod2.jpeg"/>
 
 ---
 
