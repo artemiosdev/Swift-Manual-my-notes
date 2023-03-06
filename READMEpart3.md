@@ -1469,23 +1469,128 @@ class ViewController: UIViewController {
 }
 ```
 
-<img alt="image" src="images/.jpeg"/>
-
 ---
 
-### 
+### Command
 
-<img alt="image" src="images/.jpeg"/>
+https://refactoring.guru/ru/design-patterns/command
+
+#Команда — это поведенческий паттерн проектирования, который превращает запросы в объекты, позволяя передавать их как аргументы при вызове методов, ставить запросы в очередь, логировать их, а также поддерживать отмену операций.
+
+**Аналогия из жизни**. Пример заказа в ресторане.
+
+Вы заходите в ресторан. К вам подходит  официант и принимает заказ, записывая все в блокнот. Он уходит на кухню, и передает лист из блокнота повару, который читает содержание заказа и готовит заказанные блюда.
+
+В этом примере вы являетесь отправителем, официант с блокнотом — **командой**, а повар — получателем. Как и в паттерне, вы не соприкасаетесь напрямую с поваром. Вместо этого вы отправляете заказ с официантом, который самостоятельно «настраивает» повара на работу. С другой стороны, повар не знает, кто конкретно послал ему заказ. Но это ему безразлично, так как вся необходимая информация есть в листе заказа.
+
+<img alt="image" src="images/Command1.jpeg"/>
+
+<img alt="image" src="images/Command2.jpeg"/>
 
 ```swift
+// Command
 
+// для идентификации аккаунта с которым работаем
+class Account {
+    var accountName: String
+    var balance: Int
+    
+    init(accountName: String, balance: Int) {
+        self.accountName = accountName
+        self.balance = balance
+    }
+}
+
+protocol Command {
+    func execute()
+    var isComplete: Bool { get set }
+}
+
+// внести деньги
+class Deposit: Command {
+    private var _account: Account
+    private var _amount: Int
+    var isComplete = false
+    
+    init(account: Account, amount: Int) {
+        self._account = account
+        self._amount = amount
+    }
+    
+    func execute() {
+        _account.balance += _amount
+        isComplete = true
+    }
+}
+
+// снять деньги
+class Withdraw: Command {
+    private var _account: Account
+    private var _amount: Int
+    var isComplete = false
+    
+    init(account: Account, amount: Int) {
+        self._account = account
+        self._amount = amount
+    }
+    
+    func execute() {
+        if _account.balance >= _amount {
+            _account.balance -= _amount
+            isComplete = true
+        } else {
+            print("Not enough money")
+        }
+    }
+}
+
+// отделен от аккаунтов и ничего не знает о них
+class TransactionManager {
+    // Singleton
+    static let shared = TransactionManager()
+    private init() {}
+    
+    // ничего не знает об Account, главное чтобы был тип Command
+    private var _transactions: [Command] = []
+    
+    // незаконченные транзакции
+    var pendingTransactions: [Command] {
+        get {
+            // фильтруем каждый элемент массива транзакций
+            return self._transactions.filter{ $0.isComplete == false }
+        }
+    }
+    
+    func addTransactions(command: Command) {
+        self._transactions.append(command)
+    }
+    
+    func processingTransactions() {
+        // фильтруем каждый элемент массива транзакций
+        // и выполняем для каждого метод execute
+        _transactions.filter{ $0.isComplete == false }.forEach{ $0.execute() }
+    }
+}
+
+let account = Account(accountName: "Artem", balance: 1000)
+let transactionManager = TransactionManager.shared
+transactionManager.addTransactions(command: Deposit(account: account, amount: 100))
+transactionManager.addTransactions(command: Withdraw(account: account, amount: 500))
+transactionManager.pendingTransactions
+account.balance // 1000
+transactionManager.processingTransactions()
+account.balance // 600
+
+// при необходимости новой транзакции в работе с деньгими,
+// мы создадим лишь один новый класс для нее типа Command и все,
+// остальной код будет без изменений
 ```
 
-<img alt="image" src="images/.jpeg"/>
+<img alt="image" src="images/Command3.jpeg"/>
 
 ---
 
-### 
+### Adapter
 
 <img alt="image" src="images/.jpeg"/>
 
