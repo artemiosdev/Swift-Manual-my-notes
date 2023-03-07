@@ -1668,15 +1668,81 @@ class SimpleCar1: SupercarProtocol {
 
 ---
 
-### 
+### Facade
 
-<img alt="image" src="images/.jpeg"/>
+https://refactoring.guru/ru/design-patterns/facade
+
+#Фасад — это структурный паттерн проектирования, который предоставляет простой интерфейс к сложной системе классов, библиотеке или фреймворку. Призван превратить сложное в простое.
+
+Проблема:
+
+Вашему коду приходится работать с большим количеством объектов некой сложной библиотеки или фреймворка. Вы должны самостоятельно инициализировать эти объекты, следить за правильным порядком зависимостей и так далее.
+
+В результате бизнес-логика ваших классов тесно переплетается с деталями реализации сторонних классов. Такой код довольно сложно понимать и поддерживать.
+
+Аналогия из жизни:
+
+Когда вы звоните в магазин и делаете заказ по телефону, сотрудник службы поддержки является вашим фасадом ко всем службам и отделам магазина. Он предоставляет вам упрощённый интерфейс к системе создания заказа, платёжной системе и отделу доставки.
+
+Другой пример. Раньше были магазины специализированного типа, хлебный, молочный, хозяйственный, кондитерская, мясной и тп, и чтобы купить все это нужно посетить множество магазинов, сейчас же есть супермаркет, где можно в одном месте приобрести разные товары.
 
 ```swift
+// Facade
+class FruitShop {
+    func buyFruits() -> String {
+        return "fruits"
+    }
+}
 
+class MeatShop {
+    func buyMeat() -> String {
+        return "meat"
+    }
+}
+
+class MilkShop {
+    func buyMilk() -> String {
+        return "milk"
+    }
+}
+
+class SweetShop {
+    func buySweets() -> String {
+        return "sweets"
+    }
+}
+
+class BreadShop {
+    func buyBread() -> String {
+        return "bread"
+    }
+}
+
+// Facade
+class Supermarket {
+    private let fruitShop = FruitShop()
+    private let meatShop = MeatShop()
+    private let milkShop = MilkShop()
+    private let sweetShop = SweetShop()
+    private let breadShop = BreadShop()
+    
+    // спрячем реализацию всех методов buy... в один
+    func buyProducts() -> String {
+        var products = ""
+        products += fruitShop.buyFruits() + ", "
+        products += meatShop.buyMeat() + ", "
+        products += milkShop.buyMilk() + ", "
+        products += sweetShop.buySweets() + ", "
+        products += breadShop.buyBread()
+        return "I bought: " + products
+    }
+}
+
+let supermarket = Supermarket()
+supermarket.buyProducts()
 ```
 
-<img alt="image" src="images/.jpeg"/>
+<img alt="image" src="images/Facade.jpeg"/>
 
 ---
 
