@@ -1592,13 +1592,79 @@ account.balance // 600
 
 ### Adapter
 
-<img alt="image" src="images/.jpeg"/>
+https://refactoring.guru/ru/design-patterns/adapter
+
+#Адаптер — это структурный паттерн проектирования, который позволяет объектам с несовместимыми интерфейсами работать вместе.
+
+Это объект-переводчик, который трансформирует интерфейс или данные одного объекта в такой вид, чтобы он стал понятен другому объекту.
+
+При этом адаптер оборачивает один из объектов, так что другой объект даже не знает о наличии первого. Например, вы можете обернуть объект, работающий в метрах, адаптером, который бы конвертировал данные в футы.
+
+Адаптеры могут не только переводить данные из одного формата в другой, но и помогать объектам с разными интерфейсами работать сообща. Это работает так:
+
+Адаптер имеет интерфейс, который совместим с одним из объектов.
+
+Поэтому этот объект может свободно вызывать методы адаптера.
+
+Адаптер получает эти вызовы и перенаправляет их второму объекту, но уже в том формате и последовательности, которые понятны второму объекту.
+
+Аналогия из жизни:
+
+Стандарты розеток в разных странах отличаются. Ваша европейская зарядка будет бесполезна в США без специального адаптера, позволяющего подключиться к розетке другого типа.
+
+Напишем адаптер чтобы класс SimpleCar мог воспользоваться недоступным ему методом makeNoise().
+ Мы хотим адаптировать SimpleCar под Supercar
 
 ```swift
+// adaptee, т.е класс который мы адаптируем
+class SimpleCar {
 
+    func sound() -> String {
+        return "tr-tr-tr-tr"
+    }
+}
+
+// target, т.е объект под который мы ориентируемся
+protocol SupercarProtocol {
+    func makeNoise() -> String
+}
+
+class Supercar: SupercarProtocol {
+    func makeNoise() -> String {
+        return "wroom-wroom"
+    }
+}
+
+// adaptor
+class SupercarAdaptor: SupercarProtocol {
+    // принимаем объект который хотим адаптировать
+    var simpleCar: SimpleCar
+    
+    init(simpleCar: SimpleCar) {
+        self.simpleCar = simpleCar
+    }
+    
+    // адаптируем его под наш протокол SupercarProtocol
+    func makeNoise() -> String {
+        return simpleCar.sound()
+    }
+}
+
+// ...
+
+// или можно подписать SimpleCar под SupercarProtocol
+// и внутри реализовать его обязательный метод
+class SimpleCar1: SupercarProtocol {
+    func makeNoise() -> String {
+        return "new sound"
+    }
+    func sound() -> String {
+        return "tr-tr-tr-tr"
+    }
+}
 ```
 
-<img alt="image" src="images/.jpeg"/>
+<img alt="image" src="images/Adapter.jpeg"/>
 
 ---
 
