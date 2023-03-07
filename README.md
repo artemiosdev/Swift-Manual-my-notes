@@ -60,7 +60,7 @@
 
 - [Глава №31. Grand Central Dispatch](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#gcd)
 - [Глава №32. API – Application Programming Interface](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#api)
-
+- [Глава №33. Паттерны проектирования](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#patterns)
 
 ---
 

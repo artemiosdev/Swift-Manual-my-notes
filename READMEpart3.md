@@ -10,20 +10,20 @@
 
 ### ЧАСТЬ V Фреймворки
 
-- [Глава №31. Core Data](#coredata)
-
+- [Глава  №29. UIKit. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/UIKit%20notes.md)
+- [Глава №30. Core Data](#coredata)
 
 ### ЧАСТЬ VI 
 
-- [Глава №32. Grand Central Dispatch](#gcd)
-- [Глава №33. API – Application Programming Interface](#api)
-- [Глава №34. Паттерны проектирования](#patterns)
+- [Глава №31. Grand Central Dispatch](#gcd)
+- [Глава №32. API – Application Programming Interface](#api)
+- [Глава №33. Паттерны проектирования](#patterns)
 
 ---
 
 [К оглавлению](#contents)
 
-###  <a id="coredata" /> Глава №31. Core Data
+###  <a id="coredata" /> Глава №30. Core Data
 
 [#CoreData](https://developer.apple.com/documentation/coredata) – нативный фреймворк от Apple для хранения данных пользователя у него на устройстве. Это не база данных.
 
@@ -196,7 +196,7 @@ extension Name : Identifiable {
 
 [К оглавлению](#contents)
 
-###  <a id="gcd" /> Глава №32. Grand Central Dispatch 
+###  <a id="gcd" /> Глава №31. Grand Central Dispatch 
 
 ### [Папка с примерами использования #GCD](https://github.com/artemiosdev/Small-projects/tree/main/GCD) 
 
@@ -606,7 +606,7 @@ timer.resume()
 
 [К оглавлению](#contents)
 
-###  <a id="api" /> Глава №33. API – Application Programming Interface
+###  <a id="api" /> Глава №32. API – Application Programming Interface
 
 **#API – Application Programming Interface**, програмный интерфейс приложения. По сути это документация описывающая что мы можем получить от сервиса и какие запросы нужно отправить чтобы получить ту или иную информацию (аналогия с меню блюд, когда мы сидим в ресторане).
 
@@ -778,7 +778,7 @@ struct Wind: Codable {
 
 [К оглавлению](#contents)
 
-###  <a id="patterns" /> Глава №34. Паттерны проектирования
+###  <a id="patterns" /> Глава №33. Паттерны проектирования
 
 Существует три категории паттернов: порождающие, структурные, поведенческие
 
@@ -794,9 +794,7 @@ struct Wind: Codable {
 
 ---
 
-### Strategy
-
-https://refactoring.guru/ru/design-patterns/strategy
+### [Strategy](https://refactoring.guru/ru/design-patterns/strategy)
 
 **#Стратегия** — это поведенческий паттерн проектирования, который определяет семейство схожих алгоритмов и помещает каждый из них в собственный класс, после чего алгоритмы можно взаимозаменять прямо во время исполнения программы.
 
@@ -810,7 +808,7 @@ https://refactoring.guru/ru/design-patterns/strategy
 
 Аналогия из жизни. Вам нужно добраться до аэропорта. Можно доехать на автобусе, такси или велосипеде. Здесь вид транспорта является стратегией. Вы выбираете конкретную стратегию в зависимости от контекста — наличия денег или времени до отлёта
 
-<img alt="image" src="images/Strategy1.jpeg"/>
+<img alt="image" src="images/Strategy1.jpeg" width = 70%/>
 
 Используем протокол как тип, для свойств class Human
 
@@ -900,13 +898,11 @@ human.setSwimBehavior(sb: NonSwimmer())
 human.performSwim() // non-swimming
 ```
 
-<img alt="image" src="images/Strategy2.jpeg"/>
+<img alt="image" src="images/Strategy2.jpeg" width = 70%/>
 
 ---
 
-### Observer - наблюдатель
-
-https://refactoring.guru/ru/design-patterns/observer
+### [Observer - наблюдатель](https://refactoring.guru/ru/design-patterns/observer)
 
 **#Наблюдатель** — это поведенческий паттерн проектирования, который создаёт механизм подписки, позволяющий одним объектам следить и реагировать на события, происходящие в других объектах.
 
@@ -916,7 +912,7 @@ https://refactoring.guru/ru/design-patterns/observer
 
 Один ко многим, то есть один объект за которым наблюдают  другие объекты. Аналогия с учителем, где все ученики следят за ним т.е он главный объект, а они наблюдатели, он раздаёт всем домашнее задание, а ученики его получают.
 
-<img alt="image" src="images/Observer1.jpeg"/>
+<img alt="image" src="images/Observer1.jpeg" width = 70%/>
 
 ```swift
 import Foundation
@@ -989,13 +985,11 @@ newPupil.homeTask
 // Повторить паттерны проектирования для успешного прохождения собеседования
 ```
 
-<img alt="image" src="images/Observer2.jpeg"/>
+<img alt="image" src="images/Observer2.jpeg" width = 70%/>
 
 ---
 
-### Decorator
-
-https://refactoring.guru/ru/design-patterns/decorator 
+### [Decorator](https://refactoring.guru/ru/design-patterns/decorator)
 
 **#Декоратор** — это структурный паттерн проектирования, который позволяет динамически добавлять объектам новую функциональность, оборачивая их в полезные «обёртки». По сути можем наследоваться от нескольких классов, один объект "оборачиваем" в другой, и так далее.
 
@@ -1005,7 +999,7 @@ https://refactoring.guru/ru/design-patterns/decorator
 
 Аналогия из жизни. Любая одежда — это аналог Декоратора. Применяя Декоратор, вы не меняете первоначальный класс и не создаёте дочерних классов. Так и с одеждой — надевая свитер, вы не перестаёте быть собой, но получаете новое свойство — защиту от холода. Вы можете пойти дальше и надеть сверху ещё один декоратор — плащ, чтобы защититься и от дождя.
 
-<img alt="image" src="images/Decorator1.jpeg"/>
+<img alt="image" src="images/Decorator1.jpeg" width = 70%/>
 
 ```swift
 // Decorator
@@ -1087,7 +1081,7 @@ porscheBoxster.getDescription()
 porscheBoxster.getPrice() // 170
 ```
 
-<img alt="image" src="images/Decorator2.jpeg"/>
+<img alt="image" src="images/Decorator2.jpeg" width = 70%/>
 
 ---
 
@@ -1097,7 +1091,7 @@ porscheBoxster.getPrice() // 170
 
 Это неполноценный паттерн, это мостик к пониманию Factory Method и Abstract Factory (будут рассмотрены далее).
 
-<img alt="image" src="images/SimpleFactory1.jpeg"/>
+<img alt="image" src="images/SimpleFactory1.jpeg" width = 70%/>
 
 ```swift
 // Simple Factory
@@ -1150,17 +1144,15 @@ let hugeCar1 = CarFactory.produceCar(type: .huge)
 let fastCar1 = CarFactory.produceCar(type: .fast)
 ```
 
-<img alt="image" src="images/SimpleFactory2.jpeg"/>
+<img alt="image" src="images/SimpleFactory2.jpeg" width = 70%/>
 
 ---
 
-### Factory Method
-
-https://refactoring.guru/ru/design-patterns/factory-method
+### [Factory Method](https://refactoring.guru/ru/design-patterns/factory-method)
 
 #Фабричный метод, #фабрика — это порождающий паттерн проектирования, который определяет общий интерфейс для создания объектов в суперклассе, позволяя подклассам изменять тип создаваемых объектов.
 
-<img alt="image" src="images/FactoryMethod1.jpeg"/>
+<img alt="image" src="images/FactoryMethod1.jpeg" width = 70%/>
 
 Для каждого транспортного средства создадим свою отдельную фабрику (для легковых, для грузовых, для автобусов).
 
@@ -1224,12 +1216,11 @@ let busFactory = BusFactory()
 let bus = busFactory.produce() // bus is created
 ```
 
-<img alt="image" src="images/FactoryMethod2.jpeg"/>
+<img alt="image" src="images/FactoryMethod2.jpeg" width = 70%/>
 
 ---
 
-### Abstract Factory
-https://refactoring.guru/ru/design-patterns/abstract-factory
+### [Abstract Factory](https://refactoring.guru/ru/design-patterns/abstract-factory)
 
 #Абстрактная фабрика — это порождающий паттерн проектирования, который позволяет создавать семейства связанных объектов, не привязываясь к конкретным классам создаваемых объектов.
 
@@ -1243,7 +1234,7 @@ https://refactoring.guru/ru/design-patterns/abstract-factory
 
 Вам нужен такой способ создавать объекты продуктов, чтобы они сочетались с другими продуктами того же семейства. Это важно, так как клиенты расстраиваются, если получают несочетающуюся мебель.
 
-<img alt="image" src="images/AbstractFactory1.jpeg"/>
+<img alt="image" src="images/AbstractFactory1.jpeg" width = 70%/>
 
 ```swift
 // Abstract Factory
@@ -1316,12 +1307,11 @@ let middleFactory = MiddleSizeFactory()
 middleFactory.produceBus() // Middle size bus is creates
 ```
 
-<img alt="image" src="images/AbstractFactory2.jpeg"/>
+<img alt="image" src="images/AbstractFactory2.jpeg" width = 70%/>
 
 ---
 
-### Singleton
-https://refactoring.guru/ru/design-patterns/singleton
+### [Singleton](https://refactoring.guru/ru/design-patterns/singleton)
 
 #Одиночка — это порождающий паттерн проектирования, который гарантирует, что у класса есть только один экземпляр, и предоставляет к нему глобальную точку доступа.
 
@@ -1381,7 +1371,7 @@ print(TaylorFan.favoriteSong)
 
 Итак, у фаната Тейлор Свифт есть имя и возраст, которые принадлежат им, но у них у всех одна и та же любимая песня. Поскольку статические методы принадлежат самой структуре, а не экземплярам этой структуры, вы не можете использовать их для доступа к каким-либо нестатическим свойствам из структуры.
 
-<img alt="image" src="images/Singleton1.jpeg"/>
+<img alt="image" src="images/Singleton1.jpeg" width = 70%/>
 
 Вы используете синглтоны для предоставления глобально доступного общего экземпляра класса. Вы можете создавать свои собственные синглтоны, чтобы обеспечить единую точку доступа к ресурсу или службе, которые являются общими для всего приложения, например, аудиоканал для воспроизведения звуковых эффектов или сетевой менеджер для отправки HTTP-запросов
 
@@ -1471,9 +1461,7 @@ class ViewController: UIViewController {
 
 ---
 
-### Command
-
-https://refactoring.guru/ru/design-patterns/command
+### [Command](https://refactoring.guru/ru/design-patterns/command)
 
 #Команда — это поведенческий паттерн проектирования, который превращает запросы в объекты, позволяя передавать их как аргументы при вызове методов, ставить запросы в очередь, логировать их, а также поддерживать отмену операций.
 
@@ -1483,9 +1471,9 @@ https://refactoring.guru/ru/design-patterns/command
 
 В этом примере вы являетесь отправителем, официант с блокнотом — **командой**, а повар — получателем. Как и в паттерне, вы не соприкасаетесь напрямую с поваром. Вместо этого вы отправляете заказ с официантом, который самостоятельно «настраивает» повара на работу. С другой стороны, повар не знает, кто конкретно послал ему заказ. Но это ему безразлично, так как вся необходимая информация есть в листе заказа.
 
-<img alt="image" src="images/Command1.jpeg" width = 75%/>
+<img alt="image" src="images/Command1.jpeg" width = 70%/>
 
-<img alt="image" src="images/Command2.jpeg" width = 1000 height = 450/>
+<img alt="image" src="images/Command2.jpeg"  width = 70%/>
 
 ```swift
 // Command
@@ -1586,13 +1574,11 @@ account.balance // 600
 // остальной код будет без изменений
 ```
 
-<img alt="image" src="images/Command3.jpeg" width = 1000 height = 300/>
+<img alt="image" src="images/Command3.jpeg" width = 80%/>
 
 ---
 
-### Adapter
-
-https://refactoring.guru/ru/design-patterns/adapter
+### [Adapter](https://refactoring.guru/ru/design-patterns/adapter)
 
 #Адаптер — это структурный паттерн проектирования, который позволяет объектам с несовместимыми интерфейсами работать вместе.
 
@@ -1664,13 +1650,11 @@ class SimpleCar1: SupercarProtocol {
 }
 ```
 
-<img alt="image" src="images/Adapter.jpeg"/>
+<img alt="image" src="images/Adapter.jpeg"  width = 80%/>
 
 ---
 
-### Facade
-
-https://refactoring.guru/ru/design-patterns/facade
+### [Facade](https://refactoring.guru/ru/design-patterns/facade)
 
 #Фасад — это структурный паттерн проектирования, который предоставляет простой интерфейс к сложной системе классов, библиотеке или фреймворку. Призван превратить сложное в простое.
 
@@ -1742,13 +1726,11 @@ let supermarket = Supermarket()
 supermarket.buyProducts()
 ```
 
-<img alt="image" src="images/Facade.jpeg" width = 1000 height = 500/>
+<img alt="image" src="images/Facade.jpeg"  width = 70%/>
 
 ---
 
-### Template Method
-
-https://refactoring.guru/ru/design-patterns/template-method
+### [Template Method](https://refactoring.guru/ru/design-patterns/template-method)
 
 **#Шаблонный метод** — это поведенческий паттерн проектирования, который определяет скелет алгоритма, перекладывая ответственность за некоторые его шаги на подклассы. Паттерн позволяет подклассам переопределять шаги алгоритма, не меняя его общей структуры.
 
@@ -1766,7 +1748,7 @@ https://refactoring.guru/ru/design-patterns/template-method
 
 Но, несмотря на стандартизацию каждого этапа, строители могут вносить небольшие изменения на любом из этапов, чтобы сделать дом непохожим на другие.
 
-<img alt="image" src="images/TemplateMethod1.jpeg" width = 1000 height = 500/>
+<img alt="image" src="images/TemplateMethod1.jpeg"  width = 70%/>
 
 ```swift
 // Template Method
@@ -1864,19 +1846,19 @@ print("###########")
 bicycle.startVehicle()
 ```
 
-<img alt="image" src="images/TemplateMethod2.jpeg" width = 1000 height = 700/> 
+<img alt="image" src="images/TemplateMethod2.jpeg" width = 70%/> 
 
 ---
 
-### Iterator
+### [Iterator](https://refactoring.guru/ru/design-patterns/iterator)
 
-<img alt="image" src="images/.jpeg"/>
+<img alt="image" src="images/Iterator1.jpeg"/>
 
 ```swift
 
 ```
 
-<img alt="image" src="images/.jpeg"/>
+<img alt="image" src="images/Iterator2.jpeg"/>
 
 ---
 
