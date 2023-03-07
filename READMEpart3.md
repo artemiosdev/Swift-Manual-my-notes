@@ -1852,68 +1852,225 @@ bicycle.startVehicle()
 
 ### [Iterator](https://refactoring.guru/ru/design-patterns/iterator)
 
-<img alt="image" src="images/Iterator1.jpeg"/>
+#Итератор — это поведенческий паттерн проектирования, который даёт возможность последовательно обходить элементы составных объектов, не раскрывая их внутреннего представления. 
+
+Как перебирать вашу коллекцию. Итератор предоставляет нам стандартный интерфейс для перебора коллекции элементов. Коллекция это какой-то общий объект. При переборе мы не вникаем в то как хранятся эти элементы и в общую структуру этого объекта. 
+
+Проблема:
+
+Коллекции — самая распространённая структура данных, которую вы можете встретить в программировании. Это набор объектов, собранный в одну кучу по каким-то критериям.
+
+Большинство коллекций выглядят как обычный список элементов. Но есть и экзотические коллекции, построенные на основе деревьев, графов и других сложных структур данных.
+
+Но как бы ни была структурирована коллекция, пользователь должен иметь возможность последовательно обходить её элементы, чтобы проделывать с ними какие-то действия.
+
+Но каким способом следует перемещаться по сложной структуре данных? Например, сегодня может быть достаточным обход дерева в глубину, но завтра потребуется возможность перемещаться по дереву в ширину. А на следующей неделе и того хуже — понадобится обход коллекции в случайном порядке.
+
+Решение:
+
+Идея паттерна Итератор состоит в том, чтобы вынести поведение обхода коллекции из самой коллекции в отдельный класс
+
+Аналогия из жизни:
+
+Вы в городе полном достопримечательностей, и у вас есть выбор бродить самостоятельно и искать памятники, погуглить или воспользоваться онлайн картой, нанять гида и тп. Таким образом, город выступает коллекцией достопримечательностей, а ваш мозг (вы сами), навигатор или гид — итератором по коллекции (памятники). Вы, как клиентский код, можете выбрать один из итераторов (вариантов посещения\перебора достопримечательностей), отталкиваясь от решаемой задачи и доступных ресурсов.
+
+<img alt="image" src="images/Iterator1.jpeg"  width = 80%/>
+
+**[IteratorProtocol](https://developer.apple.com/documentation/swift/iteratorprotocol)** - предоставляет значения последовательности sequence по одному за раз
+
+`protocol IteratorProtocol`
+
+Протокол Iterator Protocol тесно связан с протоколом Sequence. Последовательности предоставляют доступ к своим элементам путем создания итератора, который отслеживает свой итерационный процесс и возвращает по одному элементу за раз по мере продвижения по последовательности.
+
+Всякий раз, когда вы используете цикл for-in с массивом, set или любой другой коллекцией или последовательностью, вы используете итератор этого типа. 
+
+Прямое использование итератора последовательности дает вам доступ к тем же элементам в том же порядке, что и итерация по этой последовательности с использованием цикла for-in. Например, обычно вы можете использовать цикл for-in для печати каждого из элементов массива.
 
 ```swift
-
+let array = [1, 2, 3]
+for item in array {
+    print(item)
+} 
+// 1 
+// 2 
+// 3
 ```
 
-<img alt="image" src="images/Iterator2.jpeg"/>
+Behind the scenes, Swift uses the array’s iterator to loop over the contents of the array.
+
+```swift
+// однако можно достать сам итератор и метод next
+// результат будет тот же
+var iterator = array.makeIterator()
+// сам итератор не знает что перебирает,
+// он просто возвращает следующий элемент какой-то коллекции
+while let item = iterator.next() {
+    print(item)
+} 
+// 1 
+// 2 
+// 3
+```
+
+Вызов `array.makeIterator()` возвращает экземпляр итератора массива. Затем цикл while повторно вызывает метод `next()` итератора, привязывая каждый возвращаемый элемент к array и завершая работу, когда метод `next()` возвращает nil.
+
+Сам метод `makeIterator()` реализован в протоколе [Sequence](https://developer.apple.com/documentation/swift/sequence)
+
+#Итератор - это такой элемент который может предоставить следующий элемент коллекции
+
+```swift
+// Iterator
+class Driver {
+    let isGoodDriver: Bool
+    let name: String
+    
+    init(isGood: Bool, name: String) {
+        self.isGoodDriver = isGood
+        self.name = name
+    }
+}
+
+class Car {
+    var goodDriverIterator: GoodDriverIterator {
+        return GoodDriverIterator(drivers: drivers)
+    }
+    var badDriverIterator: BadDriverIterator {
+        return BadDriverIterator(drivers: drivers)
+    }
+    
+    private let drivers = [Driver(isGood: true, name: "Mark"),
+                           Driver(isGood: false, name: "Ivan"),
+                           Driver(isGood: true, name: "Maria"),
+                           Driver(isGood: false, name: "Morgan")]
+}
+
+extension Car: Sequence {
+    // обязательный метод для протокола Sequence
+    func makeIterator() -> GoodDriverIterator {
+        return GoodDriverIterator(drivers: drivers)
+    }
+    // введем дополнительный метод
+    func makeBadIterator() -> BadDriverIterator {
+        return BadDriverIterator(drivers: drivers)
+    }
+}
+
+protocol BasicIterator: IteratorProtocol {
+    init(drivers: [Driver])
+    func allDrivers() -> [Driver]
+}
+
+class GoodDriverIterator: BasicIterator {
+    private let drivers: [Driver]
+    private var current = 0
+    
+    required init(drivers: [Driver]) {
+        // фильтруем, нам нужны только хорошие водители
+        self.drivers = drivers.filter{ $0.isGoodDriver }
+    }
+    
+    func next() -> Driver? {
+        // defer - это оператор, который выпoлняет свое действие в самом конце
+        // чтобы элемент стал текущий, тот который вернули
+        // выполняется в конце перед выходом из этой области видимости
+        defer { current += 1 }
+        // возвращаем следующий элемент как и задумано, т.е next
+        return drivers.count > current ? drivers[current] : nil
+    }
+    
+    func allDrivers() -> [Driver] {
+        return drivers
+    }
+}
+
+class BadDriverIterator: BasicIterator {
+    private let drivers: [Driver]
+    private var current = 0
+    
+    required init(drivers: [Driver]) {
+        // фильтруем, нам нужны только хорошие водители
+        self.drivers = drivers.filter{ !$0.isGoodDriver }
+    }
+    
+    func next() -> Driver? {
+        // чтобы элемент стал текущий, тот который вернули
+        // выполняется в конце перед выходом из этой области видимости
+        defer { current += 1 }
+        // возвращаем следующий элемент как и задумано, т.е next
+        return drivers.count > current ? drivers[current] : nil
+    }
+    
+    func allDrivers() -> [Driver] {
+        return drivers
+    }
+}
+
+let car = Car()
+let goodDriverIterator = car.goodDriverIterator.next() // Mark
+let goodDriverIteratorViaSequance = car.makeIterator().next() // Mark
+let allgoodDriverIteratorViaSequance = car.makeIterator().allDrivers() // Mark, Maria
+
+let badDriverIterator = car.badDriverIterator.next() // Ivan
+let badDriverIteratorViaSequance = car.makeBadIterator().next() // Ivan
+let allbadDriverIteratorViaSequance = car.makeBadIterator().allDrivers() // Ivan, Morgan
+```
+
+<img alt="image" src="images/Iterator2.jpeg"  width = 80%/>
 
 ---
 
 ### 
 
-<img alt="image" src="images/.jpeg"/>
+<img alt="image" src="images/.jpeg"  width = 70%/>
 
 ```swift
 
 ```
 
-<img alt="image" src="images/.jpeg"/>
+<img alt="image" src="images/.jpeg"  width = 70%/>
 
 ---
 
 ### 
 
-<img alt="image" src="images/.jpeg"/>
+<img alt="image" src="images/.jpeg"  width = 70%/>
 
 ```swift
 
 ```
 
-<img alt="image" src="images/.jpeg"/>
+<img alt="image" src="images/.jpeg"  width = 70%/>
 
 ---
 
 ### 
 
-<img alt="image" src="images/.jpeg"/>
+<img alt="image" src="images/.jpeg"  width = 70%/>
 
 ```swift
 
 ```
 
-<img alt="image" src="images/.jpeg"/>
+<img alt="image" src="images/.jpeg"  width = 70%/>
 
 ---
 
 ### 
 
-<img alt="image" src="images/.jpeg"/>
+<img alt="image" src="images/.jpeg"  width = 70%/>
 
 ```swift
 
 ```
 
-<img alt="image" src="images/.jpeg"/>
+<img alt="image" src="images/.jpeg"  width = 70%/>
 
 ---
 
 
 
 
-<img alt="image" src="images/.jpeg"/>
+<img alt="image" src="images/.jpeg"  width = 70%/>
 
 <img alt="image" src="images/.jpeg"/>
 
