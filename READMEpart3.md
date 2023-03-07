@@ -1483,9 +1483,9 @@ https://refactoring.guru/ru/design-patterns/command
 
 В этом примере вы являетесь отправителем, официант с блокнотом — **командой**, а повар — получателем. Как и в паттерне, вы не соприкасаетесь напрямую с поваром. Вместо этого вы отправляете заказ с официантом, который самостоятельно «настраивает» повара на работу. С другой стороны, повар не знает, кто конкретно послал ему заказ. Но это ему безразлично, так как вся необходимая информация есть в листе заказа.
 
-<img alt="image" src="images/Command1.jpeg"/>
+<img alt="image" src="images/Command1.jpeg" width = 75%/>
 
-<img alt="image" src="images/Command2.jpeg"/>
+<img alt="image" src="images/Command2.jpeg" width = 1000 height = 450/>
 
 ```swift
 // Command
@@ -1586,7 +1586,7 @@ account.balance // 600
 // остальной код будет без изменений
 ```
 
-<img alt="image" src="images/Command3.jpeg"/>
+<img alt="image" src="images/Command3.jpeg" width = 1000 height = 300/>
 
 ---
 
@@ -1742,7 +1742,7 @@ let supermarket = Supermarket()
 supermarket.buyProducts()
 ```
 
-<img alt="image" src="images/Facade.jpeg"/>
+<img alt="image" src="images/Facade.jpeg" width = 1000 height = 500/>
 
 ---
 
@@ -1766,7 +1766,7 @@ https://refactoring.guru/ru/design-patterns/template-method
 
 Но, несмотря на стандартизацию каждого этапа, строители могут вносить небольшие изменения на любом из этапов, чтобы сделать дом непохожим на другие.
 
-<img alt="image" src="images/TemplateMethod1.jpeg"/>
+<img alt="image" src="images/TemplateMethod1.jpeg" width = 1000 height = 500/>
 
 ```swift
 // Template Method
@@ -1864,7 +1864,7 @@ print("###########")
 bicycle.startVehicle()
 ```
 
-<img alt="image" src="images/TemplateMethod2.jpeg"/>
+<img alt="image" src="images/TemplateMethod2.jpeg" width = 1000 height = 700/> 
 
 ---
 
