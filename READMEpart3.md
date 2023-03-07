@@ -1746,19 +1746,129 @@ supermarket.buyProducts()
 
 ---
 
-### 
+### Template Method
 
-<img alt="image" src="images/.jpeg"/>
+https://refactoring.guru/ru/design-patterns/template-method
+
+**#Шаблонный метод** — это поведенческий паттерн проектирования, который определяет скелет алгоритма, перекладывая ответственность за некоторые его шаги на подклассы. Паттерн позволяет подклассам переопределять шаги алгоритма, не меняя его общей структуры.
+
+Решение:
+
+Паттерн Шаблонный метод предлагает разбить алгоритм на последовательность шагов, описать эти шаги в отдельных методах и вызывать их в одном шаблонном методе друг за другом.
+
+Это позволит подклассам переопределять некоторые шаги алгоритма, оставляя без изменений его структуру и остальные шаги, которые для этого подкласса не так важны.
+
+Аналогия из жизни:
+
+Строительство типовых домов. Проекты могут немного изменить по желанию клиента.
+
+Строители используют подход, похожий на шаблонный метод при строительстве типовых домов. У них есть основной архитектурный проект, в котором расписаны шаги строительства: заливка фундамента, постройка стен, перекрытие крыши, установка окон и так далее.
+
+Но, несмотря на стандартизацию каждого этапа, строители могут вносить небольшие изменения на любом из этапов, чтобы сделать дом непохожим на другие.
+
+<img alt="image" src="images/TemplateMethod1.jpeg"/>
 
 ```swift
+// Template Method
+protocol DriveVehicle {
+    func haveASeat()
+    func closeTheDoor()
+    func useProtection()
+    func lookAtTheMirror()
+    func turnSignal()
+    func driveForward()
+    func startVehicle()
+}
 
+extension DriveVehicle {
+    func startVehicle() {
+        haveASeat()
+        useProtection()
+        lookAtTheMirror()
+        turnSignal()
+        driveForward()
+    }
+    func haveASeat() {
+        // специально остановим выполнение и получим ошибку
+        preconditionFailure("this method should be overriden")
+    }
+    func closeTheDoor() { }
+    func useProtection() {
+        preconditionFailure("this method should be overriden")
+    }
+    func lookAtTheMirror() {
+        preconditionFailure("this method should be overriden")
+    }
+    func turnSignal() {
+        preconditionFailure("this method should be overriden")
+    }
+    func driveForward() {
+        preconditionFailure("this method should be overriden")
+    }
+}
+
+class Bicycle: DriveVehicle {
+    func haveASeat() {
+        print("sit down on a bicycle seat")
+    }
+    
+    func useProtection() {
+        print("wear a helmet")
+    }
+    
+    func lookAtTheMirror() {
+        print("look at the little mirror")
+    }
+    
+    func turnSignal() {
+        print("show left hand")
+    }
+    
+    func driveForward() {
+        print("pedal")
+    }
+}
+
+class Car: DriveVehicle {
+    func haveASeat() {
+        print("sit down on a car seat")
+        closeTheDoor()
+    }
+    
+    func closeTheDoor() {
+        print("close the door")
+    }
+
+    func useProtection() {
+        print("fasten seat belt")
+    }
+    
+    func lookAtTheMirror() {
+        print("look at the rearview mirror")
+    }
+    
+    func turnSignal() {
+        print("turn on left turn light")
+    }
+    
+    func driveForward() {
+        print("push pedal")
+    }
+}
+
+let car = Car()
+let bicycle = Bicycle()
+
+car.startVehicle()
+print("###########")
+bicycle.startVehicle()
 ```
 
-<img alt="image" src="images/.jpeg"/>
+<img alt="image" src="images/TemplateMethod2.jpeg"/>
 
 ---
 
-### 
+### Iterator
 
 <img alt="image" src="images/.jpeg"/>
 
