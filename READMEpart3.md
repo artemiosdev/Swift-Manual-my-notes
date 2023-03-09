@@ -808,7 +808,7 @@ struct Wind: Codable {
 
 Аналогия из жизни. Вам нужно добраться до аэропорта. Можно доехать на автобусе, такси или велосипеде. Здесь вид транспорта является стратегией. Вы выбираете конкретную стратегию в зависимости от контекста — наличия денег или времени до отлёта
 
-<img alt="image" src="images/Strategy1.jpeg" width = 70%/>
+<img alt="image" src="images/Strategy1.jpeg" width = 80%/>
 
 Используем протокол как тип, для свойств class Human
 
@@ -898,7 +898,7 @@ human.setSwimBehavior(sb: NonSwimmer())
 human.performSwim() // non-swimming
 ```
 
-<img alt="image" src="images/Strategy2.jpeg" width = 70%/>
+<img alt="image" src="images/Strategy2.jpeg" width = 85%/>
 
 ---
 
@@ -912,7 +912,7 @@ human.performSwim() // non-swimming
 
 Один ко многим, то есть один объект за которым наблюдают  другие объекты. Аналогия с учителем, где все ученики следят за ним т.е он главный объект, а они наблюдатели, он раздаёт всем домашнее задание, а ученики его получают.
 
-<img alt="image" src="images/Observer1.jpeg" width = 70%/>
+<img alt="image" src="images/Observer1.jpeg" width = 80%/>
 
 ```swift
 import Foundation
@@ -985,7 +985,7 @@ newPupil.homeTask
 // Повторить паттерны проектирования для успешного прохождения собеседования
 ```
 
-<img alt="image" src="images/Observer2.jpeg" width = 70%/>
+<img alt="image" src="images/Observer2.jpeg" width = 80%/>
 
 ---
 
@@ -999,7 +999,7 @@ newPupil.homeTask
 
 Аналогия из жизни. Любая одежда — это аналог Декоратора. Применяя Декоратор, вы не меняете первоначальный класс и не создаёте дочерних классов. Так и с одеждой — надевая свитер, вы не перестаёте быть собой, но получаете новое свойство — защиту от холода. Вы можете пойти дальше и надеть сверху ещё один декоратор — плащ, чтобы защититься и от дождя.
 
-<img alt="image" src="images/Decorator1.jpeg" width = 70%/>
+<img alt="image" src="images/Decorator1.jpeg" width = 80%/>
 
 ```swift
 // Decorator
@@ -1081,7 +1081,7 @@ porscheBoxster.getDescription()
 porscheBoxster.getPrice() // 170
 ```
 
-<img alt="image" src="images/Decorator2.jpeg" width = 70%/>
+<img alt="image" src="images/Decorator2.jpeg" width = 80%/>
 
 ---
 
@@ -1091,7 +1091,7 @@ porscheBoxster.getPrice() // 170
 
 Это неполноценный паттерн, это мостик к пониманию Factory Method и Abstract Factory (будут рассмотрены далее).
 
-<img alt="image" src="images/SimpleFactory1.jpeg" width = 70%/>
+<img alt="image" src="images/SimpleFactory1.jpeg" width = 80%/>
 
 ```swift
 // Simple Factory
@@ -1144,7 +1144,7 @@ let hugeCar1 = CarFactory.produceCar(type: .huge)
 let fastCar1 = CarFactory.produceCar(type: .fast)
 ```
 
-<img alt="image" src="images/SimpleFactory2.jpeg" width = 70%/>
+<img alt="image" src="images/SimpleFactory2.jpeg" width = 80%/>
 
 ---
 
@@ -1152,7 +1152,7 @@ let fastCar1 = CarFactory.produceCar(type: .fast)
 
 #Фабричный метод, #фабрика — это порождающий паттерн проектирования, который определяет общий интерфейс для создания объектов в суперклассе, позволяя подклассам изменять тип создаваемых объектов.
 
-<img alt="image" src="images/FactoryMethod1.jpeg" width = 70%/>
+<img alt="image" src="images/FactoryMethod1.jpeg" width = 80%/>
 
 Для каждого транспортного средства создадим свою отдельную фабрику (для легковых, для грузовых, для автобусов).
 
@@ -1216,7 +1216,7 @@ let busFactory = BusFactory()
 let bus = busFactory.produce() // bus is created
 ```
 
-<img alt="image" src="images/FactoryMethod2.jpeg" width = 70%/>
+<img alt="image" src="images/FactoryMethod2.jpeg" width = 80%/>
 
 ---
 
@@ -1234,7 +1234,7 @@ let bus = busFactory.produce() // bus is created
 
 Вам нужен такой способ создавать объекты продуктов, чтобы они сочетались с другими продуктами того же семейства. Это важно, так как клиенты расстраиваются, если получают несочетающуюся мебель.
 
-<img alt="image" src="images/AbstractFactory1.jpeg" width = 70%/>
+<img alt="image" src="images/AbstractFactory1.jpeg" width = 80%/>
 
 ```swift
 // Abstract Factory
@@ -1307,7 +1307,7 @@ let middleFactory = MiddleSizeFactory()
 middleFactory.produceBus() // Middle size bus is creates
 ```
 
-<img alt="image" src="images/AbstractFactory2.jpeg" width = 70%/>
+<img alt="image" src="images/AbstractFactory2.jpeg" width = 80%/>
 
 ---
 
@@ -1471,9 +1471,9 @@ class ViewController: UIViewController {
 
 В этом примере вы являетесь отправителем, официант с блокнотом — **командой**, а повар — получателем. Как и в паттерне, вы не соприкасаетесь напрямую с поваром. Вместо этого вы отправляете заказ с официантом, который самостоятельно «настраивает» повара на работу. С другой стороны, повар не знает, кто конкретно послал ему заказ. Но это ему безразлично, так как вся необходимая информация есть в листе заказа.
 
-<img alt="image" src="images/Command1.jpeg" width = 70%/>
+<img alt="image" src="images/Command1.jpeg" width = 80%/>
 
-<img alt="image" src="images/Command2.jpeg"  width = 70%/>
+<img alt="image" src="images/Command2.jpeg"  width = 80%/>
 
 ```swift
 // Command
@@ -1574,7 +1574,7 @@ account.balance // 600
 // остальной код будет без изменений
 ```
 
-<img alt="image" src="images/Command3.jpeg" width = 80%/>
+<img alt="image" src="images/Command3.jpeg" width = 85%/>
 
 ---
 
@@ -1650,7 +1650,7 @@ class SimpleCar1: SupercarProtocol {
 }
 ```
 
-<img alt="image" src="images/Adapter.jpeg"  width = 80%/>
+<img alt="image" src="images/Adapter.jpeg"  width = 85%/>
 
 ---
 
@@ -1726,7 +1726,7 @@ let supermarket = Supermarket()
 supermarket.buyProducts()
 ```
 
-<img alt="image" src="images/Facade.jpeg"  width = 70%/>
+<img alt="image" src="images/Facade.jpeg"  width = 80%/>
 
 ---
 
@@ -1748,7 +1748,7 @@ supermarket.buyProducts()
 
 Но, несмотря на стандартизацию каждого этапа, строители могут вносить небольшие изменения на любом из этапов, чтобы сделать дом непохожим на другие.
 
-<img alt="image" src="images/TemplateMethod1.jpeg"  width = 70%/>
+<img alt="image" src="images/TemplateMethod1.jpeg"  width = 80%/>
 
 ```swift
 // Template Method
@@ -1852,11 +1852,11 @@ bicycle.startVehicle()
 
 ### [Iterator](https://refactoring.guru/ru/design-patterns/iterator)
 
-#Итератор — это поведенческий паттерн проектирования, который даёт возможность последовательно обходить элементы составных объектов, не раскрывая их внутреннего представления. 
+**#Итератор** — это поведенческий паттерн проектирования, который даёт возможность последовательно обходить элементы составных объектов, не раскрывая их внутреннего представления. 
 
 Как перебирать вашу коллекцию. Итератор предоставляет нам стандартный интерфейс для перебора коллекции элементов. Коллекция это какой-то общий объект. При переборе мы не вникаем в то как хранятся эти элементы и в общую структуру этого объекта. 
 
-Проблема:
+**Проблема:**
 
 Коллекции — самая распространённая структура данных, которую вы можете встретить в программировании. Это набор объектов, собранный в одну кучу по каким-то критериям.
 
@@ -1870,7 +1870,7 @@ bicycle.startVehicle()
 
 Идея паттерна Итератор состоит в том, чтобы вынести поведение обхода коллекции из самой коллекции в отдельный класс
 
-Аналогия из жизни:
+**Аналогия из жизни:**
 
 Вы в городе полном достопримечательностей, и у вас есть выбор бродить самостоятельно и искать памятники, погуглить или воспользоваться онлайн картой, нанять гида и тп. Таким образом, город выступает коллекцией достопримечательностей, а ваш мозг (вы сами), навигатор или гид — итератором по коллекции (памятники). Вы, как клиентский код, можете выбрать один из итераторов (вариантов посещения\перебора достопримечательностей), отталкиваясь от решаемой задачи и доступных ресурсов.
 
@@ -2019,17 +2019,114 @@ let allbadDriverIteratorViaSequance = car.makeBadIterator().allDrivers() // Ivan
 
 ---
 
-### 
+### [Composite](https://refactoring.guru/ru/design-patterns/composite)
 
-<img alt="image" src="images/.jpeg"  width = 70%/>
+**#Компоновщик** — это структурный паттерн проектирования, который позволяет сгруппировать множество объектов в древовидную структуру, а затем работать с ней так, как будто это единичный объект.
+
+**Проблема:**
+
+Паттерн Компоновщик имеет смысл только тогда, когда основная модель вашей программы может быть структурирована в виде дерева.
+
+Например, есть два объекта: Продукт и Коробка. Коробка может содержать несколько Продуктов и других Коробок поменьше. Те, в свою очередь, тоже содержат либо Продукты, либо Коробки и так далее.
+
+Теперь предположим, ваши Продукты и Коробки могут быть частью заказов. Каждый заказ может содержать как простые Продукты без упаковки, так и составные Коробки. Ваша задача состоит в том, чтобы узнать цену всего заказа.
+
+Структура сложного заказа
+
+<img alt="image" src="images/Composite1.jpeg"  width = 70%/>
+
+Заказ может состоять из различных продуктов, упакованных в собственные коробки.
+
+Если решать задачу в лоб, то вам потребуется открыть все коробки заказа, перебрать все продукты и посчитать их суммарную стоимость. Но это слишком хлопотно, так как типы коробок и их содержимое могут быть вам неизвестны. Кроме того, наперёд неизвестно и количество уровней вложенности коробок, поэтому перебрать коробки простым циклом не выйдет.
+
+**Решение:**
+
+Компоновщик предлагает рассматривать Продукт и Коробку через единый интерфейс с общим методом получения стоимости.
+
+Продукт просто вернёт свою цену. Коробка спросит цену каждого предмета внутри себя и вернёт сумму результатов. Если одним из внутренних предметов окажется коробка поменьше, она тоже будет перебирать своё содержимое, и так далее, пока не будут посчитаны все составные части.
+
+Компоновщик рекурсивно запускает действие по всем элементам дерева — от корня к листьям.
+
+Для вас, клиента, главное, что теперь не нужно ничего знать о структуре заказов. Вы вызываете метод получения цены, он возвращает цифру
+
+**Аналогия из жизни**
+
+Пример армейской структуры.
+
+Армии большинства государств могут быть представлены в виде перевёрнутых деревьев. На нижнем уровне у вас есть солдаты, затем взводы, затем полки, а затем целые армии. Приказы отдаются сверху и спускаются вниз по структуре командования, пока не доходят до конкретного солдата.
+
+Древовидная структура. Ветки и листья. Ветки могут содержать себеподобных (другие ветки или листья). Листья не могут содержать себеподобных, они и есть последний элемент.
+
 
 ```swift
+// Composite
 
+// определяет наших менеджеров
+protocol Coworker {
+    // нанять другого сотрудника
+    func hire(coworker: Coworker)
+    // сколько сотрудников в подчинении
+    func getInfo()
+    var level: Int { get }
+}
+
+// branch - ветка
+// менеджеры которые могут нанимать других-себеподобных
+class Manager: Coworker {
+    private var coworkers = [Coworker]()
+    var level: Int
+    init(level: Int) {
+        self.level = level
+    }
+    func hire(coworker: Coworker) {
+        self.coworkers.append(coworker)
+    }
+    func getInfo() {
+        print(self.level.description + " level manager")
+        for coworker in coworkers {
+            coworker.getInfo()
+        }
+    }
+}
+
+// leaf-листья, последние элементы
+class LowLevelManager: Coworker {    var level: Int
+    init(level: Int) {
+        self.level = level
+    }
+    func hire(coworker: Coworker) {
+        print("can't hire")
+    }
+    func getInfo() {
+        print(self.level.description + " level manager")
+    }
+}
+
+let topManager = Manager(level: 1)
+let managerLvl2 = Manager(level: 2)
+let managerLvl3_1 = Manager(level: 3)
+let managerLvl3_2 = Manager(level: 3)
+let managerLvl10 = Manager(level: 10)
+
+// нанимаем менеджеров
+topManager.hire(coworker: managerLvl2)
+managerLvl2.hire(coworker: managerLvl3_1)
+managerLvl2.hire(coworker: managerLvl3_2)
+managerLvl3_1.hire(coworker: managerLvl10)
+
+topManager.getInfo()
 ```
 
-<img alt="image" src="images/.jpeg"  width = 70%/>
+```bash
+1 level manager
+2 level manager
+3 level manager
+10 level manager
+3 level manager
+```
 
----
+<img alt="image" src="images/Composite2.jpeg" width = 70%/>
+
 
 ### 
 
