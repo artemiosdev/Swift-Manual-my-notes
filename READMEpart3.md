@@ -2248,17 +2248,118 @@ it is already off
 
 ---
 
-### 
+### [Proxy](https://refactoring.guru/ru/design-patterns/proxy)
 
+**#Заместитель** — это структурный паттерн проектирования, который позволяет подставлять вместо реальных объектов специальные объекты-заменители. Эти объекты перехватывают вызовы к оригинальному объекту, позволяя сделать что-то до или после передачи вызова оригиналу. Некая прокладка/промежуточный вариант. Сам прокси может выполнять какие-то действия, и тем самым снять некую нагрузку.
 
+**Проблема:**
+
+Для чего вообще контролировать доступ к объектам? Рассмотрим такой пример: у вас есть внешний ресурсоёмкий объект, который нужен не все время, а изредка.
+
+Запросы к базе данных могут быть очень медленными.
+
+Мы могли бы создавать этот объект не в самом начале программы, а только тогда, когда он кому-то реально понадобится. Каждый клиент объекта получил бы некий код отложенной инициализации. Но, вероятно, это привело бы к множественному дублированию кода.
+
+В идеале, этот код хотелось бы поместить прямо в служебный класс, но это не всегда возможно. Например, код класса может находиться в закрытой сторонней библиотеке.
+
+**Решение:**
+
+Паттерн Заместитель предлагает создать новый класс-дублёр, имеющий тот же интерфейс, что и оригинальный служебный объект. При получении запроса от клиента объект-заместитель сам бы создавал экземпляр служебного объекта и переадресовывал бы ему всю реальную работу.
 
 <img alt="image" src="images/Proxy1.jpeg"  width = 70%/>
 
-```swift
+Но в чём же здесь польза? Вы могли бы поместить в класс заместителя какую-то промежуточную логику, которая выполнялась бы до (или после) вызовов этих же методов в настоящем объекте. А благодаря одинаковому интерфейсу, объект-заместитель можно передать в любой код, ожидающий сервисный объект.
 
-```
+**Аналогия из жизни:**
+
+Платёжная карта — это заместитель пачки наличных
+Платёжной картой можно расплачиваться, как и наличными.
+
+Платёжная карточка — это заместитель пачки наличных. И карточка, и наличные имеют общий интерфейс — ими можно оплачивать товары. Для покупателя польза в том, что не надо таскать с собой тонны наличных, а владелец магазина рад, что ему не нужно делать дорогостоящую инкассацию наличности в банк — деньги поступают к нему на счёт напрямую.
 
 <img alt="image" src="images/Proxy2.jpeg"  width = 70%/>
+
+```swift
+// Виртуальный Proxy. Простой пример
+class User {
+    let id = "123"
+}
+
+protocol ServerProtocol {
+// предоставить доступ
+    func grandAccess(user: User)
+// запретить доступ
+    func denyAccess(user: User)
+}
+
+class ServerSide: ServerProtocol {
+    func grandAccess(user: User) {
+        print("access granted to user with id = \(user.id)")
+    }
+    func denyAccess(user: User) {
+        print("access denied to user with id = \(user.id)")
+    }
+}
+// прокси-копия сервера
+class ServerProxy: ServerProtocol {
+// имеем ссылку на наш сервер
+    lazy private var server: ServerSide = ServerSide()
+    func grandAccess(user: User) {
+        server.grandAccess(user: user)
+    }
+    func denyAccess(user: User) {
+        server.denyAccess(user: user)
+    }
+}
+
+let user = User()
+let proxy = ServerProxy()
+proxy.grandAccess(user: user) // access granted to user with id = 123
+proxy.denyAccess(user: user) // access denied to user with id = 123
+```
+
+```swift
+// Защитный Proxy. Второй пример
+class User {
+    let name = "Artem"
+    let password = "123"
+}
+
+protocol ServerProtocol {
+    func grantAccess(user: User)
+}
+
+class ServerSide: ServerProtocol {
+    func grantAccess(user: User) {
+        print("access granted to user with name = \(user.name)")
+    }
+}
+
+class ServerProxy: ServerProtocol {
+    private var server: ServerSide!
+    func grantAccess(user: User) {
+        guard server != nil else {
+            print("access can't be granted")
+            return
+        }
+        server.grantAccess(user: user)
+    }
+    func authenticate(user: User) {
+        guard user.password == "123" else { return }
+        print("user authenticated")
+        server = ServerSide()
+    }
+}
+
+let user = User()
+let proxy = ServerProxy()
+
+proxy.grantAccess(user: user) // access can't be granted
+proxy.authenticate(user: user) // user authenticated
+proxy.grantAccess(user: user) // access granted to user with name = Artem
+```
+
+<img alt="image" src="images/Proxy3.jpeg"  width = 70%/>
 
 ---
 
