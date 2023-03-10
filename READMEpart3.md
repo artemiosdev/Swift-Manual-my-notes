@@ -2127,28 +2127,138 @@ topManager.getInfo()
 
 <img alt="image" src="images/Composite2.jpeg" width = 70%/>
 
+### [State](https://refactoring.guru/ru/design-patterns/state)
 
-### 
+**#Состояние** — это поведенческий паттерн проектирования, который позволяет объектам менять поведение в зависимости от своего состояния. Извне создаётся впечатление, что изменился класс объекта. Схож с Стратегия, но здесь основной класс в данном случае Printer(т.е некий контекст) ничего не знает о других состояниях, он освобождается от этих конкретных знаний, они ему не нужны. При добавлении новых состояний, мы их реализуем, к примеру дописываем еще с десяток классов-состояний, но сам Printer(контекст) мы менять не будем 
 
-<img alt="image" src="images/.jpeg"  width = 70%/>
+**Аналогия из жизни:**
+
+Ваш смартфон ведёт себя по-разному, в зависимости от текущего состояния:
+
+Когда телефон разблокирован, нажатие кнопок телефона приводит к каким-то действиям.
+Когда телефон заблокирован, нажатие кнопок приводит к экрану разблокировки.
+Когда телефон разряжен, нажатие кнопок приводит к экрану зарядки.
+
+**Проблема:**
+
+Паттерн Состояние невозможно рассматривать в отрыве от концепции машины состояний, также известной как стейт-машина или конечный автомат.
+
+Основная идея в том, что программа может находиться в одном из нескольких состояний, которые всё время сменяют друг друга. Набор этих состояний, а также переходов между ними, предопределён и конечен. Находясь в разных состояниях, программа может по-разному реагировать на одни и те же события, которые происходят с ней.
+
+Такой подход можно применить и к отдельным объектам. Например, объект Документ может принимать три состояния: Черновик, Модерация или Опубликован. В каждом из этих состоянии метод опубликовать будет работать по-разному:
+
+- Из черновика он отправит документ на модерацию.
+- Из модерации — в публикацию, но при условии, что это сделал администратор.
+- В опубликованном состоянии метод не будет делать ничего.
+
+Машину состояний чаще всего реализуют с помощью множества условных операторов, if либо switch, которые проверяют текущее состояние объекта и выполняют соответствующее поведение.
+
+Основная проблема такой машины состояний проявится в том случае, если в Документ добавить ещё десяток состояний. Каждый метод будет состоять из увесистого условного оператора, перебирающего доступные состояния. Такой код крайне сложно поддерживать. Малейшее изменение логики переходов заставит вас перепроверять работу всех методов, которые содержат условные операторы машины состояний.
+
+Путаница и нагромождение условий особенно сильно проявляется в старых проектах. Набор возможных состояний бывает трудно предопределить заранее, поэтому они всё время добавляются в процессе эволюции программы. Из-за этого решение, которое выглядело простым и эффективным в самом начале разработки, может впоследствии стать проекцией большого макаронного монстра.
+
+<img alt="image" src="images/State1.jpeg"  width = 70%/>
 
 ```swift
+// State
+protocol State {
+    func on(printer: Printer)
+    func off(printer: Printer)
+    func printDocument(printer: Printer)
+}
 
+class On: State {
+    func on(printer: Printer) {
+        print("it is on already")
+    }
+    func off(printer: Printer) {
+        print("turning printer off")
+        printer.set(state: Off())
+    }
+    func printDocument(printer: Printer) {
+        print("printing")
+        printer.set(state: Print())
+    }
+}
+
+class Off: State {
+    func on(printer: Printer) {
+        print("turning on")
+        printer.set(state: On())
+    }
+    func off(printer: Printer) {
+        print("it is already off")
+    }
+    func printDocument(printer: Printer) {
+        print("it is off, we can't print")
+    }
+}
+
+class Print: State {
+    func on(printer: Printer) {
+        print("it is on already")
+    }
+    func off(printer: Printer) {
+        print("turning printer off")
+        printer.set(state: Off())
+    }
+    func printDocument(printer: Printer) {
+        print("it is already printing")
+    }
+}
+
+class Printer {
+    var state: State
+    init() {
+        self.state = On()
+    }
+    func set(state: State) {
+        self.state = state
+    }
+    func turnOn() {
+        state.on(printer: self)
+    }
+    func turnOff() {
+        state.off(printer: self)
+    }
+    func printDocument() {
+        state.printDocument(printer: self)
+    }
+}
+
+let printer = Printer()
+printer.printDocument()
+printer.turnOff()
+printer.turnOn()
+printer.turnOn()
+printer.turnOff()
+printer.turnOff()
 ```
 
-<img alt="image" src="images/.jpeg"  width = 70%/>
+```bash
+printing
+turning printer off
+turning on
+it is on already
+turning printer off
+it is already off
+```
+
+<img alt="image" src="images/State2.jpeg"  width = 70%/>
 
 ---
 
 ### 
 
-<img alt="image" src="images/.jpeg"  width = 70%/>
+
+
+<img alt="image" src="images/Proxy1.jpeg"  width = 70%/>
 
 ```swift
 
 ```
 
-<img alt="image" src="images/.jpeg"  width = 70%/>
+<img alt="image" src="images/Proxy2.jpeg"  width = 70%/>
 
 ---
 
