@@ -704,6 +704,7 @@ HTTP довольно прост. Допустим, есть адрес http://w
 "cod": 200
 }
 ```
+
 Превращается в swift модель (можно выбрать любой язык)
 
 ```swift
@@ -776,17 +777,19 @@ struct Wind: Codable {
 
 ---
 
+---
+
 [К оглавлению](#contents)
 
 ###  <a id="patterns" /> Глава №33. Паттерны проектирования
 
 Существует три категории паттернов: порождающие, структурные, поведенческие
 
-**Порождающие паттерны** – работают с инициализацией объектов. Абстрагируются от самой инициализации конкретного типа в какой-то абстрактный тип (протокол к примеру)
+**Порождающие паттерны** – работают с инициализацией объектов. Абстрагируются от самой инициализации конкретного типа в какой-то абстрактный тип (протокол к примеру). Отвечают за удобное и безопасное создание новых объектов или даже целых семейств объектов.
 
-**Структурные паттерны** – работает с интерфейсами, и преобразует их 
+**Структурные паттерны** – работает с интерфейсами, и преобразуют их. Отвечают за построение удобных в поддержке иерархий классов.
 
-**Поведенческие паттерны** – обеспечивают гибкое взаимодействие между типами/объектами
+**Поведенческие паттерны** – обеспечивают гибкое взаимодействие между типами/объектами. Решают задачи эффективного и безопасного взаимодействия между объектами программы.
 
 <img alt="image" src="images/паттерны1.jpeg"/>
 
@@ -794,294 +797,11 @@ struct Wind: Codable {
 
 ---
 
-### [Strategy](https://refactoring.guru/ru/design-patterns/strategy)
-
-**#Стратегия** — это поведенческий паттерн проектирования, который определяет семейство схожих алгоритмов и помещает каждый из них в собственный класс, после чего алгоритмы можно взаимозаменять прямо во время исполнения программы.
-
-Позволяет не плодить классы с подклассами, а сделать более гибкое решение.
-
-Паттерн Стратегия предлагает определить семейство схожих алгоритмов, которые часто изменяются или расширяются, и вынести их в собственные классы, называемые стратегиями.
-
-Вместо того, чтобы изначальный класс сам выполнял тот или иной алгоритм, он будет играть роль контекста, ссылаясь на одну из стратегий и делегируя ей выполнение работы. Чтобы сменить алгоритм, вам будет достаточно подставить в контекст другой объект-стратегию.
-
-Важно, чтобы все стратегии имели общий интерфейс. Используя этот интерфейс, контекст будет независимым от конкретных классов стратегий. С другой стороны, вы сможете изменять и добавлять новые виды алгоритмов, не трогая код контекста.
-
-Аналогия из жизни. Вам нужно добраться до аэропорта. Можно доехать на автобусе, такси или велосипеде. Здесь вид транспорта является стратегией. Вы выбираете конкретную стратегию в зависимости от контекста — наличия денег или времени до отлёта
-
-<img alt="image" src="images/Strategy1.jpeg" width = 80%/>
-
-Используем протокол как тип, для свойств class Human
-
-```swift
-protocol SwimBehavior {
-    func swim()
-}
-
-class ProfessionalSwimmer: SwimBehavior {
-    func swim() {
-        print("professional swimming")
-    }
-}
-
-class NewbieSwimmer: SwimBehavior {
-    func swim() {
-        print("newbie swimming")
-    }
-}
-
-class NonSwimmer: SwimBehavior {
-    func swim() {
-        print("non-swimming")
-    }
-}
-
-
-protocol DiveBehavior {
-    func dive()
-}
-
-
-class ProfessionalDiver: DiveBehavior {
-    func dive() {
-        print("professional diving")
-    }
-}
-
-
-class NewbieDiver: DiveBehavior {
-    func dive() {
-        print("newbie diving")
-    }
-}
-
-class NonDiver: DiveBehavior {
-    func dive() {
-        print("non-diving")
-    }
-}
-
-
-class Human {
-    private var diveBehavior: DiveBehavior
-    private var swimBehavior: SwimBehavior
-    
-    func performSwim() {
-        swimBehavior.swim()
-    }
-    
-    func performDive() {
-        diveBehavior.dive()
-    }
-    
-    func setSwimBehavior(sb: SwimBehavior) {
-        self.swimBehavior = sb
-    }
-    
-    func setDiveBehavior(db: DiveBehavior) {
-        self.diveBehavior = db
-    }
-    
-    func run() {
-        print("running")
-    }
-    
-    init(swimBehavior: SwimBehavior, diveBehavior: DiveBehavior) {
-        self.swimBehavior = swimBehavior
-        self.diveBehavior = diveBehavior
-    }
-}
-
-let human = Human(swimBehavior: ProfessionalSwimmer(), diveBehavior: ProfessionalDiver())
-human.performSwim() // professional swimming
-human.performDive() // professional diving
-human.setSwimBehavior(sb: NonSwimmer())
-human.performSwim() // non-swimming
-```
-
-<img alt="image" src="images/Strategy2.jpeg" width = 85%/>
-
 ---
 
-### [Observer - наблюдатель](https://refactoring.guru/ru/design-patterns/observer)
+## Порождающие паттерны
 
-**#Наблюдатель** — это поведенческий паттерн проектирования, который создаёт механизм подписки, позволяющий одним объектам следить и реагировать на события, происходящие в других объектах.
-
-Аналогия из жизни. После того как вы оформили подписку на газету или журнал, вам больше не нужно ездить в супермаркет и проверять, не вышел ли очередной номер. Вместо этого издательство будет присылать новые номера по почте прямо к вам домой сразу после их выхода.
-
-Издательство ведёт список подписчиков и знает, кому какой журнал высылать. Вы можете в любой момент отказаться от подписки, и журнал перестанет вам приходить.
-
-Один ко многим, то есть один объект за которым наблюдают  другие объекты. Аналогия с учителем, где все ученики следят за ним т.е он главный объект, а они наблюдатели, он раздаёт всем домашнее задание, а ученики его получают.
-
-<img alt="image" src="images/Observer1.jpeg" width = 80%/>
-
-```swift
-import Foundation
-
-// протокол учителя
-protocol Subject {
-    // добавляем нового ученика-наблюдателя
-    func add(observer: PropertyObserver)
-    // убираем ученика-наблюдателя
-    func remove(observer: PropertyObserver)
-    // уведомляем наших наблюдателей об изменениях (дз, новости)
-    func notify(withString string: String)
-}
-
-// сам учитель
-class Teacher: Subject {
-    
-    // изменяемая коллекция наблюдателей, каждый элемент единственный
-    // аналогия с "журналом учителя"
-    // объекты которые "подписаны" под изменения дз
-    var observerCollection = NSMutableSet()
-    
-    // домашняя работа
-    // при появлении дз идет уведомление для всех учеников-наблюдателей
-    var homeTask = "" {
-        didSet {
-            notify(withString: homeTask)
-        }
-    }
-    
-    func add(observer: PropertyObserver) {
-        observerCollection.add(observer)
-    }
-
-    func remove(observer: PropertyObserver) {
-        observerCollection.remove(observer)
-    }
-    
-    func notify(withString string: String) {
-        for observer in observerCollection {
-            (observer as! PropertyObserver).didGet(newTask: string)
-        }
-    }
-}
-
-
-protocol PropertyObserver {
-    // получаем дз
-    func didGet(newTask task: String)
-}
-
-class Pupil: NSObject, PropertyObserver {
-    
-    var homeTask = ""
-    
-    func didGet(newTask task: String) {
-        homeTask = task
-        print("Получена новая домашняя работа: \(homeTask)")
-    }
-}
-
-let teacher = Teacher()
-let newPupil = Pupil()
-
-teacher.add(observer: newPupil)
-teacher.homeTask = "Повторить паттерны проектирования для успешного прохождения собеседования"
-
-newPupil.homeTask
-// Получена новая домашняя работа:
-// Повторить паттерны проектирования для успешного прохождения собеседования
-```
-
-<img alt="image" src="images/Observer2.jpeg" width = 80%/>
-
----
-
-### [Decorator](https://refactoring.guru/ru/design-patterns/decorator)
-
-**#Декоратор** — это структурный паттерн проектирования, который позволяет динамически добавлять объектам новую функциональность, оборачивая их в полезные «обёртки». По сути можем наследоваться от нескольких классов, один объект "оборачиваем" в другой, и так далее.
-
-**#Decorator** имеет альтернативное название — **#обёртка**. Оно более точно описывает суть паттерна: вы помещаете целевой объект в другой объект-обёртку, который запускает базовое поведение объекта, а затем добавляет к результату что-то своё.
-
-Оба объекта имеют общий интерфейс, поэтому для пользователя нет никакой разницы, с каким объектом работать — чистым или обёрнутым. Вы можете использовать несколько разных обёрток одновременно — результат будет иметь объединённое поведение всех обёрток сразу.
-
-Аналогия из жизни. Любая одежда — это аналог Декоратора. Применяя Декоратор, вы не меняете первоначальный класс и не создаёте дочерних классов. Так и с одеждой — надевая свитер, вы не перестаёте быть собой, но получаете новое свойство — защиту от холода. Вы можете пойти дальше и надеть сверху ещё один декоратор — плащ, чтобы защититься и от дождя.
-
-<img alt="image" src="images/Decorator1.jpeg" width = 80%/>
-
-```swift
-// Decorator
-protocol Porsche {
-    func getPrice() -> Double
-    func getDescription() -> String
-}
-
-class Boxster: Porsche {
-    func getPrice() -> Double {
-        return 120
-    }
-    func getDescription() -> String {
-        return "Porsche Boxster"
-    }
-}
-
-// отвечает за все опции которые будут предусмотрены для данных автомобилей
-class PorscheDecorator: Porsche {
-    // добавляем к автомобилю опцию
-    private let decoratedPorsche: Porsche
-    
-    required init(dp: Porsche) {
-        self.decoratedPorsche = dp
-    }
-    
-    func getPrice() -> Double {
-        return decoratedPorsche.getPrice()
-    }
-    
-    func getDescription() -> String {
-        return decoratedPorsche.getDescription()
-    }
-}
-
-class PremiumAudioSystem: PorscheDecorator {
-    required init(dp: Porsche) {
-        super.init(dp: dp)
-    }
-    
-    override func getPrice() -> Double {
-        return super.getPrice() + 30
-    }
-    
-    override func getDescription() -> String {
-        return super.getDescription() + " with premium audio system"
-    }
-}
-
-
-class PanoramicSunroof: PorscheDecorator {
-    required init(dp: Porsche) {
-        super.init(dp: dp)
-    }
-    
-    override func getPrice() -> Double {
-        return super.getPrice() + 20
-    }
-    
-    override func getDescription() -> String {
-        return super.getDescription() + " with panoramic sunroof"
-    }
-}
-
-var porscheBoxster: Porsche = Boxster()
-porscheBoxster.getDescription() // Porsche Boxster
-porscheBoxster.getPrice() // 120
-
-porscheBoxster = PremiumAudioSystem(dp: porscheBoxster)
-porscheBoxster.getDescription()
-// Porsche Boxster with premium audio system
-
-porscheBoxster.getPrice() // 150
-
-porscheBoxster = PanoramicSunroof(dp: porscheBoxster)
-porscheBoxster.getDescription()
-
-// Porsche Boxster with premium audio system with panoramic sunroof
-porscheBoxster.getPrice() // 170
-```
-
-<img alt="image" src="images/Decorator2.jpeg" width = 80%/>
+Отвечают за удобное и безопасное создание новых объектов или даже целых семейств объектов.
 
 ---
 
@@ -1311,6 +1031,111 @@ middleFactory.produceBus() // Middle size bus is creates
 
 ---
 
+### [Builder](https://refactoring.guru/ru/design-patterns/builder)
+
+**#Строитель** — это порождающий паттерн проектирования, который позволяет создавать сложные объекты пошагово. Строитель даёт возможность использовать один и тот же код строительства для получения разных представлений объектов.
+
+Данный паттерн создан специально для того чтобы сложную инициализацию поместить в отдельный класс. Паттерн используется для создания сложных объектов которые создаются с помощью других объектов, или которые сами создают другие объекты, или которые требуют определенный алгоритм для своего создания (к примеру дом деревянный и каменный с бассейном). Для этого и используем отдельный класс Builder, чтобы соблюсти это.
+
+<img alt="image" src="images/Builder1.jpeg"  width = 70%/>
+
+**Проблема:**
+
+Представьте сложный объект, требующий кропотливой пошаговой инициализации множества полей и вложенных объектов. Код инициализации таких объектов обычно спрятан внутри монструозного конструктора с десятком параметров. Либо ещё хуже — распылён по всему клиентскому коду.
+
+Например, давайте подумаем о том, как создать объект Дом. Чтобы построить стандартный дом, нужно поставить 4 стены, установить двери, вставить пару окон и положить крышу. Но что, если вы хотите дом побольше да посветлее, имеющий сад, бассейн и прочее добро?
+
+Самое простое решение — расширить класс Дом, создав подклассы для всех комбинаций параметров дома. Проблема такого подхода — это громадное количество классов, которые вам придётся создать. Каждый новый параметр, вроде цвета обоев или материала кровли, заставит вас создавать всё больше и больше классов для перечисления всех возможных вариантов.
+
+Чтобы не плодить подклассы, вы можете подойти к решению с другой стороны. Вы можете создать гигантский конструктор Дома, принимающий уйму параметров для контроля над создаваемым продуктом. Действительно, это избавит вас от подклассов, но приведёт к другой проблеме.
+
+Большая часть этих параметров будет простаивать, а вызовы конструктора будут выглядеть монструозно из-за длинного списка параметров. К примеру, далеко не каждый дом имеет бассейн, поэтому параметры, связанные с бассейнами, будут простаивать бесполезно в 99% случаев
+
+**Решение:**
+
+Паттерн Строитель предлагает вынести конструирование объекта за пределы его собственного класса, поручив это дело отдельным объектам, называемым строителями
+
+Паттерн предлагает разбить процесс конструирования объекта на отдельные шаги (например, построитьСтены, вставитьДвери и другие). Чтобы создать объект, вам нужно поочерёдно вызывать методы строителя. Причём не нужно запускать все шаги, а только те, что нужны для производства объекта определённой конфигурации.
+
+Зачастую один и тот же шаг строительства может отличаться для разных вариаций производимых объектов. Например, деревянный дом потребует строительства стен из дерева, а каменный — из камня.
+
+В этом случае вы можете создать несколько классов строителей, выполняющих одни и те же шаги по-разному. Используя этих строителей в одном и том же строительном процессе, вы сможете получать на выходе различные объекты.
+
+Например, один строитель делает стены из дерева и стекла, другой из камня и железа, третий из золота и бриллиантов. Вызвав одни и те же шаги строительства, в первом случае вы получите обычный жилой дом, во втором — маленькую крепость, а в третьем — роскошное жилище. Замечу, что код, который вызывает шаги строительства, должен работать со строителями через общий интерфейс, чтобы их можно было свободно взаимозаменять.
+
+**Директор**
+
+Вы можете пойти дальше и выделить вызовы методов строителя в отдельный класс, называемый директором. В этом случае директор будет задавать порядок шагов строительства, а строитель — выполнять их, т.е директор это отдельный класс который следит за строителем.
+
+Отдельный класс директора не является строго обязательным. Вы можете вызывать методы строителя и напрямую из клиентского кода. Тем не менее, директор полезен, если у вас есть несколько способов конструирования продуктов, отличающихся порядком и наличием шагов конструирования. В этом случае вы сможете объединить всю эту логику в одном классе.
+
+Такая структура классов полностью скроет от клиентского кода процесс конструирования объектов. Клиенту останется только привязать желаемого строителя к директору, а затем получить у строителя готовый результат.
+
+```swift
+// Builder
+import UIKit
+
+protocol ThemeProtocol {
+    var backgroundColor: UIColor { get }
+    var textColor: UIColor { get }
+}
+
+class Theme: ThemeProtocol {
+    var backgroundColor: UIColor
+    var textColor: UIColor
+    
+    init(backgroundColor: UIColor, textColor: UIColor) {
+        self.backgroundColor = backgroundColor
+        self.textColor = textColor
+    }
+}
+
+protocol ThemeBuilderProtocol {
+    func setBackground(color: UIColor)
+    func setText(color: UIColor)
+    // будем возвращать все темы,
+    // всех типов подписанные на ThemeProtocol
+    func createTheme() -> ThemeProtocol?
+}
+
+class ThemeBuilder: ThemeBuilderProtocol {
+    private var backgroundColor: UIColor?
+    private var textColor: UIColor?
+    
+    func setBackground(color: UIColor) {
+        self.backgroundColor = color
+    }
+    
+    func setText(color: UIColor) {
+        self.textColor = color
+    }
+    
+    func createTheme() -> ThemeProtocol? {
+        guard let backgroundColor = backgroundColor, let textColor = textColor else { return nil }
+        return Theme(backgroundColor: backgroundColor, textColor: textColor)
+    }
+}
+
+let builder = ThemeBuilder()
+builder.setText(color: .white)
+builder.setBackground(color: .black)
+let theme = builder.createTheme() 
+```
+
+<img alt="image" src="images/Builder2.jpeg"  width = 70%/>
+
+---
+
+### [Prototype](https://refactoring.guru/ru/design-patterns/prototype)
+
+```swift
+
+````
+
+<img alt="image" src="images/.jpeg"  width = 70%/>
+
+---
+
 ### [Singleton](https://refactoring.guru/ru/design-patterns/singleton)
 
 #Одиночка — это порождающий паттерн проектирования, который гарантирует, что у класса есть только один экземпляр, и предоставляет к нему глобальную точку доступа.
@@ -1461,6 +1286,634 @@ class ViewController: UIViewController {
 
 ---
 
+---
+
+## Структурные паттерны
+
+Отвечают за построение удобных в поддержке иерархий классов.
+
+### [Adapter](https://refactoring.guru/ru/design-patterns/adapter)
+
+#Адаптер — это структурный паттерн проектирования, который позволяет объектам с несовместимыми интерфейсами работать вместе.
+
+Это объект-переводчик, который трансформирует интерфейс или данные одного объекта в такой вид, чтобы он стал понятен другому объекту.
+
+При этом адаптер оборачивает один из объектов, так что другой объект даже не знает о наличии первого. Например, вы можете обернуть объект, работающий в метрах, адаптером, который бы конвертировал данные в футы.
+
+Адаптеры могут не только переводить данные из одного формата в другой, но и помогать объектам с разными интерфейсами работать сообща. Это работает так:
+
+Адаптер имеет интерфейс, который совместим с одним из объектов.
+
+Поэтому этот объект может свободно вызывать методы адаптера.
+
+Адаптер получает эти вызовы и перенаправляет их второму объекту, но уже в том формате и последовательности, которые понятны второму объекту.
+
+Аналогия из жизни:
+
+Стандарты розеток в разных странах отличаются. Ваша европейская зарядка будет бесполезна в США без специального адаптера, позволяющего подключиться к розетке другого типа.
+
+Напишем адаптер чтобы класс SimpleCar мог воспользоваться недоступным ему методом makeNoise().
+ Мы хотим адаптировать SimpleCar под Supercar
+
+```swift
+// adaptee, т.е класс который мы адаптируем
+class SimpleCar {
+
+    func sound() -> String {
+        return "tr-tr-tr-tr"
+    }
+}
+
+// target, т.е объект под который мы ориентируемся
+protocol SupercarProtocol {
+    func makeNoise() -> String
+}
+
+class Supercar: SupercarProtocol {
+    func makeNoise() -> String {
+        return "wroom-wroom"
+    }
+}
+
+// adaptor
+class SupercarAdaptor: SupercarProtocol {
+    // принимаем объект который хотим адаптировать
+    var simpleCar: SimpleCar
+    
+    init(simpleCar: SimpleCar) {
+        self.simpleCar = simpleCar
+    }
+    
+    // адаптируем его под наш протокол SupercarProtocol
+    func makeNoise() -> String {
+        return simpleCar.sound()
+    }
+}
+
+// ...
+
+// или можно подписать SimpleCar под SupercarProtocol
+// и внутри реализовать его обязательный метод
+class SimpleCar1: SupercarProtocol {
+    func makeNoise() -> String {
+        return "new sound"
+    }
+    func sound() -> String {
+        return "tr-tr-tr-tr"
+    }
+}
+```
+
+<img alt="image" src="images/Adapter.jpeg"  width = 85%/>
+
+---
+
+### [Bridge](https://refactoring.guru/ru/design-patterns/bridge)
+
+```swift
+
+````
+
+<img alt="image" src="images/.jpeg"  width = 70%/>
+
+---
+
+### [Composite](https://refactoring.guru/ru/design-patterns/composite)
+
+**#Компоновщик** — это структурный паттерн проектирования, который позволяет сгруппировать множество объектов в древовидную структуру, а затем работать с ней так, как будто это единичный объект.
+
+**Проблема:**
+
+Паттерн Компоновщик имеет смысл только тогда, когда основная модель вашей программы может быть структурирована в виде дерева.
+
+Например, есть два объекта: Продукт и Коробка. Коробка может содержать несколько Продуктов и других Коробок поменьше. Те, в свою очередь, тоже содержат либо Продукты, либо Коробки и так далее.
+
+Теперь предположим, ваши Продукты и Коробки могут быть частью заказов. Каждый заказ может содержать как простые Продукты без упаковки, так и составные Коробки. Ваша задача состоит в том, чтобы узнать цену всего заказа.
+
+Структура сложного заказа
+
+<img alt="image" src="images/Composite1.jpeg"  width = 70%/>
+
+Заказ может состоять из различных продуктов, упакованных в собственные коробки.
+
+Если решать задачу в лоб, то вам потребуется открыть все коробки заказа, перебрать все продукты и посчитать их суммарную стоимость. Но это слишком хлопотно, так как типы коробок и их содержимое могут быть вам неизвестны. Кроме того, наперёд неизвестно и количество уровней вложенности коробок, поэтому перебрать коробки простым циклом не выйдет.
+
+**Решение:**
+
+Компоновщик предлагает рассматривать Продукт и Коробку через единый интерфейс с общим методом получения стоимости.
+
+Продукт просто вернёт свою цену. Коробка спросит цену каждого предмета внутри себя и вернёт сумму результатов. Если одним из внутренних предметов окажется коробка поменьше, она тоже будет перебирать своё содержимое, и так далее, пока не будут посчитаны все составные части.
+
+Компоновщик рекурсивно запускает действие по всем элементам дерева — от корня к листьям.
+
+Для вас, клиента, главное, что теперь не нужно ничего знать о структуре заказов. Вы вызываете метод получения цены, он возвращает цифру
+
+**Аналогия из жизни**
+
+Пример армейской структуры.
+
+Армии большинства государств могут быть представлены в виде перевёрнутых деревьев. На нижнем уровне у вас есть солдаты, затем взводы, затем полки, а затем целые армии. Приказы отдаются сверху и спускаются вниз по структуре командования, пока не доходят до конкретного солдата.
+
+Древовидная структура. Ветки и листья. Ветки могут содержать себеподобных (другие ветки или листья). Листья не могут содержать себеподобных, они и есть последний элемент.
+
+```swift
+// Composite
+
+// определяет наших менеджеров
+protocol Coworker {
+    // нанять другого сотрудника
+    func hire(coworker: Coworker)
+    // сколько сотрудников в подчинении
+    func getInfo()
+    var level: Int { get }
+}
+
+// branch - ветка
+// менеджеры которые могут нанимать других-себеподобных
+class Manager: Coworker {
+    private var coworkers = [Coworker]()
+    var level: Int
+    init(level: Int) {
+        self.level = level
+    }
+    func hire(coworker: Coworker) {
+        self.coworkers.append(coworker)
+    }
+    func getInfo() {
+        print(self.level.description + " level manager")
+        for coworker in coworkers {
+            coworker.getInfo()
+        }
+    }
+}
+
+// leaf-листья, последние элементы
+class LowLevelManager: Coworker {    var level: Int
+    init(level: Int) {
+        self.level = level
+    }
+    func hire(coworker: Coworker) {
+        print("can't hire")
+    }
+    func getInfo() {
+        print(self.level.description + " level manager")
+    }
+}
+
+let topManager = Manager(level: 1)
+let managerLvl2 = Manager(level: 2)
+let managerLvl3_1 = Manager(level: 3)
+let managerLvl3_2 = Manager(level: 3)
+let managerLvl10 = Manager(level: 10)
+
+// нанимаем менеджеров
+topManager.hire(coworker: managerLvl2)
+managerLvl2.hire(coworker: managerLvl3_1)
+managerLvl2.hire(coworker: managerLvl3_2)
+managerLvl3_1.hire(coworker: managerLvl10)
+
+topManager.getInfo()
+```
+
+```bash
+1 level manager
+2 level manager
+3 level manager
+10 level manager
+3 level manager
+```
+
+<img alt="image" src="images/Composite2.jpeg" width = 70%/>
+
+---
+
+### [Decorator](https://refactoring.guru/ru/design-patterns/decorator)
+
+**#Декоратор** — это структурный паттерн проектирования, который позволяет динамически добавлять объектам новую функциональность, оборачивая их в полезные «обёртки». По сути можем наследоваться от нескольких классов, один объект "оборачиваем" в другой, и так далее.
+
+**#Decorator** имеет альтернативное название — **#обёртка**. Оно более точно описывает суть паттерна: вы помещаете целевой объект в другой объект-обёртку, который запускает базовое поведение объекта, а затем добавляет к результату что-то своё.
+
+Оба объекта имеют общий интерфейс, поэтому для пользователя нет никакой разницы, с каким объектом работать — чистым или обёрнутым. Вы можете использовать несколько разных обёрток одновременно — результат будет иметь объединённое поведение всех обёрток сразу.
+
+Аналогия из жизни. Любая одежда — это аналог Декоратора. Применяя Декоратор, вы не меняете первоначальный класс и не создаёте дочерних классов. Так и с одеждой — надевая свитер, вы не перестаёте быть собой, но получаете новое свойство — защиту от холода. Вы можете пойти дальше и надеть сверху ещё один декоратор — плащ, чтобы защититься и от дождя.
+
+<img alt="image" src="images/Decorator1.jpeg" width = 80%/>
+
+```swift
+// Decorator
+protocol Porsche {
+    func getPrice() -> Double
+    func getDescription() -> String
+}
+
+class Boxster: Porsche {
+    func getPrice() -> Double {
+        return 120
+    }
+    func getDescription() -> String {
+        return "Porsche Boxster"
+    }
+}
+
+// отвечает за все опции которые будут предусмотрены для данных автомобилей
+class PorscheDecorator: Porsche {
+    // добавляем к автомобилю опцию
+    private let decoratedPorsche: Porsche
+    
+    required init(dp: Porsche) {
+        self.decoratedPorsche = dp
+    }
+    
+    func getPrice() -> Double {
+        return decoratedPorsche.getPrice()
+    }
+    
+    func getDescription() -> String {
+        return decoratedPorsche.getDescription()
+    }
+}
+
+class PremiumAudioSystem: PorscheDecorator {
+    required init(dp: Porsche) {
+        super.init(dp: dp)
+    }
+    
+    override func getPrice() -> Double {
+        return super.getPrice() + 30
+    }
+    
+    override func getDescription() -> String {
+        return super.getDescription() + " with premium audio system"
+    }
+}
+
+
+class PanoramicSunroof: PorscheDecorator {
+    required init(dp: Porsche) {
+        super.init(dp: dp)
+    }
+    
+    override func getPrice() -> Double {
+        return super.getPrice() + 20
+    }
+    
+    override func getDescription() -> String {
+        return super.getDescription() + " with panoramic sunroof"
+    }
+}
+
+var porscheBoxster: Porsche = Boxster()
+porscheBoxster.getDescription() // Porsche Boxster
+porscheBoxster.getPrice() // 120
+
+porscheBoxster = PremiumAudioSystem(dp: porscheBoxster)
+porscheBoxster.getDescription()
+// Porsche Boxster with premium audio system
+
+porscheBoxster.getPrice() // 150
+
+porscheBoxster = PanoramicSunroof(dp: porscheBoxster)
+porscheBoxster.getDescription()
+
+// Porsche Boxster with premium audio system with panoramic sunroof
+porscheBoxster.getPrice() // 170
+```
+
+<img alt="image" src="images/Decorator2.jpeg" width = 80%/>
+
+---
+
+### [Facade](https://refactoring.guru/ru/design-patterns/facade)
+
+#Фасад — это структурный паттерн проектирования, который предоставляет простой интерфейс к сложной системе классов, библиотеке или фреймворку. Призван превратить сложное в простое.
+
+Проблема:
+
+Вашему коду приходится работать с большим количеством объектов некой сложной библиотеки или фреймворка. Вы должны самостоятельно инициализировать эти объекты, следить за правильным порядком зависимостей и так далее.
+
+В результате бизнес-логика ваших классов тесно переплетается с деталями реализации сторонних классов. Такой код довольно сложно понимать и поддерживать.
+
+Аналогия из жизни:
+
+Когда вы звоните в магазин и делаете заказ по телефону, сотрудник службы поддержки является вашим фасадом ко всем службам и отделам магазина. Он предоставляет вам упрощённый интерфейс к системе создания заказа, платёжной системе и отделу доставки.
+
+Другой пример. Раньше были магазины специализированного типа, хлебный, молочный, хозяйственный, кондитерская, мясной и тп, и чтобы купить все это нужно посетить множество магазинов, сейчас же есть супермаркет, где можно в одном месте приобрести разные товары.
+
+```swift
+// Facade
+class FruitShop {
+    func buyFruits() -> String {
+        return "fruits"
+    }
+}
+
+class MeatShop {
+    func buyMeat() -> String {
+        return "meat"
+    }
+}
+
+class MilkShop {
+    func buyMilk() -> String {
+        return "milk"
+    }
+}
+
+class SweetShop {
+    func buySweets() -> String {
+        return "sweets"
+    }
+}
+
+class BreadShop {
+    func buyBread() -> String {
+        return "bread"
+    }
+}
+
+// Facade
+class Supermarket {
+    private let fruitShop = FruitShop()
+    private let meatShop = MeatShop()
+    private let milkShop = MilkShop()
+    private let sweetShop = SweetShop()
+    private let breadShop = BreadShop()
+    
+    // спрячем реализацию всех методов buy... в один
+    func buyProducts() -> String {
+        var products = ""
+        products += fruitShop.buyFruits() + ", "
+        products += meatShop.buyMeat() + ", "
+        products += milkShop.buyMilk() + ", "
+        products += sweetShop.buySweets() + ", "
+        products += breadShop.buyBread()
+        return "I bought: " + products
+    }
+}
+
+let supermarket = Supermarket()
+supermarket.buyProducts()
+```
+
+<img alt="image" src="images/Facade.jpeg"  width = 80%/>
+
+---
+
+### [Flyweight](https://refactoring.guru/ru/design-patterns/flyweight)
+
+```swift
+
+````
+
+<img alt="image" src="images/.jpeg"  width = 70%/>
+
+---
+
+### [Proxy](https://refactoring.guru/ru/design-patterns/proxy)
+
+**#Заместитель** — это структурный паттерн проектирования, который позволяет подставлять вместо реальных объектов специальные объекты-заменители. Эти объекты перехватывают вызовы к оригинальному объекту, позволяя сделать что-то до или после передачи вызова оригиналу. Некая прокладка/промежуточный вариант. Сам прокси может выполнять какие-то действия, и тем самым снять некую нагрузку.
+
+**Проблема:**
+
+Для чего вообще контролировать доступ к объектам? Рассмотрим такой пример: у вас есть внешний ресурсоёмкий объект, который нужен не все время, а изредка.
+
+Запросы к базе данных могут быть очень медленными.
+
+Мы могли бы создавать этот объект не в самом начале программы, а только тогда, когда он кому-то реально понадобится. Каждый клиент объекта получил бы некий код отложенной инициализации. Но, вероятно, это привело бы к множественному дублированию кода.
+
+В идеале, этот код хотелось бы поместить прямо в служебный класс, но это не всегда возможно. Например, код класса может находиться в закрытой сторонней библиотеке.
+
+**Решение:**
+
+Паттерн Заместитель предлагает создать новый класс-дублёр, имеющий тот же интерфейс, что и оригинальный служебный объект. При получении запроса от клиента объект-заместитель сам бы создавал экземпляр служебного объекта и переадресовывал бы ему всю реальную работу.
+
+<img alt="image" src="images/Proxy1.jpeg"  width = 70%/>
+
+Но в чём же здесь польза? Вы могли бы поместить в класс заместителя какую-то промежуточную логику, которая выполнялась бы до (или после) вызовов этих же методов в настоящем объекте. А благодаря одинаковому интерфейсу, объект-заместитель можно передать в любой код, ожидающий сервисный объект.
+
+**Аналогия из жизни:**
+
+Платёжная карта — это заместитель пачки наличных
+Платёжной картой можно расплачиваться, как и наличными.
+
+Платёжная карточка — это заместитель пачки наличных. И карточка, и наличные имеют общий интерфейс — ими можно оплачивать товары. Для покупателя польза в том, что не надо таскать с собой тонны наличных, а владелец магазина рад, что ему не нужно делать дорогостоящую инкассацию наличности в банк — деньги поступают к нему на счёт напрямую.
+
+<img alt="image" src="images/Proxy2.jpeg"  width = 70%/>
+
+```swift
+// Виртуальный Proxy. Простой пример
+class User {
+    let id = "123"
+}
+
+protocol ServerProtocol {
+// предоставить доступ
+    func grandAccess(user: User)
+// запретить доступ
+    func denyAccess(user: User)
+}
+
+class ServerSide: ServerProtocol {
+    func grandAccess(user: User) {
+        print("access granted to user with id = \(user.id)")
+    }
+    func denyAccess(user: User) {
+        print("access denied to user with id = \(user.id)")
+    }
+}
+// прокси-копия сервера
+class ServerProxy: ServerProtocol {
+// имеем ссылку на наш сервер
+    lazy private var server: ServerSide = ServerSide()
+    func grandAccess(user: User) {
+        server.grandAccess(user: user)
+    }
+    func denyAccess(user: User) {
+        server.denyAccess(user: user)
+    }
+}
+
+let user = User()
+let proxy = ServerProxy()
+proxy.grandAccess(user: user) // access granted to user with id = 123
+proxy.denyAccess(user: user) // access denied to user with id = 123
+```
+
+```swift
+// Защитный Proxy. Второй пример
+class User {
+    let name = "Artem"
+    let password = "123"
+}
+
+protocol ServerProtocol {
+    func grantAccess(user: User)
+}
+
+class ServerSide: ServerProtocol {
+    func grantAccess(user: User) {
+        print("access granted to user with name = \(user.name)")
+    }
+}
+
+class ServerProxy: ServerProtocol {
+    private var server: ServerSide!
+    func grantAccess(user: User) {
+        guard server != nil else {
+            print("access can't be granted")
+            return
+        }
+        server.grantAccess(user: user)
+    }
+    func authenticate(user: User) {
+        guard user.password == "123" else { return }
+        print("user authenticated")
+        server = ServerSide()
+    }
+}
+
+let user = User()
+let proxy = ServerProxy()
+
+proxy.grantAccess(user: user) // access can't be granted
+proxy.authenticate(user: user) // user authenticated
+proxy.grantAccess(user: user) // access granted to user with name = Artem
+```
+
+<img alt="image" src="images/Proxy3.jpeg"  width = 70%/>
+
+---
+
+---
+
+## Поведенческие паттерны
+Решают задачи эффективного и безопасного взаимодействия между объектами программы.
+
+---
+
+### [ChainOfResponsibility](https://refactoring.guru/ru/design-patterns/chain-of-responsibility)
+
+**#Цепочка обязанностей** — это поведенческий паттерн проектирования, который позволяет передавать запросы последовательно по цепочке обработчиков. Каждый последующий обработчик решает, может ли он обработать запрос сам и стоит ли передавать запрос дальше по цепи
+
+**Создается цепочка объектов последовательно анализирующих поступающий в них запрос**. Есть несколько структурно схожих объектов, запрос двигается по ним и обрабатывается. Запрос передается последовательно
+
+<img alt="image" src="images/ChainOfResponsibility3.jpeg"  width = 70%/>
+
+**Аналогия из жизни:**
+
+Пример общения с тех. поддержкой.
+
+Первым вы слышите голос автоответчика, предлагающий выбор из десятка стандартных решений. Ни один из вариантов не подходит, и робот соединяет вас с живым оператором.
+
+Увы, но рядовой оператор поддержки умеет общаться только заученными фразами и давать шаблонные ответы. После очередного предложения «выключить и включить компьютер» вы просите связать вас с настоящими инженерами.
+
+Оператор перебрасывает звонок дежурному инженеру, и он-то знает, как вам помочь. Запрос удовлетворён. Вы кладёте трубку.
+
+**Проблема:**
+
+Представьте, что вы делаете систему приёма онлайн-заказов. Вы хотите ограничить к ней доступ так, чтобы только авторизованные пользователи могли создавать заказы. Кроме того, определённые пользователи, владеющие правами администратора, должны иметь полный доступ к заказам.
+
+Вы быстро сообразили, что эти проверки нужно выполнять последовательно. Ведь пользователя можно попытаться «залогинить» в систему, если его запрос содержит логин и пароль. Но если такая попытка не удалась, то проверять расширенные права доступа попросту не имеет смысла.
+
+На протяжении следующих нескольких месяцев вам пришлось добавить ещё несколько таких последовательных проверок.
+
+- Кто-то резонно заметил, что неплохо бы проверять данные, передаваемые в запросе перед тем, как вносить их в систему — вдруг запрос содержит данные о покупке несуществующих продуктов.
+
+- Кто-то предложил блокировать массовые отправки формы с одним и тем же логином, чтобы предотвратить подбор паролей ботами.
+
+- Кто-то заметил, что форму заказа неплохо бы доставать из кеша, если она уже была однажды показана.
+
+С каждой новой «фичей» код проверок, выглядящий как большой клубок условных операторов, всё больше раздувался. При изменении одного правила приходилось трогать код всех проверок. А для того, чтобы применить проверки к другим ресурсам, пришлось продублировать их код в других классах.
+
+**Решение:**
+
+Как и многие другие поведенческие паттерны, Цепочка обязанностей базируется на том, чтобы превратить отдельные поведения в объекты. В нашем случае каждая проверка переедет в отдельный класс с единственным методом выполнения. Данные запроса, над которым происходит проверка, будут передаваться в метод как аргументы.
+
+А теперь по-настоящему важный этап. Паттерн предлагает связать объекты обработчиков в одну цепь. Каждый из них будет иметь ссылку на следующий обработчик в цепи. Таким образом, при получении запроса обработчик сможет не только сам что-то с ним сделать, но и передать обработку следующему объекту в цепочке.
+
+Передавая запросы в первый обработчик цепочки, вы можете быть уверены, что все объекты в цепи смогут его обработать. При этом длина цепочки не имеет никакого значения.
+
+И последний штрих. Обработчик не обязательно должен передавать запрос дальше, причём эта особенность может быть использована по-разному.
+
+В примере с фильтрацией доступа обработчики прерывают дальнейшие проверки, если текущая проверка не прошла. Ведь нет смысла тратить попусту ресурсы, если и так понятно, что с запросом что-то не так.
+
+<img alt="image" src="images/ChainOfResponsibility1.jpeg"  width = 70%/>
+
+Но есть и другой подход, при котором обработчики прерывают цепь только когда они могут обработать запрос. В этом случае запрос движется по цепи, пока не найдётся обработчик, который может его обработать. Очень часто такой подход используется для передачи событий, создаваемых классами графического интерфейса в результате взаимодействия с пользователем.
+
+Например, когда пользователь кликает по кнопке, программа выстраивает цепочку из объекта этой кнопки, всех её родительских элементов и общего окна приложения на конце. Событие клика передаётся по этой цепи до тех пор, пока не найдётся объект, способный его обработать. Этот пример примечателен ещё и тем, что цепочку всегда можно выделить из древовидной структуры объектов, в которую обычно и свёрнуты элементы пользовательского интерфейса.
+
+<img alt="image" src="images/ChainOfResponsibility2.jpeg"  width = 70%/>
+
+Очень важно, чтобы все объекты цепочки имели общий интерфейс. Обычно каждому конкретному обработчику достаточно знать только то, что следующий объект в цепи имеет метод выполнить. Благодаря этому связи между объектами цепочки будут более гибкими. Кроме того, вы сможете формировать цепочки на лету из разнообразных объектов, не привязываясь к конкретным классам.
+
+```swift
+// ChainOfResponsibility
+class Enemy {
+    let strength = 600
+}
+
+protocol MilitaryChain {
+    // сила
+    var strength: Int { get }
+    // следующий уровень бойца
+    var nextRank: MilitaryChain? { get set }
+    // пробуем текущим классом победить врага
+    func shouldDefeatWithStrength(amount: Int)
+}
+
+class Soldier: MilitaryChain {
+    var strength = 100
+    var nextRank: MilitaryChain?
+    func shouldDefeatWithStrength(amount: Int) {
+        if amount < strength {
+            print("Soldier got it")
+        } else {
+            nextRank?.shouldDefeatWithStrength(amount: amount)
+        }
+    }
+}
+
+class Officer: MilitaryChain {
+    var strength = 500
+    var nextRank: MilitaryChain?
+    func shouldDefeatWithStrength(amount: Int) {
+        if amount < strength {
+            print("Officer got it")
+        } else {
+            nextRank?.shouldDefeatWithStrength(amount: amount)
+        }
+    }
+}
+
+class General: MilitaryChain {
+    var strength = 1000
+    var nextRank: MilitaryChain?
+    func shouldDefeatWithStrength(amount: Int) {
+        if amount < strength {
+            print("General got it")
+        } else {
+            print("We can't defeat this enemy")
+        }
+    }
+}
+
+let enemy = Enemy()
+
+let solider = Soldier()
+let officer = Officer()
+let general = General()
+
+solider.nextRank = officer
+officer.nextRank = general
+
+solider.shouldDefeatWithStrength(amount: enemy.strength) // General got it
+```
+
+<img alt="image" src="images/ChainOfResponsibility4.jpeg"  width = 70%/>
+
+---
+
 ### [Command](https://refactoring.guru/ru/design-patterns/command)
 
 #Команда — это поведенческий паттерн проектирования, который превращает запросы в объекты, позволяя передавать их как аргументы при вызове методов, ставить запросы в очередь, логировать их, а также поддерживать отмену операций.
@@ -1575,278 +2028,6 @@ account.balance // 600
 ```
 
 <img alt="image" src="images/Command3.jpeg" width = 85%/>
-
----
-
-### [Adapter](https://refactoring.guru/ru/design-patterns/adapter)
-
-#Адаптер — это структурный паттерн проектирования, который позволяет объектам с несовместимыми интерфейсами работать вместе.
-
-Это объект-переводчик, который трансформирует интерфейс или данные одного объекта в такой вид, чтобы он стал понятен другому объекту.
-
-При этом адаптер оборачивает один из объектов, так что другой объект даже не знает о наличии первого. Например, вы можете обернуть объект, работающий в метрах, адаптером, который бы конвертировал данные в футы.
-
-Адаптеры могут не только переводить данные из одного формата в другой, но и помогать объектам с разными интерфейсами работать сообща. Это работает так:
-
-Адаптер имеет интерфейс, который совместим с одним из объектов.
-
-Поэтому этот объект может свободно вызывать методы адаптера.
-
-Адаптер получает эти вызовы и перенаправляет их второму объекту, но уже в том формате и последовательности, которые понятны второму объекту.
-
-Аналогия из жизни:
-
-Стандарты розеток в разных странах отличаются. Ваша европейская зарядка будет бесполезна в США без специального адаптера, позволяющего подключиться к розетке другого типа.
-
-Напишем адаптер чтобы класс SimpleCar мог воспользоваться недоступным ему методом makeNoise().
- Мы хотим адаптировать SimpleCar под Supercar
-
-```swift
-// adaptee, т.е класс который мы адаптируем
-class SimpleCar {
-
-    func sound() -> String {
-        return "tr-tr-tr-tr"
-    }
-}
-
-// target, т.е объект под который мы ориентируемся
-protocol SupercarProtocol {
-    func makeNoise() -> String
-}
-
-class Supercar: SupercarProtocol {
-    func makeNoise() -> String {
-        return "wroom-wroom"
-    }
-}
-
-// adaptor
-class SupercarAdaptor: SupercarProtocol {
-    // принимаем объект который хотим адаптировать
-    var simpleCar: SimpleCar
-    
-    init(simpleCar: SimpleCar) {
-        self.simpleCar = simpleCar
-    }
-    
-    // адаптируем его под наш протокол SupercarProtocol
-    func makeNoise() -> String {
-        return simpleCar.sound()
-    }
-}
-
-// ...
-
-// или можно подписать SimpleCar под SupercarProtocol
-// и внутри реализовать его обязательный метод
-class SimpleCar1: SupercarProtocol {
-    func makeNoise() -> String {
-        return "new sound"
-    }
-    func sound() -> String {
-        return "tr-tr-tr-tr"
-    }
-}
-```
-
-<img alt="image" src="images/Adapter.jpeg"  width = 85%/>
-
----
-
-### [Facade](https://refactoring.guru/ru/design-patterns/facade)
-
-#Фасад — это структурный паттерн проектирования, который предоставляет простой интерфейс к сложной системе классов, библиотеке или фреймворку. Призван превратить сложное в простое.
-
-Проблема:
-
-Вашему коду приходится работать с большим количеством объектов некой сложной библиотеки или фреймворка. Вы должны самостоятельно инициализировать эти объекты, следить за правильным порядком зависимостей и так далее.
-
-В результате бизнес-логика ваших классов тесно переплетается с деталями реализации сторонних классов. Такой код довольно сложно понимать и поддерживать.
-
-Аналогия из жизни:
-
-Когда вы звоните в магазин и делаете заказ по телефону, сотрудник службы поддержки является вашим фасадом ко всем службам и отделам магазина. Он предоставляет вам упрощённый интерфейс к системе создания заказа, платёжной системе и отделу доставки.
-
-Другой пример. Раньше были магазины специализированного типа, хлебный, молочный, хозяйственный, кондитерская, мясной и тп, и чтобы купить все это нужно посетить множество магазинов, сейчас же есть супермаркет, где можно в одном месте приобрести разные товары.
-
-```swift
-// Facade
-class FruitShop {
-    func buyFruits() -> String {
-        return "fruits"
-    }
-}
-
-class MeatShop {
-    func buyMeat() -> String {
-        return "meat"
-    }
-}
-
-class MilkShop {
-    func buyMilk() -> String {
-        return "milk"
-    }
-}
-
-class SweetShop {
-    func buySweets() -> String {
-        return "sweets"
-    }
-}
-
-class BreadShop {
-    func buyBread() -> String {
-        return "bread"
-    }
-}
-
-// Facade
-class Supermarket {
-    private let fruitShop = FruitShop()
-    private let meatShop = MeatShop()
-    private let milkShop = MilkShop()
-    private let sweetShop = SweetShop()
-    private let breadShop = BreadShop()
-    
-    // спрячем реализацию всех методов buy... в один
-    func buyProducts() -> String {
-        var products = ""
-        products += fruitShop.buyFruits() + ", "
-        products += meatShop.buyMeat() + ", "
-        products += milkShop.buyMilk() + ", "
-        products += sweetShop.buySweets() + ", "
-        products += breadShop.buyBread()
-        return "I bought: " + products
-    }
-}
-
-let supermarket = Supermarket()
-supermarket.buyProducts()
-```
-
-<img alt="image" src="images/Facade.jpeg"  width = 80%/>
-
----
-
-### [Template Method](https://refactoring.guru/ru/design-patterns/template-method)
-
-**#Шаблонный метод** — это поведенческий паттерн проектирования, который определяет скелет алгоритма, перекладывая ответственность за некоторые его шаги на подклассы. Паттерн позволяет подклассам переопределять шаги алгоритма, не меняя его общей структуры.
-
-Решение:
-
-Паттерн Шаблонный метод предлагает разбить алгоритм на последовательность шагов, описать эти шаги в отдельных методах и вызывать их в одном шаблонном методе друг за другом.
-
-Это позволит подклассам переопределять некоторые шаги алгоритма, оставляя без изменений его структуру и остальные шаги, которые для этого подкласса не так важны.
-
-Аналогия из жизни:
-
-Строительство типовых домов. Проекты могут немного изменить по желанию клиента.
-
-Строители используют подход, похожий на шаблонный метод при строительстве типовых домов. У них есть основной архитектурный проект, в котором расписаны шаги строительства: заливка фундамента, постройка стен, перекрытие крыши, установка окон и так далее.
-
-Но, несмотря на стандартизацию каждого этапа, строители могут вносить небольшие изменения на любом из этапов, чтобы сделать дом непохожим на другие.
-
-<img alt="image" src="images/TemplateMethod1.jpeg"  width = 80%/>
-
-```swift
-// Template Method
-protocol DriveVehicle {
-    func haveASeat()
-    func closeTheDoor()
-    func useProtection()
-    func lookAtTheMirror()
-    func turnSignal()
-    func driveForward()
-    func startVehicle()
-}
-
-extension DriveVehicle {
-    func startVehicle() {
-        haveASeat()
-        useProtection()
-        lookAtTheMirror()
-        turnSignal()
-        driveForward()
-    }
-    func haveASeat() {
-        // специально остановим выполнение и получим ошибку
-        preconditionFailure("this method should be overriden")
-    }
-    func closeTheDoor() { }
-    func useProtection() {
-        preconditionFailure("this method should be overriden")
-    }
-    func lookAtTheMirror() {
-        preconditionFailure("this method should be overriden")
-    }
-    func turnSignal() {
-        preconditionFailure("this method should be overriden")
-    }
-    func driveForward() {
-        preconditionFailure("this method should be overriden")
-    }
-}
-
-class Bicycle: DriveVehicle {
-    func haveASeat() {
-        print("sit down on a bicycle seat")
-    }
-    
-    func useProtection() {
-        print("wear a helmet")
-    }
-    
-    func lookAtTheMirror() {
-        print("look at the little mirror")
-    }
-    
-    func turnSignal() {
-        print("show left hand")
-    }
-    
-    func driveForward() {
-        print("pedal")
-    }
-}
-
-class Car: DriveVehicle {
-    func haveASeat() {
-        print("sit down on a car seat")
-        closeTheDoor()
-    }
-    
-    func closeTheDoor() {
-        print("close the door")
-    }
-
-    func useProtection() {
-        print("fasten seat belt")
-    }
-    
-    func lookAtTheMirror() {
-        print("look at the rearview mirror")
-    }
-    
-    func turnSignal() {
-        print("turn on left turn light")
-    }
-    
-    func driveForward() {
-        print("push pedal")
-    }
-}
-
-let car = Car()
-let bicycle = Bicycle()
-
-car.startVehicle()
-print("###########")
-bicycle.startVehicle()
-```
-
-<img alt="image" src="images/TemplateMethod2.jpeg" width = 70%/> 
 
 ---
 
@@ -2019,113 +2200,112 @@ let allbadDriverIteratorViaSequance = car.makeBadIterator().allDrivers() // Ivan
 
 ---
 
-### [Composite](https://refactoring.guru/ru/design-patterns/composite)
-
-**#Компоновщик** — это структурный паттерн проектирования, который позволяет сгруппировать множество объектов в древовидную структуру, а затем работать с ней так, как будто это единичный объект.
-
-**Проблема:**
-
-Паттерн Компоновщик имеет смысл только тогда, когда основная модель вашей программы может быть структурирована в виде дерева.
-
-Например, есть два объекта: Продукт и Коробка. Коробка может содержать несколько Продуктов и других Коробок поменьше. Те, в свою очередь, тоже содержат либо Продукты, либо Коробки и так далее.
-
-Теперь предположим, ваши Продукты и Коробки могут быть частью заказов. Каждый заказ может содержать как простые Продукты без упаковки, так и составные Коробки. Ваша задача состоит в том, чтобы узнать цену всего заказа.
-
-Структура сложного заказа
-
-<img alt="image" src="images/Composite1.jpeg"  width = 70%/>
-
-Заказ может состоять из различных продуктов, упакованных в собственные коробки.
-
-Если решать задачу в лоб, то вам потребуется открыть все коробки заказа, перебрать все продукты и посчитать их суммарную стоимость. Но это слишком хлопотно, так как типы коробок и их содержимое могут быть вам неизвестны. Кроме того, наперёд неизвестно и количество уровней вложенности коробок, поэтому перебрать коробки простым циклом не выйдет.
-
-**Решение:**
-
-Компоновщик предлагает рассматривать Продукт и Коробку через единый интерфейс с общим методом получения стоимости.
-
-Продукт просто вернёт свою цену. Коробка спросит цену каждого предмета внутри себя и вернёт сумму результатов. Если одним из внутренних предметов окажется коробка поменьше, она тоже будет перебирать своё содержимое, и так далее, пока не будут посчитаны все составные части.
-
-Компоновщик рекурсивно запускает действие по всем элементам дерева — от корня к листьям.
-
-Для вас, клиента, главное, что теперь не нужно ничего знать о структуре заказов. Вы вызываете метод получения цены, он возвращает цифру
-
-**Аналогия из жизни**
-
-Пример армейской структуры.
-
-Армии большинства государств могут быть представлены в виде перевёрнутых деревьев. На нижнем уровне у вас есть солдаты, затем взводы, затем полки, а затем целые армии. Приказы отдаются сверху и спускаются вниз по структуре командования, пока не доходят до конкретного солдата.
-
-Древовидная структура. Ветки и листья. Ветки могут содержать себеподобных (другие ветки или листья). Листья не могут содержать себеподобных, они и есть последний элемент.
-
+### [Mediator](https://refactoring.guru/ru/design-patterns/mediator)
 
 ```swift
-// Composite
 
-// определяет наших менеджеров
-protocol Coworker {
-    // нанять другого сотрудника
-    func hire(coworker: Coworker)
-    // сколько сотрудников в подчинении
-    func getInfo()
-    var level: Int { get }
+````
+
+<img alt="image" src="images/.jpeg"  width = 70%/>
+
+---
+
+### [Memento](https://refactoring.guru/ru/design-patterns/memento)
+
+```swift
+
+````
+
+<img alt="image" src="images/.jpeg"  width = 70%/>
+
+---
+
+### [Observer - наблюдатель](https://refactoring.guru/ru/design-patterns/observer)
+
+**#Наблюдатель** — это поведенческий паттерн проектирования, который создаёт механизм подписки, позволяющий одним объектам следить и реагировать на события, происходящие в других объектах.
+
+Аналогия из жизни. После того как вы оформили подписку на газету или журнал, вам больше не нужно ездить в супермаркет и проверять, не вышел ли очередной номер. Вместо этого издательство будет присылать новые номера по почте прямо к вам домой сразу после их выхода.
+
+Издательство ведёт список подписчиков и знает, кому какой журнал высылать. Вы можете в любой момент отказаться от подписки, и журнал перестанет вам приходить.
+
+Один ко многим, то есть один объект за которым наблюдают  другие объекты. Аналогия с учителем, где все ученики следят за ним т.е он главный объект, а они наблюдатели, он раздаёт всем домашнее задание, а ученики его получают.
+
+<img alt="image" src="images/Observer1.jpeg" width = 80%/>
+
+```swift
+import Foundation
+
+// протокол учителя
+protocol Subject {
+    // добавляем нового ученика-наблюдателя
+    func add(observer: PropertyObserver)
+    // убираем ученика-наблюдателя
+    func remove(observer: PropertyObserver)
+    // уведомляем наших наблюдателей об изменениях (дз, новости)
+    func notify(withString string: String)
 }
 
-// branch - ветка
-// менеджеры которые могут нанимать других-себеподобных
-class Manager: Coworker {
-    private var coworkers = [Coworker]()
-    var level: Int
-    init(level: Int) {
-        self.level = level
+// сам учитель
+class Teacher: Subject {
+    
+    // изменяемая коллекция наблюдателей, каждый элемент единственный
+    // аналогия с "журналом учителя"
+    // объекты которые "подписаны" под изменения дз
+    var observerCollection = NSMutableSet()
+    
+    // домашняя работа
+    // при появлении дз идет уведомление для всех учеников-наблюдателей
+    var homeTask = "" {
+        didSet {
+            notify(withString: homeTask)
+        }
     }
-    func hire(coworker: Coworker) {
-        self.coworkers.append(coworker)
+    
+    func add(observer: PropertyObserver) {
+        observerCollection.add(observer)
     }
-    func getInfo() {
-        print(self.level.description + " level manager")
-        for coworker in coworkers {
-            coworker.getInfo()
+
+    func remove(observer: PropertyObserver) {
+        observerCollection.remove(observer)
+    }
+    
+    func notify(withString string: String) {
+        for observer in observerCollection {
+            (observer as! PropertyObserver).didGet(newTask: string)
         }
     }
 }
 
-// leaf-листья, последние элементы
-class LowLevelManager: Coworker {    var level: Int
-    init(level: Int) {
-        self.level = level
-    }
-    func hire(coworker: Coworker) {
-        print("can't hire")
-    }
-    func getInfo() {
-        print(self.level.description + " level manager")
+
+protocol PropertyObserver {
+    // получаем дз
+    func didGet(newTask task: String)
+}
+
+class Pupil: NSObject, PropertyObserver {
+    
+    var homeTask = ""
+    
+    func didGet(newTask task: String) {
+        homeTask = task
+        print("Получена новая домашняя работа: \(homeTask)")
     }
 }
 
-let topManager = Manager(level: 1)
-let managerLvl2 = Manager(level: 2)
-let managerLvl3_1 = Manager(level: 3)
-let managerLvl3_2 = Manager(level: 3)
-let managerLvl10 = Manager(level: 10)
+let teacher = Teacher()
+let newPupil = Pupil()
 
-// нанимаем менеджеров
-topManager.hire(coworker: managerLvl2)
-managerLvl2.hire(coworker: managerLvl3_1)
-managerLvl2.hire(coworker: managerLvl3_2)
-managerLvl3_1.hire(coworker: managerLvl10)
+teacher.add(observer: newPupil)
+teacher.homeTask = "Повторить паттерны проектирования для успешного прохождения собеседования"
 
-topManager.getInfo()
+newPupil.homeTask
+// Получена новая домашняя работа:
+// Повторить паттерны проектирования для успешного прохождения собеседования
 ```
 
-```bash
-1 level manager
-2 level manager
-3 level manager
-10 level manager
-3 level manager
-```
+<img alt="image" src="images/Observer2.jpeg" width = 80%/>
 
-<img alt="image" src="images/Composite2.jpeg" width = 70%/>
+---
 
 ### [State](https://refactoring.guru/ru/design-patterns/state)
 
@@ -2248,338 +2428,244 @@ it is already off
 
 ---
 
-### [Proxy](https://refactoring.guru/ru/design-patterns/proxy)
+### [Strategy](https://refactoring.guru/ru/design-patterns/strategy)
 
-**#Заместитель** — это структурный паттерн проектирования, который позволяет подставлять вместо реальных объектов специальные объекты-заменители. Эти объекты перехватывают вызовы к оригинальному объекту, позволяя сделать что-то до или после передачи вызова оригиналу. Некая прокладка/промежуточный вариант. Сам прокси может выполнять какие-то действия, и тем самым снять некую нагрузку.
+**#Стратегия** — это поведенческий паттерн проектирования, который определяет семейство схожих алгоритмов и помещает каждый из них в собственный класс, после чего алгоритмы можно взаимозаменять прямо во время исполнения программы.
 
-**Проблема:**
+Позволяет не плодить классы с подклассами, а сделать более гибкое решение.
 
-Для чего вообще контролировать доступ к объектам? Рассмотрим такой пример: у вас есть внешний ресурсоёмкий объект, который нужен не все время, а изредка.
+Паттерн Стратегия предлагает определить семейство схожих алгоритмов, которые часто изменяются или расширяются, и вынести их в собственные классы, называемые стратегиями.
 
-Запросы к базе данных могут быть очень медленными.
+Вместо того, чтобы изначальный класс сам выполнял тот или иной алгоритм, он будет играть роль контекста, ссылаясь на одну из стратегий и делегируя ей выполнение работы. Чтобы сменить алгоритм, вам будет достаточно подставить в контекст другой объект-стратегию.
 
-Мы могли бы создавать этот объект не в самом начале программы, а только тогда, когда он кому-то реально понадобится. Каждый клиент объекта получил бы некий код отложенной инициализации. Но, вероятно, это привело бы к множественному дублированию кода.
+Важно, чтобы все стратегии имели общий интерфейс. Используя этот интерфейс, контекст будет независимым от конкретных классов стратегий. С другой стороны, вы сможете изменять и добавлять новые виды алгоритмов, не трогая код контекста.
 
-В идеале, этот код хотелось бы поместить прямо в служебный класс, но это не всегда возможно. Например, код класса может находиться в закрытой сторонней библиотеке.
+Аналогия из жизни. Вам нужно добраться до аэропорта. Можно доехать на автобусе, такси или велосипеде. Здесь вид транспорта является стратегией. Вы выбираете конкретную стратегию в зависимости от контекста — наличия денег или времени до отлёта
 
-**Решение:**
+<img alt="image" src="images/Strategy1.jpeg" width = 80%/>
 
-Паттерн Заместитель предлагает создать новый класс-дублёр, имеющий тот же интерфейс, что и оригинальный служебный объект. При получении запроса от клиента объект-заместитель сам бы создавал экземпляр служебного объекта и переадресовывал бы ему всю реальную работу.
-
-<img alt="image" src="images/Proxy1.jpeg"  width = 70%/>
-
-Но в чём же здесь польза? Вы могли бы поместить в класс заместителя какую-то промежуточную логику, которая выполнялась бы до (или после) вызовов этих же методов в настоящем объекте. А благодаря одинаковому интерфейсу, объект-заместитель можно передать в любой код, ожидающий сервисный объект.
-
-**Аналогия из жизни:**
-
-Платёжная карта — это заместитель пачки наличных
-Платёжной картой можно расплачиваться, как и наличными.
-
-Платёжная карточка — это заместитель пачки наличных. И карточка, и наличные имеют общий интерфейс — ими можно оплачивать товары. Для покупателя польза в том, что не надо таскать с собой тонны наличных, а владелец магазина рад, что ему не нужно делать дорогостоящую инкассацию наличности в банк — деньги поступают к нему на счёт напрямую.
-
-<img alt="image" src="images/Proxy2.jpeg"  width = 70%/>
+Используем протокол как тип, для свойств class Human
 
 ```swift
-// Виртуальный Proxy. Простой пример
-class User {
-    let id = "123"
+protocol SwimBehavior {
+    func swim()
 }
 
-protocol ServerProtocol {
-// предоставить доступ
-    func grandAccess(user: User)
-// запретить доступ
-    func denyAccess(user: User)
-}
-
-class ServerSide: ServerProtocol {
-    func grandAccess(user: User) {
-        print("access granted to user with id = \(user.id)")
-    }
-    func denyAccess(user: User) {
-        print("access denied to user with id = \(user.id)")
-    }
-}
-// прокси-копия сервера
-class ServerProxy: ServerProtocol {
-// имеем ссылку на наш сервер
-    lazy private var server: ServerSide = ServerSide()
-    func grandAccess(user: User) {
-        server.grandAccess(user: user)
-    }
-    func denyAccess(user: User) {
-        server.denyAccess(user: user)
+class ProfessionalSwimmer: SwimBehavior {
+    func swim() {
+        print("professional swimming")
     }
 }
 
-let user = User()
-let proxy = ServerProxy()
-proxy.grandAccess(user: user) // access granted to user with id = 123
-proxy.denyAccess(user: user) // access denied to user with id = 123
+class NewbieSwimmer: SwimBehavior {
+    func swim() {
+        print("newbie swimming")
+    }
+}
+
+class NonSwimmer: SwimBehavior {
+    func swim() {
+        print("non-swimming")
+    }
+}
+
+protocol DiveBehavior {
+    func dive()
+}
+
+class ProfessionalDiver: DiveBehavior {
+    func dive() {
+        print("professional diving")
+    }
+}
+
+class NewbieDiver: DiveBehavior {
+    func dive() {
+        print("newbie diving")
+    }
+}
+
+class NonDiver: DiveBehavior {
+    func dive() {
+        print("non-diving")
+    }
+}
+
+class Human {
+    private var diveBehavior: DiveBehavior
+    private var swimBehavior: SwimBehavior
+    func performSwim() {
+        swimBehavior.swim()
+    }
+    func performDive() {
+        diveBehavior.dive()
+    }
+    func setSwimBehavior(sb: SwimBehavior) {
+        self.swimBehavior = sb
+    }
+    func setDiveBehavior(db: DiveBehavior) {
+        self.diveBehavior = db
+    }
+    func run() {
+        print("running")
+    }
+    
+    init(swimBehavior: SwimBehavior, diveBehavior: DiveBehavior) {
+        self.swimBehavior = swimBehavior
+        self.diveBehavior = diveBehavior
+    }
+}
+
+let human = Human(swimBehavior: ProfessionalSwimmer(), diveBehavior: ProfessionalDiver())
+human.performSwim() // professional swimming
+human.performDive() // professional diving
+human.setSwimBehavior(sb: NonSwimmer())
+human.performSwim() // non-swimming
 ```
 
-```swift
-// Защитный Proxy. Второй пример
-class User {
-    let name = "Artem"
-    let password = "123"
-}
-
-protocol ServerProtocol {
-    func grantAccess(user: User)
-}
-
-class ServerSide: ServerProtocol {
-    func grantAccess(user: User) {
-        print("access granted to user with name = \(user.name)")
-    }
-}
-
-class ServerProxy: ServerProtocol {
-    private var server: ServerSide!
-    func grantAccess(user: User) {
-        guard server != nil else {
-            print("access can't be granted")
-            return
-        }
-        server.grantAccess(user: user)
-    }
-    func authenticate(user: User) {
-        guard user.password == "123" else { return }
-        print("user authenticated")
-        server = ServerSide()
-    }
-}
-
-let user = User()
-let proxy = ServerProxy()
-
-proxy.grantAccess(user: user) // access can't be granted
-proxy.authenticate(user: user) // user authenticated
-proxy.grantAccess(user: user) // access granted to user with name = Artem
-```
-
-<img alt="image" src="images/Proxy3.jpeg"  width = 70%/>
+<img alt="image" src="images/Strategy2.jpeg" width = 85%/>
 
 ---
 
-### [Builder](https://refactoring.guru/ru/design-patterns/builder)
+### [Template Method](https://refactoring.guru/ru/design-patterns/template-method)
 
-**#Строитель** — это порождающий паттерн проектирования, который позволяет создавать сложные объекты пошагово. Строитель даёт возможность использовать один и тот же код строительства для получения разных представлений объектов.
-
-Данный паттерн создан специально для того чтобы сложную инициализацию поместить в отдельный класс. Паттерн используется для создания сложных объектов которые создаются с помощью других объектов, или которые сами создают другие объекты, или которые требуют определенный алгоритм для своего создания (к примеру дом деревянный и каменный с бассейном). Для этого и используем отдельный класс Builder, чтобы соблюсти это.
-
-<img alt="image" src="images/Builder1.jpeg"  width = 70%/>
-
-**Проблема:**
-
-Представьте сложный объект, требующий кропотливой пошаговой инициализации множества полей и вложенных объектов. Код инициализации таких объектов обычно спрятан внутри монструозного конструктора с десятком параметров. Либо ещё хуже — распылён по всему клиентскому коду.
-
-Например, давайте подумаем о том, как создать объект Дом. Чтобы построить стандартный дом, нужно поставить 4 стены, установить двери, вставить пару окон и положить крышу. Но что, если вы хотите дом побольше да посветлее, имеющий сад, бассейн и прочее добро?
-
-Самое простое решение — расширить класс Дом, создав подклассы для всех комбинаций параметров дома. Проблема такого подхода — это громадное количество классов, которые вам придётся создать. Каждый новый параметр, вроде цвета обоев или материала кровли, заставит вас создавать всё больше и больше классов для перечисления всех возможных вариантов.
-
-Чтобы не плодить подклассы, вы можете подойти к решению с другой стороны. Вы можете создать гигантский конструктор Дома, принимающий уйму параметров для контроля над создаваемым продуктом. Действительно, это избавит вас от подклассов, но приведёт к другой проблеме.
-
-Большая часть этих параметров будет простаивать, а вызовы конструктора будут выглядеть монструозно из-за длинного списка параметров. К примеру, далеко не каждый дом имеет бассейн, поэтому параметры, связанные с бассейнами, будут простаивать бесполезно в 99% случаев
+**#Шаблонный метод** — это поведенческий паттерн проектирования, который определяет скелет алгоритма, перекладывая ответственность за некоторые его шаги на подклассы. Паттерн позволяет подклассам переопределять шаги алгоритма, не меняя его общей структуры.
 
 **Решение:**
 
-Паттерн Строитель предлагает вынести конструирование объекта за пределы его собственного класса, поручив это дело отдельным объектам, называемым строителями
+Паттерн Шаблонный метод предлагает разбить алгоритм на последовательность шагов, описать эти шаги в отдельных методах и вызывать их в одном шаблонном методе друг за другом.
 
-Паттерн предлагает разбить процесс конструирования объекта на отдельные шаги (например, построитьСтены, вставитьДвери и другие). Чтобы создать объект, вам нужно поочерёдно вызывать методы строителя. Причём не нужно запускать все шаги, а только те, что нужны для производства объекта определённой конфигурации.
-
-Зачастую один и тот же шаг строительства может отличаться для разных вариаций производимых объектов. Например, деревянный дом потребует строительства стен из дерева, а каменный — из камня.
-
-В этом случае вы можете создать несколько классов строителей, выполняющих одни и те же шаги по-разному. Используя этих строителей в одном и том же строительном процессе, вы сможете получать на выходе различные объекты.
-
-Например, один строитель делает стены из дерева и стекла, другой из камня и железа, третий из золота и бриллиантов. Вызвав одни и те же шаги строительства, в первом случае вы получите обычный жилой дом, во втором — маленькую крепость, а в третьем — роскошное жилище. Замечу, что код, который вызывает шаги строительства, должен работать со строителями через общий интерфейс, чтобы их можно было свободно взаимозаменять.
-
-**Директор**
-
-Вы можете пойти дальше и выделить вызовы методов строителя в отдельный класс, называемый директором. В этом случае директор будет задавать порядок шагов строительства, а строитель — выполнять их, т.е директор это отдельный класс который следит за строителем.
-
-Отдельный класс директора не является строго обязательным. Вы можете вызывать методы строителя и напрямую из клиентского кода. Тем не менее, директор полезен, если у вас есть несколько способов конструирования продуктов, отличающихся порядком и наличием шагов конструирования. В этом случае вы сможете объединить всю эту логику в одном классе.
-
-Такая структура классов полностью скроет от клиентского кода процесс конструирования объектов. Клиенту останется только привязать желаемого строителя к директору, а затем получить у строителя готовый результат.
-
-```swift
-// Builder
-import UIKit
-
-protocol ThemeProtocol {
-    var backgroundColor: UIColor { get }
-    var textColor: UIColor { get }
-}
-
-class Theme: ThemeProtocol {
-    var backgroundColor: UIColor
-    var textColor: UIColor
-    
-    init(backgroundColor: UIColor, textColor: UIColor) {
-        self.backgroundColor = backgroundColor
-        self.textColor = textColor
-    }
-}
-
-protocol ThemeBuilderProtocol {
-    func setBackground(color: UIColor)
-    func setText(color: UIColor)
-    // будем возвращать все темы,
-    // всех типов подписанные на ThemeProtocol
-    func createTheme() -> ThemeProtocol?
-}
-
-class ThemeBuilder: ThemeBuilderProtocol {
-    private var backgroundColor: UIColor?
-    private var textColor: UIColor?
-    
-    func setBackground(color: UIColor) {
-        self.backgroundColor = color
-    }
-    
-    func setText(color: UIColor) {
-        self.textColor = color
-    }
-    
-    func createTheme() -> ThemeProtocol? {
-        guard let backgroundColor = backgroundColor, let textColor = textColor else { return nil }
-        return Theme(backgroundColor: backgroundColor, textColor: textColor)
-    }
-}
-
-let builder = ThemeBuilder()
-builder.setText(color: .white)
-builder.setBackground(color: .black)
-let theme = builder.createTheme() 
-```
-
-<img alt="image" src="images/Builder2.jpeg"  width = 70%/>
-
----
-
-### [ChainOfResponsibility](https://refactoring.guru/ru/design-patterns/chain-of-responsibility)
-
-**#Цепочка обязанностей** — это поведенческий паттерн проектирования, который позволяет передавать запросы последовательно по цепочке обработчиков. Каждый последующий обработчик решает, может ли он обработать запрос сам и стоит ли передавать запрос дальше по цепи
-
-**Создается цепочка объектов последовательно анализирующих поступающий в них запрос**. Есть несколько структурно схожих объектов, запрос двигается по ним и обрабатывается. Запрос передается последовательно
-
-<img alt="image" src="images/ChainOfResponsibility3.jpeg"  width = 70%/>
+Это позволит подклассам переопределять некоторые шаги алгоритма, оставляя без изменений его структуру и остальные шаги, которые для этого подкласса не так важны.
 
 **Аналогия из жизни:**
 
-Пример общения с тех. поддержкой.
+Строительство типовых домов. Проекты могут немного изменить по желанию клиента.
 
-Первым вы слышите голос автоответчика, предлагающий выбор из десятка стандартных решений. Ни один из вариантов не подходит, и робот соединяет вас с живым оператором.
+Строители используют подход, похожий на шаблонный метод при строительстве типовых домов. У них есть основной архитектурный проект, в котором расписаны шаги строительства: заливка фундамента, постройка стен, перекрытие крыши, установка окон и так далее.
 
-Увы, но рядовой оператор поддержки умеет общаться только заученными фразами и давать шаблонные ответы. После очередного предложения «выключить и включить компьютер» вы просите связать вас с настоящими инженерами.
+Но, несмотря на стандартизацию каждого этапа, строители могут вносить небольшие изменения на любом из этапов, чтобы сделать дом непохожим на другие.
 
-Оператор перебрасывает звонок дежурному инженеру, и он-то знает, как вам помочь. Запрос удовлетворён. Вы кладёте трубку.
-
-**Проблема:**
-
-Представьте, что вы делаете систему приёма онлайн-заказов. Вы хотите ограничить к ней доступ так, чтобы только авторизованные пользователи могли создавать заказы. Кроме того, определённые пользователи, владеющие правами администратора, должны иметь полный доступ к заказам.
-
-Вы быстро сообразили, что эти проверки нужно выполнять последовательно. Ведь пользователя можно попытаться «залогинить» в систему, если его запрос содержит логин и пароль. Но если такая попытка не удалась, то проверять расширенные права доступа попросту не имеет смысла.
-
-На протяжении следующих нескольких месяцев вам пришлось добавить ещё несколько таких последовательных проверок.
-
-- Кто-то резонно заметил, что неплохо бы проверять данные, передаваемые в запросе перед тем, как вносить их в систему — вдруг запрос содержит данные о покупке несуществующих продуктов.
-
-- Кто-то предложил блокировать массовые отправки формы с одним и тем же логином, чтобы предотвратить подбор паролей ботами.
-
-- Кто-то заметил, что форму заказа неплохо бы доставать из кеша, если она уже была однажды показана.
-
-С каждой новой «фичей» код проверок, выглядящий как большой клубок условных операторов, всё больше раздувался. При изменении одного правила приходилось трогать код всех проверок. А для того, чтобы применить проверки к другим ресурсам, пришлось продублировать их код в других классах.
-
-**Решение:**
-
-Как и многие другие поведенческие паттерны, Цепочка обязанностей базируется на том, чтобы превратить отдельные поведения в объекты. В нашем случае каждая проверка переедет в отдельный класс с единственным методом выполнения. Данные запроса, над которым происходит проверка, будут передаваться в метод как аргументы.
-
-А теперь по-настоящему важный этап. Паттерн предлагает связать объекты обработчиков в одну цепь. Каждый из них будет иметь ссылку на следующий обработчик в цепи. Таким образом, при получении запроса обработчик сможет не только сам что-то с ним сделать, но и передать обработку следующему объекту в цепочке.
-
-Передавая запросы в первый обработчик цепочки, вы можете быть уверены, что все объекты в цепи смогут его обработать. При этом длина цепочки не имеет никакого значения.
-
-И последний штрих. Обработчик не обязательно должен передавать запрос дальше, причём эта особенность может быть использована по-разному.
-
-В примере с фильтрацией доступа обработчики прерывают дальнейшие проверки, если текущая проверка не прошла. Ведь нет смысла тратить попусту ресурсы, если и так понятно, что с запросом что-то не так.
-
-<img alt="image" src="images/ChainOfResponsibility1.jpeg"  width = 70%/>
-
-Но есть и другой подход, при котором обработчики прерывают цепь только когда они могут обработать запрос. В этом случае запрос движется по цепи, пока не найдётся обработчик, который может его обработать. Очень часто такой подход используется для передачи событий, создаваемых классами графического интерфейса в результате взаимодействия с пользователем.
-
-Например, когда пользователь кликает по кнопке, программа выстраивает цепочку из объекта этой кнопки, всех её родительских элементов и общего окна приложения на конце. Событие клика передаётся по этой цепи до тех пор, пока не найдётся объект, способный его обработать. Этот пример примечателен ещё и тем, что цепочку всегда можно выделить из древовидной структуры объектов, в которую обычно и свёрнуты элементы пользовательского интерфейса.
-
-<img alt="image" src="images/ChainOfResponsibility2.jpeg"  width = 70%/>
-
-Очень важно, чтобы все объекты цепочки имели общий интерфейс. Обычно каждому конкретному обработчику достаточно знать только то, что следующий объект в цепи имеет метод выполнить. Благодаря этому связи между объектами цепочки будут более гибкими. Кроме того, вы сможете формировать цепочки на лету из разнообразных объектов, не привязываясь к конкретным классам.
+<img alt="image" src="images/TemplateMethod1.jpeg"  width = 80%/>
 
 ```swift
-// ChainOfResponsibility
-class Enemy {
-    let strength = 600
+// Template Method
+protocol DriveVehicle {
+    func haveASeat()
+    func closeTheDoor()
+    func useProtection()
+    func lookAtTheMirror()
+    func turnSignal()
+    func driveForward()
+    func startVehicle()
 }
 
-protocol MilitaryChain {
-    // сила
-    var strength: Int { get }
-    // следующий уровень бойца
-    var nextRank: MilitaryChain? { get set }
-    // пробуем текущим классом победить врага
-    func shouldDefeatWithStrength(amount: Int)
-}
-
-class Soldier: MilitaryChain {
-    var strength = 100
-    var nextRank: MilitaryChain?
-    func shouldDefeatWithStrength(amount: Int) {
-        if amount < strength {
-            print("Soldier got it")
-        } else {
-            nextRank?.shouldDefeatWithStrength(amount: amount)
-        }
+extension DriveVehicle {
+    func startVehicle() {
+        haveASeat()
+        useProtection()
+        lookAtTheMirror()
+        turnSignal()
+        driveForward()
+    }
+    func haveASeat() {
+        // специально остановим выполнение и получим ошибку
+        preconditionFailure("this method should be overriden")
+    }
+    func closeTheDoor() { }
+    func useProtection() {
+        preconditionFailure("this method should be overriden")
+    }
+    func lookAtTheMirror() {
+        preconditionFailure("this method should be overriden")
+    }
+    func turnSignal() {
+        preconditionFailure("this method should be overriden")
+    }
+    func driveForward() {
+        preconditionFailure("this method should be overriden")
     }
 }
 
-class Officer: MilitaryChain {
-    var strength = 500
-    var nextRank: MilitaryChain?
-    func shouldDefeatWithStrength(amount: Int) {
-        if amount < strength {
-            print("Officer got it")
-        } else {
-            nextRank?.shouldDefeatWithStrength(amount: amount)
-        }
+class Bicycle: DriveVehicle {
+    func haveASeat() {
+        print("sit down on a bicycle seat")
+    }
+    func useProtection() {
+        print("wear a helmet")
+    }
+    func lookAtTheMirror() {
+        print("look at the little mirror")
+    }
+    func turnSignal() {
+        print("show left hand")
+    }
+    func driveForward() {
+        print("pedal")
     }
 }
 
-class General: MilitaryChain {
-    var strength = 1000
-    var nextRank: MilitaryChain?
-    func shouldDefeatWithStrength(amount: Int) {
-        if amount < strength {
-            print("General got it")
-        } else {
-            print("We can't defeat this enemy")
-        }
+class Car: DriveVehicle {
+    func haveASeat() {
+        print("sit down on a car seat")
+        closeTheDoor()
+    }
+    func closeTheDoor() {
+        print("close the door")
+    }
+    func useProtection() {
+        print("fasten seat belt")
+    }
+    func lookAtTheMirror() {
+        print("look at the rearview mirror")
+    }
+    func turnSignal() {
+        print("turn on left turn light")
+    }
+    func driveForward() {
+        print("push pedal")
     }
 }
 
-let enemy = Enemy()
+let car = Car()
+let bicycle = Bicycle()
 
-let solider = Soldier()
-let officer = Officer()
-let general = General()
-
-solider.nextRank = officer
-officer.nextRank = general
-
-solider.shouldDefeatWithStrength(amount: enemy.strength) // General got it
+car.startVehicle()
+print("###########")
+bicycle.startVehicle()
 ```
 
-<img alt="image" src="images/ChainOfResponsibility4.jpeg"  width = 70%/>
+<img alt="image" src="images/TemplateMethod2.jpeg" width = 70%/> 
 
---- 
+---
+
+### [Visitor](https://refactoring.guru/ru/design-patterns/visitor)
+
+```swift
+
+````
+
+<img alt="image" src="images/.jpeg"  width = 70%/>
+
+---
+
+
+
+### 
+
+```swift
+
+````
+
+<img alt="image" src="images/.jpeg"  width = 70%/>
+
+<img alt="image" src="images/.jpeg"/>
+
+
+
+
+
+
+---
 
 ### 
 
