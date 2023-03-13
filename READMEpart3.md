@@ -3048,15 +3048,107 @@ bicycle.startVehicle()
 
 ### [Visitor](https://refactoring.guru/ru/design-patterns/visitor)
 
-```swift
+**#Посетитель** — это поведенческий паттерн проектирования, который позволяет добавлять в программу новые операции, не изменяя классы объектов, над которыми эти операции могут выполняться. 
 
+**Аналогия из жизни:**
+
+У страхового агента приготовлены полисы для разных видов организаций.
+
+Представьте начинающего страхового агента, жаждущего получить новых клиентов. Он беспорядочно посещает все дома в округе, предлагая свои услуги. Но для каждого из посещаемых типов домов у него имеется особое предложение.
+
+Придя в дом к обычной семье, он предлагает оформить медицинскую страховку.
+Придя в банк, он предлагает страховку от грабежа.
+Придя на фабрику, он предлагает страховку предприятия от пожара и наводнения.
+
+**Проблема:**
+
+Ваша команда разрабатывает приложение, работающее с геоданными в виде графа. Узлами графа являются городские локации: памятники, театры, рестораны, важные предприятия и прочее. Каждый узел имеет ссылки на другие, ближайшие к нему узлы. Каждому типу узлов соответствует свой класс, а каждый узел представлен отдельным объектом.
+
+Ваша задача — сделать экспорт этого графа в XML. Это просто, если бы вы могли редактировать классы узлов. Достаточно было бы добавить метод экспорта в каждый тип узла, а затем, перебирая узлы графа, вызывать этот метод для каждого узла. Благодаря полиморфизму, решение получилось бы изящным, так как вам не пришлось бы привязываться к конкретным классам узлов.
+
+Но, к сожалению, классы узлов вам изменить не удалось. Системный архитектор сослался на то, что код классов узлов  очень стабилен, от него многое зависит, он не хочет рисковать и его трогать.
+
+К тому же он сомневался в том, что экспорт в XML вообще уместен в рамках этих классов. Их основная задача была связана с геоданными, а экспорт выглядит в рамках этих классов чужеродно.
+
+Была и ещё одна причина запрета. Если на следующей неделе вам бы понадобился экспорт в какой-то другой формат данных, то эти классы снова пришлось бы менять.
+
+**Решение:**
+
+Паттерн Посетитель предлагает разместить новое поведение в отдельном классе, вместо того чтобы множить его сразу в нескольких классах. Объекты, с которыми должно было быть связано поведение, не будут выполнять его самостоятельно. Вместо этого вы будете передавать эти объекты в методы посетителя.
+
+Используется механизм двойной диспетчеризации. Вместо того, чтобы самим искать нужный метод, мы можем поручить это объектам, которые передаём в параметрах посетителю. А они уже вызовут правильный метод посетителя.
+
+```swift
+// Client code
+foreach (Node node in graph)
+    node.accept(exportVisitor)
+
+// City
+class City is
+    method accept(Visitor v) is
+        v.doForCity(this)
+    // ...
+
+// Industry
+class Industry is
+    method accept(Visitor v) is
+        v.doForIndustry(this)
+    // ...
+```
+
+Как видите, изменить классы узлов всё-таки придётся. Но это простое изменение позволит применять к объектам узлов и другие поведения, ведь классы узлов будут привязаны не к конкретному классу посетителей, а к их общему интерфейсу. Поэтому если придётся добавить в программу новое поведение, вы создадите новый класс посетителей и будете передавать его в методы узлов.
+
+```swift
+protocol PlanetVisitor {
+    func visit(planet: PlanetAlderaan)
+    func visit(planet: PlanetCoruscant)
+    func visit(planet: PlanetTatooine)
+    func visit(planet: MoonJedha)
+}
+
+protocol Planet {
+    func accept(visitor: PlanetVisitor)
+}
+
+final class PlanetAlderaan: Planet {
+    func accept(visitor: PlanetVisitor) { visitor.visit(planet: self) }
+}
+
+final class PlanetCoruscant: Planet {
+    func accept(visitor: PlanetVisitor) { visitor.visit(planet: self) }
+}
+
+final class PlanetTatooine: Planet {
+    func accept(visitor: PlanetVisitor) { visitor.visit(planet: self) }
+}
+
+final class MoonJedha: Planet {
+    func accept(visitor: PlanetVisitor) { visitor.visit(planet: self) }
+}
+
+final class NameVisitor: PlanetVisitor {
+    var name = ""
+
+    func visit(planet: PlanetAlderaan)  { name = "Alderaan" }
+    func visit(planet: PlanetCoruscant) { name = "Coruscant" }
+    func visit(planet: PlanetTatooine)  { name = "Tatooine" }
+    func visit(planet: MoonJedha)         { name = "Jedha" }
+}
+
+// Usage
+let planets: [Planet] = [PlanetAlderaan(), PlanetCoruscant(), PlanetTatooine(), MoonJedha()]
+
+let names = planets.map { (planet: Planet) -> String in
+    let visitor = NameVisitor()
+    planet.accept(visitor: visitor)
+    return visitor.name
+}
+print(names)
+
+// ["Alderaan", "Coruscant", "Tatooine", "Jedha"]
 ````
 
-<img alt="image" src="images/.jpeg"  width = 70%/>
-
 ---
-
-
 
 ### 
 
