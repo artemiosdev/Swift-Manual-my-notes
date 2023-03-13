@@ -2402,11 +2402,102 @@ let allbadDriverIteratorViaSequance = car.makeBadIterator().allDrivers() // Ivan
 
 ### [Mediator](https://refactoring.guru/ru/design-patterns/mediator)
 
+**#Посредник** — это поведенческий паттерн проектирования, который позволяет уменьшить связанность множества классов между собой, благодаря перемещению этих связей в один класс-посредник. 
+
+Используется для уменьшения связи между классами, которые взаимодействуют друг с другом. Вместо того, чтобы классы взаимодействовали напрямую и, следовательно, требовали знаний об их реализации, классы отправляют сообщения через объект-посредник.
+
+**Аналогия из жизни:**
+
+Регулировщик движения. Пример с диспетчерской башней.
+Пилоты самолётов общаются не напрямую, а через диспетчера.
+
+Пилоты садящихся или улетающих самолётов не общаются напрямую с другими пилотами. Вместо этого они связываются с диспетчером, который координирует действия нескольких самолётов одновременно. Без диспетчера пилотам приходилось бы все время быть начеку и следить за всеми окружающими самолётами самостоятельно, а это приводило бы к частым катастрофам в небе.
+
+Важно понимать, что диспетчер не нужен во время всего полёта. Он задействован только в зоне аэропорта, когда нужно координировать взаимодействие многих самолётов.
+
+**Проблема:**
+
+Предположим, что у вас есть диалог создания профиля пользователя. Он состоит из всевозможных элементов управления — текстовых полей, чекбоксов, кнопок.
+
+Отдельные элементы диалога должны взаимодействовать друг с другом. Так, например, чекбокс «у меня есть собака» открывает скрытое поле для ввода имени домашнего любимца, а клик по кнопке отправки запускает проверку значений всех полей формы.
+
+Прописав эту логику прямо в коде элементов управления, вы поставите крест на их повторном использовании в других местах приложения. Они станут слишком тесно связанными с элементами диалога редактирования профиля, которые не нужны в других контекстах. Поэтому вы сможете использовать либо все элементы сразу, либо ни одного.
+
+**Решение:**
+
+Паттерн Посредник заставляет объекты общаться не напрямую друг с другом, а через отдельный объект-посредник, который знает, кому нужно перенаправить тот или иной запрос. Благодаря этому, **компоненты системы будут зависеть только от посредника, а не от десятков других компонентов**.
+
+В нашем примере посредником мог бы стать диалог. Скорее всего, класс диалога и так знает, из каких элементов состоит, поэтому никаких новых связей добавлять в него не придётся.
+
+Основные изменения произойдут внутри отдельных элементов диалога. Если раньше при получении клика от пользователя объект кнопки сам проверял значения полей диалога, то теперь его единственной обязанностью будет сообщить диалогу о том, что произошёл клик. Получив извещение, диалог выполнит все необходимые проверки полей. Таким образом, вместо нескольких зависимостей от остальных элементов кнопка получит только одну — от самого диалога.
+
+Чтобы сделать код ещё более гибким, можно выделить общий интерфейс для всех посредников, то есть диалогов программы. Наша кнопка станет зависимой не от конкретного диалога создания пользователя, а от абстрактного, что позволит использовать её и в других диалогах.
+
+Таким образом, посредник скрывает в себе все сложные связи и зависимости между классами отдельных компонентов программы. А чем меньше связей имеют классы, тем проще их изменять, расширять и повторно использовать.
+
+An #associated type gives a placeholder name to a type that is used as part of the protocol. The actual type to use for that associated type isn’t specified until the protocol is adopted. Associated types are specified with the associatedtype keyword
+
+https://docs.swift.org/swift-book/documentation/the-swift-programming-language/generics/#Associated-Types
+
 ```swift
+protocol Receiver {
+    associatedtype MessageType
+    func receive(message: MessageType)
+}
 
-````
+protocol Sender {
+    associatedtype MessageType
+    associatedtype ReceiverType: Receiver
+    
+    var recipients: [ReceiverType] { get }
+    
+    func send(message: MessageType)
+}
 
-<img alt="image" src="images/.jpeg"  width = 70%/>
+struct Programmer: Receiver {
+    let name: String
+    
+    init(name: String) {
+        self.name = name
+    }
+    
+    func receive(message: String) {
+        print("\(name) received: \(message)")
+    }
+}
+
+final class MessageMediator: Sender {
+    internal var recipients: [Programmer] = []
+    
+    func add(recipient: Programmer) {
+        recipients.append(recipient)
+    }
+    
+    func send(message: String) {
+        for recipient in recipients {
+            recipient.receive(message: message)
+        }
+    }
+}
+
+func spamMonster(message: String, worker: MessageMediator) {
+    worker.send(message: message)
+}
+
+let messagesMediator = MessageMediator()
+
+let user0 = Programmer(name: "Linus Torvalds")
+let user1 = Programmer(name: "Avadis 'Avie' Tevanian")
+messagesMediator.add(recipient: user0)
+messagesMediator.add(recipient: user1)
+
+spamMonster(message: "I'd Like to Add you to My Professional Network", worker: messagesMediator)
+```
+
+```bash
+Linus Torvalds received: I'd Like to Add you to My Professional Network
+Avadis 'Avie' Tevanian received: I'd Like to Add you to My Professional Network
+```
 
 ---
 
