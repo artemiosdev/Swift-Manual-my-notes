@@ -868,12 +868,28 @@ Request – запрос. Model никогда не взаимодействуе
 - [Quizzler](https://github.com/artemiosdev/Small-projects/tree/main/Quizzler/Quizzler-iOS13)
 - [Quizzler-MultipleChoice](https://github.com/artemiosdev/Small-projects/tree/main/Quizzler-MultipleChoice/Quizzler-iOS13)
 - [Sunny](https://github.com/artemiosdev/Small-projects/tree/main/Sunny/Sunny)
+- [CalculatorArt](https://github.com/artemiosdev/CalculatorArt)
+- [TODOArt-CoreData](https://github.com/artemiosdev/TODOArt-CoreData)
 
 ---
 
 [К оглавлению](#contents)
 
 ###  <a id="mvvm" /> Глава №34. Архитектурный паттерн MVVM
+
+**Model View ViewModel** появился в 2005 году, от Microsoft. В больших приложениях на MVC, Controller увеличивается и берет на себя слишком много обязанностей, его нужно разгрузить, в этом и помогает MVVM.
+
+<img alt="image" src="images/mvvm1.jpeg"  width = 70%/>
+
+Плюсы:
+
+<img alt="image" src="images/mvvm2.jpeg"  width = 70%/>
+
+Минусы:
+- Require data binding, мы должны связывать ViewModel c View для автоматического обновления, так как данные мы обновляем в ViewModel. Используются: Reactive programming, KVO, Boxing(обертка для связывания), Delegation
+<img alt="image" src="images/mvvm3.jpeg"  width = 70%/>
+
+- Шаблонный код (boilerplate code), который должен быть написан во многих местах практически без изменений, более объемная чем MVC
 
 <img alt="image" src="images/mvvm.jpeg"  width = 70%/>
 
