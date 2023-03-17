@@ -25,7 +25,7 @@
 - [Глава  №27. Инициализаторы и деинициализаторы. ](#chapter27)
 - [Глава №28. Управление памятью в Swift. Stack and heap](#chapter28)
 
-### ЧАСТЬ V Фреймворки
+### ЧАСТЬ V ФРЕЙМВОРКИ
 
 - [Глава  №29. UIKit. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/UIKit%20notes.md)
 - [Глава  №30. Core Data. ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#coredata)
@@ -34,6 +34,10 @@
 
 - [Глава №31. Grand Central Dispatch](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#gcd)
 - [Глава №32. API – Application Programming Interface](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#api)
+
+### ЧАСТЬ VII АРХИТЕКТУРЫ И ПАТТЕРНЫ
+- [Глава №33. Архитектурный паттерн MVC](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#mvc)
+- [Глава №34. Архитектурный паттерн MVVM](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#mvvm)
 - [Глава №33. Паттерны проектирования](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#patterns)
 
 ---
