@@ -8,15 +8,19 @@ Layout - расположение; frame - костяк, рамка
 
 ### Auto Layout Tools
 
-<img alt="image" src="images/auto layout6.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout6.jpeg" width = 50%/>
 
-• Update Frames - предупреждает вас, когда положение или
+- Update Frames - предупреждает вас, когда положение или
 размер вида на холсте не соответствуют вычисленным значениям автоматической компоновки. На нем оранжевым цветом показаны ограничения на выход из положения. Используйте инструмент чтобы обновить рамки, чтобы обновить выбранные виды до расчетных значений.
-• Align Tool - полезен, когда вы хотите создать ограничения, которые выравнивают края, центры или базовые линии текста нескольких видов. Также используется для центрирования представлений в их superview.
-• Add New Constraints - для создания ограничений на горизонтальное или вертикальное расстояние между видами, придающий view фиксированный размер, ширина или высота, придание view равной ширины или высоты, установка соотношения сторон видов и выравнивание видов по краю, базовой линии или центру (например, с помощью инструмента выравнивание).
-• Resolve Auto Layout Issues - добавьте или сбросьте ограничения в зависимости от положения view на холсте. Не так полезно, как кажется, поскольку оно редко делает то, что вы хотите, при решении проблем. Я вижу, что люди
+
+- Align Tool - полезен, когда вы хотите создать ограничения, которые выравнивают края, центры или базовые линии текста нескольких видов. Также используется для центрирования представлений в их superview.
+
+- Add New Constraints - для создания ограничений на горизонтальное или вертикальное расстояние между видами, придающий view фиксированный размер, ширина или высота, придание view равной ширины или высоты, установка соотношения сторон видов и выравнивание видов по краю, базовой линии или центру (например, с помощью инструмента выравнивание).
+
+- Resolve Auto Layout Issues - добавьте или сбросьте ограничения в зависимости от положения view на холсте. Не так полезно, как кажется, поскольку оно редко делает то, что вы хотите, при решении проблем. Я вижу, что люди
 иногда используют это, чтобы привязать представление к супервизору, используя “Сброс к Предлагаемые ограничения”, чтобы быстро добавить начальные, конечные, верхние и нижние ограничения. Я рекомендую проигнорировать это.
-• Embed In - встраивание выбранного контроллера просмотра в контроллер навигации или панели вкладок. Вставляйте выбранные виды в другой вид со вставкой или без нее, в scroll view или stack view
+
+- Embed In - встраивание выбранного контроллера просмотра в контроллер навигации или панели вкладок. Вставляйте выбранные виды в другой вид со вставкой или без нее, в scroll view или stack view
 
 ### Layout Essentials
 
@@ -47,11 +51,191 @@ The root view controller обычно является подклассом по
 делегате сцены. В любом случае, превращение его в root view controller window добавляет view controller’s view to the window.
 Видимый пользовательский интерфейс не обязательно должен исходить от одного root view controller. Обычно root view controller является контейнером для других view controller. Таким образом, иерархия view представляет собой комбинацию view из родительского view контейнера и view из дочерних view controllers. Контроллеры навигации и панели вкладок - это два примера из UIKit, но вы также можете создать свой собственный.
 
+**Views (UIView)**
 
+Контент, отображаемый вашим приложением, берется из его views. Эти views могут быть обычным старым UIView, чем-то более сложным, например табличным представлением,
+одним из многих элементов управления UIKit или даже нашими пользовательскими views. Все эти views,
+включая window, являются подклассами базового класса UIView. View имеет не более одного superview, но может иметь ноль, один или несколько subviews. Свойство superview UIView может быть равно нулю, если вы
+не добавили view в иерархию views. Swift обрабатывает значения, которые могут быть равны нулю, делая их optional. Таким образом, superview - это optional UIView:
 
+`var superview: UIView? { get }`
 
+Обратите внимание, что у этого свойства нет параметра setter, поэтому вы не можете изменить его напрямую. Добавление или удаление subviews задает superview subviews. View отслеживает свои непосредственные subviews в массиве элементов UIView:
 
+`var subviews: [UIView] { get }`
 
+Порядок view в массиве имеет решающее значение, поскольку он задает порядок отображения
+от конца к началу. Таким образом, вид с индексом 0 находится сзади, а последний view в массиве - спереди.
+Добавьте subview просмотр к родительскому view, вызвав метод `addSubview` родительского view. Это добавляет subview в конец массива subview, поэтому он отображается спереди. Существуют другие методы для добавления subview в определенной позиции или до или после другого subview. Несколько примеров:
+
+```swift
+yellowView.addSubview(greenView)
+greenView.insertSubview(blueView, at: 0)
+greenView.insertSubview(whiteView, aboveSubview: blueView)
+greenView.insertSubview(redView, belowSubview: whiteView)
+```
+
+Note that you add or insert subviews to the superview, but when you want to remove a subview you use `removeFromSuperview` on the subview:
+`whiteView.removeFromSuperview()`
+
+You can also bring a view to the front, send a view to the back or swap the position of two views:
+
+```swift
+greenView.bringSubview(toFront: whiteView)
+greenView.sendSubview(toBack: blueView)
+greenView.exchangeSubview(at: 0, withSubviewAt: 1)
+```
+
+If you use Interface Builder to create your layouts, it handles the view hierarchy for you
+
+<img alt="image" src="images/auto layout8.jpeg" width = 60%/>
+
+#Clip to Bounds - Обрезка по границам property for the green view in Interface Builder:
+
+<img alt="image" src="images/auto layout9.jpeg" width = 50%/>
+
+or   `greenView.clipsToBounds = true`
+
+Помните, что для того, чтобы ваши view были видны, они также должны в конечном итоге стать частью иерархии views, в корне которой находится главное window. Вы можете проверить это с помощью `window` свойства `UIView`. Если это свойство равно нулю для view, то оно не отображается на экране.
+
+### View Geometry
+
+There are four properties of UIView that control the size and position of a view:
+- #frame-рамка: The rectangle прямоугольник that gives the position and size of the view in the coordinate system of its superview.
+- #bounds-границы: The rectangle that gives the внутренние size of the view in its coordinate system.
+- #center: The center point of the view in the coordinate system of its superview.
+- #transform-преобразование: применяемое для масштабирования rotate или поворота scale view
+
+<img alt="image" src="images/auto layout10.jpeg" width = 50%/>
+
+The coordinate systems for iOS and macOS не совпадают. The origin (0,0) is in the top-left corner for iOS and the bottom-left corner for macOS.
+
+```swift
+// Rotate by 45 degrees (angle in radians)
+greenView.transform = CGAffineTransform(rotationAngle: CGFloat.pi/4)
+
+// Scale width x 2 and height x 0.5
+greenView.transform = CGAffineTransform(scaleX: 2, y: 0.5)
+
+// Reset transform to identity
+greenView.transform = CGAffineTransform.identity
+```
+
+45-degree rotation transform ( `(π / 4) * 180 / π  = 180 / 4 = 45`):
+
+<img alt="image" src="images/auto layout11.jpeg" width = 50%/>
+
+Apple warns that when a view has a transform преобразуют, отличающееся от identity transform, the `frame` is undefined неопределен. If you need to get the size, изменить size or move a view with a transform use the `bounds` and `center`.
+
+Some examples to show how to use the frame, bounds and center to manage the size and position of a view:
+
+```swift
+// Use frame to set initial size and position of view
+let greenView = UIView(frame: CGRect(x: 25, y: 25, width: 125, height: 125))
+
+// Use bounds to change size of a view without moving
+// center of view
+greenView.bounds.size = CGSize(width: 50, height: 50)
+
+// Use center to move a view
+greenView.center = CGPoint(x: 100, y: 100)
+```
+
+При использовании автоматической компоновки вы никогда не должны напрямую изменять frame, bounds or center of a view. Используйте constraints для описания вашего layout и позвольте движку компоновки позаботиться о размере и расположении ваших views
+
+### Core Graphics Data Types
+#### CGFloat For Numeric Values
+
+Use a `CGFloat` for view sizes, spacing, and positions. It’s a Double on 64-bit platforms and a Float on 32-bit platforms.
+
+`let spacing: CGFloat = 25.0`
+
+`let padding: CGFloat = 8.0`
+
+If you mix types you will need to cast to CGFloat:
+
+`let offset = 10 // Int by default`
+
+`let x = padding + CGFloat(offset) // x is of type CGFloat`
+
+45-degree rotation transform ( `(π / 4) * 180 / π  = 180 / 4 = 45`):
+Note also the type property `CGFloat.pi` for the mathematical
+constant (3.14159. . . ):
+
+`let rotation = CGFloat.pi/4` // 45 градусов
+
+#### CGPoint для определения координат
+Структура со значениями x и y (оба CGFloat) для двумерных координат точки. Начало координат (0,0) находится в верхнем левом углу на iOS.
+
+```swift
+struct CGPoint {
+    var x: CGFloat
+    var y: CGFloat
+}
+let startPoint = CGPoint(x: 25, y: 25)
+```
+
+#### CGSize For Width And Height
+A struct with a width and height value.
+
+```swift
+struct CGSize {
+    var width: CGFloat
+    var height: CGFloat
+}
+let size = CGSize(width: 325, height: 175)
+```
+
+### CGRect For Rectangles
+
+Структура, которая определяет прямоугольник с началом координат и размером. Frame and bounds view имеют тип CGRect. Вы можете создать CGRect из CGPoint и CGSize, но у него также есть инициализаторы, которые
+принимают четыре значения  (x, y, width, height) непосредственно как типы Int, Double или CGFloat:
+
+```swift
+// Rectangle
+struct CGRect {
+    var origin: CGPoint
+    var size: CGSize
+}
+
+let origin = CGPoint(x: 25, y: 25)
+let size = CGSize(width: 325, height: 175)
+let rect1 = CGRect(origin: origin, size: size)
+let rect2 = CGRect(x: 25, y: 25, width: 325, height: 175)
+```
+
+There are functions for working with insets, offsets, intersections
+and unions:
+
+Существуют функции для работы со вставками, смещениями, пересечениями и объединениями:
+
+```swift
+let container = CGRect(x: 100, y: 100, width: 200, height: 100)
+let inset = container.insetBy(dx: 20, dy: 20) 
+// {x 120 y 120 w 160 h 60}
+
+let offset = container.offsetBy(dx: 20, dy: 20)
+// {x 120 y 120 w 200 h 100}
+```
+
+Note that each struct also has a static type property to represent zero:
+```swift
+let zeroPoint = CGPoint.zero // {x 0 y 0}
+let zeroSize = CGSize.zero // {w 0 y 0}
+let zeroRect = CGRect.zero // {x 0 y 0 w 0 h 0}
+```
+
+### Points vs. Pixels
+
+Система координат iOS (UIKit) использует точки, а не физические пиксели экрана. Способ сопоставления точки с физическим пикселем зависит от разрешения устройства. На ранних устройствах iPhone одна точка была равна одному пикселю. Более поздние устройства имеют экраны с более высоким разрешением, где одна точка масштабируется до в 2 или 3 раза больше пикселей.
+Автоматическая компоновка всегда работает в точках, но коэффициент масштабирования становится важным для любых изображений, которые вы используете в своем приложении. Таким образом, для изображения размером 50 × 50 пикселей при стандартном разрешении (1x) потребуется изображение размером @2x 100 × 100 пикселей для iPhone 8. И изображение размером @ 3x 150 × 150 пикселей для iPhone 8 Plus. В таблицах показаны размер точки UIKit и масштабный коэффициент, а также собственный размер пикселя и масштабный коэффициент каждого устройства. 
+
+<img alt="image" src="images/auto layout12.jpeg" width = 60%/>
+
+<img alt="image" src="images/auto layout13.jpeg" width = 60%/>
+
+Если вы хотите узнать размер UIKit или масштабный коэффициент scale factor экрана, используйте `bounds` и `scale` properties of the UIScreen. Свойства `nativeBounds` и `nativeScale` дают вам фактический
+размер пикселя и масштаб scale.
 
 ### Chapter 2. Layout Before Auto Layout
 
@@ -60,7 +244,7 @@ The root view controller обычно является подклассом по
 ### Autoresizing Mask
 When you use Interface Builder to set springs and struts, you’re changing that views `autoresizingMask`.
 
-<img alt="image" src="images/auto layout2.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout2.jpeg" width = 60%/>
 
 `myView.autoresizingMask = [.flexibleWidth,.flexibleHeight]`
 
@@ -166,7 +350,7 @@ var padding: CGFloat = 25.0 {
     }
 ```
 
-<img alt="image" src="images/auto layout4.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout4.jpeg" width = 60%/>
 
 В итоге получаем код:
 
@@ -230,15 +414,220 @@ final class TileView: UIView {
 }
 ```
 
-<img alt="image" src="images/auto layout5.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout5.jpeg" width = 50%/>
 
 ### Designable And Inspectable Custom Views
 
-26 стр
+Одним из недостатков нашего пользовательского представления является то, что мы больше не видим дизайн
+в Interface Builder. Xcode поддерживает предварительный просмотр пользовательских представлений “designable - настраиваемый/определяемый” в Interface Builder в режиме реального времени, добавляя
+ключевое слово `@IBDesignable` перед определением класса. Вы также можете сделать свойства view доступными для редактирования в Interface Builder, добавив ключевое слово `@IBInspectable`
 
-<img alt="image" src="images/auto layout.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout.jpeg" width = 70%/><img alt="image" src="images/auto layout.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout.jpeg" width = 70%/>
+1. Давайте сделаем наш пользовательский класс view настраиваемым в Interface Builder 
+```swift
+@IBDesignable
+final class Titleview: UIView { ... }
+```
+
+We can also make the padding parameter inspectable (проверяемый) so we can change it in Interface Builder:
+
+```swift
+    @IBInspectable var padding: CGFloat = 25.0 {
+        didSet {
+            setNeedsLayout()
+        }
+    }
+```
+
+3. The red and blue subviews should now show up in Interface Builder. Try changing the padding in the inspector:
+
+<img alt="image" src="images/auto layout14.jpeg" width = 70%/>
+
+### Using The View Controller To Layout Subviews
+
+Если у вас простой макет, можно избежать создания пользовательского подкласса UIView только для переопределения layoutSubviews. Класс UIViewController
+имеет два метода, которые вы можете использовать для настройки макета:
+
+- `viewWillLayoutSubviews`: вызывается до того, как view controller’s view начнет компоновать свои subviews
+- `viewDidLayoutSubviews`: вызывается после того, как view controller’s view завершит компоновку своих subviews
+
+Реализация обоих этих методов по умолчанию ничего не делает. Как и в случае layoutSubviews, система может вызывать эти методы много раз во время life of a view controller, поэтому избегайте выполнения в них ненужной работы.
+Для любого значительного объема макета я предпочитаю создавать custom view, но вы можете использовать `viewDidLayoutSubviews`, чтобы внести небольшие изменения в представление после того, как view controller has finished its layout
+
+add a corner radius to our tile view that’s a percentage
+of the view width
+
+```swift
+// ViewController.swift
+import UIKit
+
+final class ViewController: UIViewController {
+    @IBOutlet private var tileView: TileView!
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        // 5% radius
+        let radius = tileView.bounds.width / 20
+        tileView.layer.cornerRadius = radius
+    }
+}
+```
+
+<img alt="image" src="images/auto layout15.jpeg" width = 70%/>
+
+### Layout Without Storyboards
+
+#### Removing The Main Storyboard
+1. Main.storyboard “Move to Trash” to delete the file
+2. We need to delete the storyboard from the settings for the
+target
+<img alt="image" src="images/auto layout16.jpeg" width = 70%/>
+3. Scene Delegate “Move to Trash” to delete the file
+4. To completely remove the scene delegate we also need to remove the scene configuration from the `Info.plist` file. Find the entry named “Application Scene Manifest”, open it and delete the “Scene Configuration”
+<img alt="image" src="images/auto layout17.jpeg" width = 70%/>
+5. Delete the ViewController.swift
+6. Create new file RootViewController.swift
+7. Without the main storyboard, we need to take care of creating the main window. Find the AppDelegate.swift `didFinishLaunchingWithOptions` method, в нем и будем настраивать
+```swift
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Override point for customization after application launch.
+        // here
+        return true
+    }
+```
+8. Add the window variable if you’re not using a scene delegate.
+`var window: UIWindow?`
+9. In the body of the method create the main window using the size of the main screen. (By default a new window uses the main screen of the device): 
+`window = UIWindow(frame: UIScreen.main.bounds)`
+10. Optionally set the color of the window (default is black). 
+`window?.backgroundColor = .white`
+11. Create your [root view controller](https://developer.apple.com/documentation/uikit/uiwindow/1621581-rootviewcontroller) and add it to the window. This action takes care of adding the view controller’s view to the window 
+`window?.rootViewController = RootViewController()`
+12. Чтобы отобразить окно, установите его в качестве ключевого window и сделайте его видимым: 
+`window?.makeKeyAndVisible()`
+
+```swift
+// весь код
+import UIKit
+
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+    func application(_ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions:
+    [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.rootViewController = RootViewController()
+        window?.backgroundColor = .white
+        window?.makeKeyAndVisible()
+        return true
+    }
+// ...   
+}
+```
+
+### How View Controllers Load Their View
+
+A view controller stores its root view in its `view` property. Вновь созданный view controller загружает свой view не сразу, поэтому свойство `view` по умолчанию равно nil.
+Если вы обращаетесь к view, когда оно равно nil, view controller вызывает метод с подходящим названием `loadView()` для загрузки view. Эта “ленивая загрузка” view означает, что оно загружается только при необходимости (обычно потому, что оно вот-вот появится на экране).
+Не имеет значения, как вы создаете свой view controller loadView() метод всегда вызывается для загрузки view. Если метод loadView() находит файл nib или storyboard, загружает view и любые subviews из него.
+Если файла нет, создает обычный UIView
+
+Не вызывайте loadView самостоятельно. Если вы хотите принудительно загрузить представление, вызовите `loadViewIfNeeded()`. Чтобы проверить, загрузил ли
+контроллер представления свое представление, не вызывая
+loadView() для его загрузки, используйте `isViewLoaded`
+
+How does `loadView()` find a nib file for a view controller? It first checks the `nibName` property of the view controller. If you create your view controller with a storyboard UIKit sets the `nibName` for you using a nib file stored in the storyboard.
+If you’re creating your view controller in code, you must вызвать initializer `init(nibName:bundle:)` c указанием the nib file
+name and bundle (пакет) to use. Some examples:
+
+```swift
+// Load from RootViewController.xib in main bundle
+let controller = RootViewController(nibName: "RootViewController", bundle: Bundle.main)
+
+// Default to main bundle
+let controller = RootViewController(nibName: "RootViewController", bundle: nil)
+```
+
+If the view controller class and nib file are in a framework bundle:
+```swift
+let controller = RootViewController(nibName:
+"RootViewController", bundle: Bundle(for: RootViewController.self))
+```
+
+Если вы не задаете nibName, loadView() выполняет поиск файла, используя имя класса view controller. Например, если нашим классом view controller является RootViewController, он выполняет попытки в следующем порядке:
+- RootView.nib - this only works for classes that end in Controller.
+- RootViewController.nib
+Вы также можете использовать файлы nib, зависящие от конкретной платформы:
+- RootViewController~ipad.nib - iPad specific nib file
+- RootViewController~iphone.nib - iPhone specific nib file
+Обратите внимание, что использование инициализатора UIViewController по умолчанию - это то же самое, что
+вызов указанного инициализатора с именем nib и bundle как nil:
+```swift
+// The following are equivalent
+let controller = RootViewController(nibName: nil, bundle: nil)
+let controller = RootViewController()
+```
+
+For view controllers created in a storyboard the view is loaded from the storyboard при его создании:
+```swift
+if let vc = storyboard?.instantiateViewController(
+withIdentifier: "MyViewController") {
+// setup and present
+}
+```
+
+### Using A Nib File
+If you’re not creating your view controller with a storyboard, you can still use Interface Builder to create its views in a автономный nib file
+
+1. Add a new file to the project (File › New › File... ) and choose the `View` template from the User Interface section
+
+<img alt="image" src="images/auto layout18.jpeg" width = 70%/>
+
+2. Name the file using as your view controller, for example RootViewController.xib, and save it in the project folder.
+3. Select the “File’s Owner” placeholder in the document outline to the left of the canvas. Using the Identity Inspector set the class to the class of the view controller (RootViewController in my case)
+
+<img alt="image" src="images/auto layout19.jpeg" width = 70%/>
+
+4. Connect the view in the nib file to the view property of the view controller. Control-drag from the File’s Owner placeholder to the view and select the view outlet:
+
+<img alt="image" src="images/auto layout20.jpeg" width = 60%/>
+
+С данным xib можно работать, и добавлять на него элементы из библиотеки, все тоже что и в storyboard.
+
+### Overriding loadView
+If you don’t load your views from a storyboard or nib file, you can create them manually in code in the view controller. One possible way to do this is to override `loadView()`. 
+
+```swift
+import UIKit
+
+final class RootViewController: UIViewController {
+    override func loadView() {
+        let rootView = UIView()
+        rootView.backgroundColor = .yellow
+        view = rootView
+        // other view setup...
+    }
+}
+```
+
+Если вы переопределяете loadView(), вы должны создать по крайней мере root view  и назначить его свойству `view` view controller. Представление не обязательно должно
+быть простым UIView. Это может быть UIScrollView или любой другой подкласс UIView. Он может содержать столько подвидов, сколько вы захотите, при условии, что вы в конечном итоге назначите его `view`.
+
+### viewDidLoad and Friends
+
+
+<img alt="image" src="images/auto layout21.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout22.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout23.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout24.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout25.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout26.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout27.jpeg" width = 70%/>
+v
+<img alt="image" src="images/auto layout28.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout29.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout30.jpeg" width = 70%/>
