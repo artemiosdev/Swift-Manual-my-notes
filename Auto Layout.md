@@ -479,15 +479,24 @@ final class ViewController: UIViewController {
 
 #### Removing The Main Storyboard
 1. Main.storyboard “Move to Trash” to delete the file
+
 2. We need to delete the storyboard from the settings for the
 target
+
 <img alt="image" src="images/auto layout16.jpeg" width = 70%/>
+
 3. Scene Delegate “Move to Trash” to delete the file
+
 4. To completely remove the scene delegate we also need to remove the scene configuration from the `Info.plist` file. Find the entry named “Application Scene Manifest”, open it and delete the “Scene Configuration”
+
 <img alt="image" src="images/auto layout17.jpeg" width = 70%/>
+
 5. Delete the ViewController.swift
+
 6. Create new file RootViewController.swift
+
 7. Without the main storyboard, we need to take care of creating the main window. Find the AppDelegate.swift `didFinishLaunchingWithOptions` method, в нем и будем настраивать
+
 ```swift
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -498,14 +507,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 ```
+
 8. Add the window variable if you’re not using a scene delegate.
 `var window: UIWindow?`
+
 9. In the body of the method create the main window using the size of the main screen. (By default a new window uses the main screen of the device): 
 `window = UIWindow(frame: UIScreen.main.bounds)`
+
 10. Optionally set the color of the window (default is black). 
 `window?.backgroundColor = .white`
+
 11. Create your [root view controller](https://developer.apple.com/documentation/uikit/uiwindow/1621581-rootviewcontroller) and add it to the window. This action takes care of adding the view controller’s view to the window 
 `window?.rootViewController = RootViewController()`
+
 12. Чтобы отобразить окно, установите его в качестве ключевого window и сделайте его видимым: 
 `window?.makeKeyAndVisible()`
 
@@ -619,15 +633,388 @@ final class RootViewController: UIViewController {
 
 ### viewDidLoad and Friends
 
+• viewWillAppear: Called when the view controller’s view is about
+to be added to the view hierarchy. Unlike viewDidLoad this method
+can be called multiple times in the life of a view controller. There’s
+a corresponding viewWillDisappear called when the view is about
+to be removed from the view hierarchy.
+• viewDidAppear: Called after view controller’s view is added to
+the view hierarchy and displayed on-screen. Like viewWillAppear
+this method can be called multiple times and has a corresponding
+method, viewDidDisappear, called after removing the view.
 
-<img alt="image" src="images/auto layout21.jpeg" width = 70%/>
+- viewDidLoad: вызывается после того, как view controller загрузил свое view, но еще не добавил его в иерархию view. Вызывается только один раз в жизни view controller
+- viewWillAppear: вызывается, когда view controller’s view собирается быть добавлено в иерархию view. В отличие от viewDidLoad, этот метод может вызываться несколько раз в течение жизни view controller’s view. Существует соответствующий viewWillDisappear, вызываемый, когда представление собирается быть удалено из иерархии view.
+- viewDidAppear: вызывается после добавления view controller’s view в иерархию view и отображения на экране. Как и viewWillAppear этот метод может вызываться несколько раз и имеет соответствующий метод viewDidDisappear, вызываемый после удаления view.
+
+Как viewDidLoad, так и viewWillAppear имеют ту же проблему, которую мы видели с loadView. View еще не является частью иерархии view, поэтому мы не можем полагаться на его размер. К моменту вызова viewDidAppear наше root view находится в иерархии view, но оно уже отображается, поэтому любые изменения, которые мы вносим, могут быть видны пользователю.
+
+### Куда поместить layout code ?
+Итак, куда мы должны поместить layout code view controller, которому нужен размер root view? Мы уже видели ответ. view controller вызывает свои методы `viewWillLayoutSubviews` и `viewDidLayoutSubviews` до и после того, как его root view размещает свои subviews. Мы можем переопределить эти методы, чтобы создать наш view layout. Давайте используем это в нашем root view controller для layout нашего зеленого view 
+
+```swift
+import UIKit
+
+final class RootViewController: UIViewController {
+    private let padding: CGFloat = 50.0
+
+    private let greenView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .green
+        view.autoresizingMask = [.flexibleWidth, .flexibleBottomMargin]
+        return view
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .yellow
+    }
+
+    override func viewWillLayoutSubviews() {
+        if greenView.superview == nil {
+            view.addSubview(greenView)
+            let width = view.bounds.width - 2 * padding
+            greenView.frame = CGRect(x: padding, y: padding, width: width, height: 3 * padding)
+        }
+    }
+}
+```
+
+<img alt="image" src="images/auto layout21.jpeg" width = 50%/>
+
+Some points of interest:
+1. I made the green view a private property of the view controller and used a closure to create and configure it.
+2. Я использую `viewDidLoad` для выполнения одноразовой настройки view, которая не имеет никаких зависимостей от root view size. В этом случае мне нужно только установить цвет фона.
+3. In `viewWillLayoutSubviews` we can finally calculate and set the width of the green view. Мы выполняем вычисление один раз, если мы еще не добавили зеленый view в иерархию view hierarchy:
+
+`if greenView.superview == nil {`
+
+If the green view has no superview, we add it to the root view
+and calculate its width and set the frame. The autoresizing mask
+Маска автоматического изменения размера позаботится обо всем остальном. It matters little in this case, but since a
+view controller may call viewWillLayoutSubviews many times.
+
+Стоит отметить, что при работе с программными layout
+часто проще пропустить autoresizing mask маску автоматического изменения размера и установить рамку frame непосредственно в layout subviews. Например, мы могли бы переписать view controller для последнего примера следующим образом:
+
+```swift
+import UIKit
+
+final class RootViewController: UIViewController {
+    private let padding: CGFloat = 50.0
+    
+    private let greenView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .green
+        return view
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .yellow
+        view.addSubview(greenView)
+    }
+    override func viewWillLayoutSubviews() {
+        let width = view.bounds.width - 2 * padding
+        greenView.frame = CGRect(x: padding, y: padding, width: width, height: 3 * padding)
+    }
+}
+```
+
+### Working With A Scene Delegate
+
+Работа со сценами действительно изменяет способ загрузки системой пользовательского интерфейса для window. Если вы используете storyboards, window scene по умолчанию загружает пользовательский интерфейс из main storyboard. Вы настраиваете scenes using the “Application Scene Manifest” dictionary in the Info.plist file
+
 <img alt="image" src="images/auto layout22.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout23.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout24.jpeg" width = 70%/>
+
+The relevant keys:
+- “Enable Multiple Windows”: изменение этого параметра позволяет вам подключиться к нескольким windows. The default is NO.
+- “Delegate Class Name”: Each window scene must have a scene delegate. The default Xcode iOS templates includes a scene delegate (SceneDelegate.swift) class for you.
+- “Storyboard Name”: The storyboard used to load the scene’s начального user interface.
+
+Let’s create a modified version of our Xcode programmatic layout template that works with a scene delegate 
+
+1. Create a new Xcode project from the iOS App application template and as before remove the Main.storyboard file and delete the entry from the Info.plist file.
+2. This time do not delete the “Scene Configuration” entry from the Info.plist file. We want to keep the scene configuration but we
+don’t want the scene to load its user interface from a storyboard.
+Delete the “Storyboard Name” entry from the scene configuration
+3. Вместо создания главного окна в делегате приложения мы создаем его в делегате сцены (**SceneDelegate.swift**). Код почти идентичен, за исключением того, что мы создаем окно, используя сцену окна, переданную нам in the first parameter of the `scene(_:willConnectTo:options:)` method:
+
+```swift
+import UIKit
+
+final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    var window: UIWindow?
+
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        guard let scene = scene as? UIWindowScene else {
+            return
+        }
+
+        window = UIWindow(windowScene: scene)
+        window?.backgroundColor = .white
+        window?.rootViewController = RootViewController()
+        window?.makeKeyAndVisible()
+    }
+}
+```
+
+### Key Points To remember
+Some key points to remember from this chapter when using manual frame-based layout:
+- Автоматическое изменение размера имеет некоторые ограничения, но это быстрый способ изменить размер view вместе с его родительским элементом. Как мы увидим, авторазмер также хорошо работает наряду с Auto Layout
+- Create a custom subclass of UIView to override `layoutSubviews` and take full control of the layout. Custom subviews help разделить комплексный view на управляемые components and move view and layout code из of your view controller. Use `@IBDesignable` and `@IBInspectable` to preview custom views in Interface Builder.
+- Use `viewWillLayoutSubviews` or `viewDidLayoutSubviews` as alternatives to creating a custom view subclass.
+- When using programmatic layouts, особенно при ручном расчете кадров будьте осторожны с тем, что и где вы делаете. Помните, что view еще не является частью иерархии view в loadView, viewDidLoad или viewWillAppear, поэтому вы не можете предполагать, что оно достигло своего окончательного размера. К счастью, автоматическая компоновка в основном позволяет избежать этой проблемы.
+
+### Test Your Knowledge
+
 <img alt="image" src="images/auto layout25.jpeg" width = 70%/>
+
+1. Challenge2-1
+
+<img alt="image" src="images/auto layout23.jpeg" width = 70%/>
+
+2. Challenge2-2. Фигура такая же, расположение кодом
+
+```swift
+// AppDelegate.swift
+import UIKit
+
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions:
+                     [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.rootViewController = ViewController()
+        window?.backgroundColor = .white
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+```
+
+```swift
+// ViewController.swift
+import UIKit
+
+class ViewController: UIViewController {
+    private enum ViewMetrics {
+        static let externalPadding: CGFloat = 50.0
+        static let internalPadding: CGFloat = 25.0
+        static let redHeight: CGFloat = 100.0
+    }
+    
+    private let greenView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .green
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        return view
+    }()
+    
+    private let redView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .red
+        view.autoresizingMask = [.flexibleWidth,.flexibleTopMargin,.flexibleBottomMargin]
+        return view
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .yellow
+        greenView.addSubview(redView)
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        if greenView.superview == nil {
+            view.addSubview(greenView)
+            
+            let containerWidth = view.bounds.width
+            let containerHeight = view.bounds.height
+            
+            let greenWidth = containerWidth - 2 * ViewMetrics.externalPadding
+            let greenHeight = containerHeight - 2 * ViewMetrics.externalPadding
+            greenView.frame = CGRect(x: ViewMetrics.externalPadding, y: ViewMetrics.externalPadding, width: greenWidth, height: greenHeight)
+            
+            let redWidth = greenWidth - 2 * ViewMetrics.internalPadding
+            let redY = (greenHeight - ViewMetrics.redHeight) / 2
+            redView.frame = CGRect(x: ViewMetrics.internalPadding, y: redY, width: redWidth, height: ViewMetrics.redHeight)
+        }
+    }
+}
+```
+
+3. Challenge 2.3 Creating A Custom View and Challenge 2.4 Making Your View Designable
+
+Using A Custom View
+
 <img alt="image" src="images/auto layout26.jpeg" width = 70%/>
+
+Мое не идеальное решение, без storyboard (удален полностью), гибкие размеры на полное заполнение так и не удалось сделать, параметры autoresizingMask не работают, попытка переделать\внедрить код автора в данный код успехов не принесла, пока не ясно как это сделать.
+
+```swift
+// AppDelegate.swift
+import UIKit
+
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions:
+                     [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.rootViewController = RGBView()
+        window?.backgroundColor = .white
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+```
+
+```swift
+//  RGBView.swift
+import UIKit
+
+class RGBView: UIViewController {
+    private let spacing: CGFloat = 20.0
+    private let redView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .red
+        // не работают, результат не дают
+        //        view.autoresizingMask = [.flexibleWidth,.flexibleBottomMargin,.flexibleLeftMargin,.flexibleRightMargin ]
+        return view
+    }()
+    
+    private let greenView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .green
+        // не работают, результат не дают
+        //        view.autoresizingMask = [.flexibleWidth, .flexibleLeftMargin, .flexibleRightMargin ]
+        return view
+    }()
+    
+    private let blueView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .blue
+        // не работают, результат не дают
+        //        view.autoresizingMask = [.flexibleWidth, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin ]
+        return view
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        //        view.backgroundColor = .white
+        view.addSubview(redView)
+        view.addSubview(greenView)
+        view.addSubview(blueView)
+    }
+    
+    override func viewWillLayoutSubviews() {
+        view.addSubview(redView)
+        view.addSubview(greenView)
+        view.addSubview(blueView)
+        let width = view.bounds.width - 2 * spacing
+        redView.frame = CGRect(x: spacing, y: 2 * spacing, width: width, height: 5 * spacing)
+        greenView.frame = CGRect(x: spacing, y: 8 * spacing, width: width, height: 5 * spacing)
+        blueView.frame = CGRect(x: spacing, y: 14 * spacing, width: width, height: 5 * spacing)
+    }
+}
+```
+
 <img alt="image" src="images/auto layout27.jpeg" width = 70%/>
-v
+
+Решение автора, с помощью storyboard
+
+```swift
+// AppDelegate.swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+}
+
+// ViewController
+import UIKit
+final class ViewController: UIViewController {
+}
+```
+
+```swift
+// RGBView.swift
+import UIKit
+
+@IBDesignable
+final class RGBView: UIView {
+
+    @IBInspectable
+    var spacing: CGFloat = 20 {
+        didSet {
+            setNeedsLayout()
+        }
+    }
+
+    private let redBar: UIView = {
+        let view = UIView()
+        view.backgroundColor = .red
+        return view
+    }()
+
+    private let greenBar: UIView = {
+        let view = UIView()
+        view.backgroundColor = .green
+        return view
+    }()
+
+    private let blueBar: UIView = {
+        let view = UIView()
+        view.backgroundColor = .blue
+        return view
+    }()
+
+    private var barViews = [UIView]()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+
+    private func setupView() {
+        barViews = [redBar, greenBar, blueBar]
+        barViews.forEach { addSubview($0) }
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        let barCount = CGFloat(barViews.count)
+        if barCount > 0 {
+            let barHeight = (bounds.height - (spacing * (barCount - 1))) / barCount
+            var y = 0 as CGFloat
+            for view in barViews {
+                view.frame = CGRect(x: 0, y: y, width: bounds.width, height: barHeight)
+                y += barHeight + spacing
+            }
+        }
+    }
+}
+```
+Identity Inspector ViewController -> class View Controller
+Identity Inspector RGBView -> class RGBView
+
 <img alt="image" src="images/auto layout28.jpeg" width = 70%/>
+
+### Chapter 3. Getting Started With Auto Layout
+What Is Auto Layout?
+
+
+
 <img alt="image" src="images/auto layout29.jpeg" width = 70%/>
 <img alt="image" src="images/auto layout30.jpeg" width = 70%/>
