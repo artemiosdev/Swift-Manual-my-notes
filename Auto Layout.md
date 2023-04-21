@@ -1012,9 +1012,178 @@ Identity Inspector RGBView -> class RGBView
 <img alt="image" src="images/auto layout28.jpeg" width = 70%/>
 
 ### Chapter 3. Getting Started With Auto Layout
-What Is Auto Layout?
 
+С  Auto Layout вы никогда напрямую не устанавливаете размер и положение view. Вы описываете, каким вы хотите видеть layout, и позволяете автоматической компоновке создавать frames за вас.
 
+Example: The top of the red view should be 16 points below the bottom of the green view.
 
 <img alt="image" src="images/auto layout29.jpeg" width = 70%/>
+
 <img alt="image" src="images/auto layout30.jpeg" width = 70%/>
+
+Мы могли бы написать ограничение, чтобы поместить верхнюю часть красного вида на 16 пунктов ниже нижней части зеленого вида:
+`redView.top == greenView.bottom x 1.0 + 16.0`
+
+Мы также могли бы написать это же ограничение, поместив нижнюю часть greenview на 16 пунктов выше верхней части red view с отрицательной константой:
+`greenView.bottom == redView.top x 1.0 - 16.0`
+
+### Constraint Attributes
+
+[NSLayoutConstraint.Attribute](https://developer.apple.com/documentation/uikit/nslayoutconstraint/attribute) - часть визуального представления объекта, которая должна использоваться для получения значения constraint.
+
+```swift
+case left
+Левая сторона прямоугольника выравнивания объекта.
+
+case right
+Правая сторона прямоугольника выравнивания объекта.
+
+case top
+Верхняя часть прямоугольника выравнивания объекта.
+
+case bottom
+Нижняя часть прямоугольника выравнивания объекта.
+
+case leading
+Передний край прямоугольника выравнивания объекта.
+
+case trailing
+Задний край прямоугольника выравнивания объекта.
+
+case width
+Ширина прямоугольника выравнивания объекта.
+
+case height
+Высота прямоугольника выравнивания объекта.
+
+case centerX
+Центр вдоль оси X прямоугольника выравнивания объекта.
+
+case centerY
+Центр по оси Y прямоугольника выравнивания объекта.
+
+case lastBaseline
+Базовая линия объекта.
+
+case firstBaseline
+Базовая линия объекта.
+
+case leftMargin
+Левое поле объекта.
+
+case rightMargin
+Правое поле объекта.
+
+case topMargin
+Верхнее поле объекта.
+
+case bottomMargin
+Нижнее поле объекта.
+
+case leadingMargin
+Ведущее поле объекта.
+
+case trailingMargin
+Задняя маржа объекта.
+
+case centerXWithinMargins
+Центр по оси x между левым и правым краями объекта.
+
+case centerYWithinMargins
+Центр по оси Y между верхним и нижним полями объекта.
+
+case notAnAttribute
+Значение-заполнитель, указывающее, что второй элемент constraint и второй атрибут не используются ни в каких вычислениях.
+```
+
+<img alt="image" src="images/auto layout31.jpeg" width = 70%/>
+
+Используйте `.leading` и `.trailing` вместо `.left` и `.right` для поддержки языков справа налево (RTL). When using an RTL language the `.leading` edge is on the **right** and the `.trailing` edge is on the **left**.
+
+you can align text on the first or last baseline:
+
+<img alt="image" src="images/auto layout32.jpeg" width = 70%/>
+
+View также имеет полный набор атрибутов полей margin для случаев, когда вы хотите вставить содержимое по краям представления view edges: 
+
+<img alt="image" src="images/auto layout33.jpeg" width = 70%/>
+
+We are using pseudo-code to write constraints in this
+chapter, we’ll see the real syntax later
+
+```swift
+// Aligning the leading edges of views
+redView.leading == greenView.leading
+
+// Aligning view centers (x-axis)
+redView.centerX == greenView.centerX
+
+// Vertical spacing between views
+redView.top == greenView.bottom + 8.0
+
+// Two views with equal width
+redView.width == greenView.width
+
+// Height of view is half the height of another view
+redView.height == 0.5 x greenView.height
+
+// Red view is never wider than green view
+redView.width <= greenView.width
+
+// Aspect Ratio - соотношение сторон
+greenView.height = 0.5 x greenView.width
+
+// Setting a constant size
+redView.height = 50.0
+redView.width = 75.0
+```
+
+Interface Builder не позволяет вам создавать бессмысленные ограничения, но при создании ограничений в коде имейте в виду, что не все комбинации атрибутов имеют смысл
+
+```swift
+// ERROR - don't mix horizontal with vertical
+redView.leading == greenView.bottom + 16.0
+
+// ERROR - cannot mix size with edge or center
+greenView.width == redView.leading
+
+// ERROR - cannot set edge or center to a constant
+redView.centerY = 100.0
+
+// ERROR - don't mix leading/trailing with left/right
+redView.left == greenView.trailing + 16.0
+```
+
+### Who Owns A Constraint?
+
+
+
+<img alt="image" src="images/auto layout34.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout35.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout36.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout37.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout38.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout39.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout40.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout41.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout42.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout43.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout44.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout45.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout46.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout47.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout48.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout49.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout50.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout51.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout52.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout53.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout54.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout55.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout56.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout57.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout58.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout59.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout60.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout61.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout62.jpeg" width = 70%/>
