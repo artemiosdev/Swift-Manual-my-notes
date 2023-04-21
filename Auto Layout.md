@@ -92,7 +92,7 @@ If you use Interface Builder to create your layouts, it handles the view hierarc
 
 #Clip to Bounds - Обрезка по границам property for the green view in Interface Builder:
 
-<img alt="image" src="images/auto layout9.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout9.jpeg" width = 60%/>
 
 or   `greenView.clipsToBounds = true`
 
@@ -473,7 +473,7 @@ final class ViewController: UIViewController {
 }
 ```
 
-<img alt="image" src="images/auto layout15.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout15.jpeg" width = 50%/>
 
 ### Layout Without Storyboards
 
@@ -608,7 +608,7 @@ If you’re not creating your view controller with a storyboard, you can still u
 
 4. Connect the view in the nib file to the view property of the view controller. Control-drag from the File’s Owner placeholder to the view and select the view outlet:
 
-<img alt="image" src="images/auto layout20.jpeg" width = 60%/>
+<img alt="image" src="images/auto layout20.jpeg" width = 50%/>
 
 С данным xib можно работать, и добавлять на него элементы из библиотеки, все тоже что и в storyboard.
 
@@ -680,7 +680,7 @@ final class RootViewController: UIViewController {
 }
 ```
 
-<img alt="image" src="images/auto layout21.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout21.jpeg" width = 40%/>
 
 Some points of interest:
 1. I made the green view a private property of the view controller and used a closure to create and configure it.
@@ -923,7 +923,7 @@ class RGBView: UIViewController {
 }
 ```
 
-<img alt="image" src="images/auto layout27.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout27.jpeg" width = 50%/>
 
 Решение автора, с помощью storyboard
 
@@ -1019,7 +1019,7 @@ Example: The top of the red view should be 16 points below the bottom of the gre
 
 <img alt="image" src="images/auto layout29.jpeg" width = 70%/>
 
-<img alt="image" src="images/auto layout30.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout30.jpeg" width = 45%/>
 
 Мы могли бы написать ограничение, чтобы поместить верхнюю часть красного вида на 16 пунктов ниже нижней части зеленого вида:
 `redView.top == greenView.bottom x 1.0 + 16.0`
@@ -1096,17 +1096,17 @@ case notAnAttribute
 Значение-заполнитель, указывающее, что второй элемент constraint и второй атрибут не используются ни в каких вычислениях.
 ```
 
-<img alt="image" src="images/auto layout31.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout31.jpeg" width = 50%/>
 
 Используйте `.leading` и `.trailing` вместо `.left` и `.right` для поддержки языков справа налево (RTL). When using an RTL language the `.leading` edge is on the **right** and the `.trailing` edge is on the **left**.
 
 you can align text on the first or last baseline:
 
-<img alt="image" src="images/auto layout32.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout32.jpeg" width = 50%/>
 
 View также имеет полный набор атрибутов полей margin для случаев, когда вы хотите вставить содержимое по краям представления view edges: 
 
-<img alt="image" src="images/auto layout33.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout33.jpeg" width = 50%/>
 
 We are using pseudo-code to write constraints in this
 chapter, we’ll see the real syntax later
@@ -1156,13 +1156,57 @@ redView.left == greenView.trailing + 16.0
 
 ### Who Owns A Constraint?
 
+Каждое view имеет свойство `constraints`, которое представляет собой массив constraints, принадлежащих этому view. Свойство доступно только для чтения:
 
+`var constraints: [NSLayoutConstraint] { get }`
 
-<img alt="image" src="images/auto layout34.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout35.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout36.jpeg" width = 70%/>
+Rule: A constraint принадлежащее view может только включать само это view или его подвиды subviews.
+
+Если вы создаете ограничение между двумя view, они должны иметь общий superview, чтобы владеть ограничением. Пример:
+
+<img alt="image" src="images/auto layout34.jpeg" width = 50%/>
+
+Распределение, кому принадлежат constraints
+
+<img alt="image" src="images/auto layout35.jpeg" width = 60%/>
+
+Let’s start with pinning a single view to the edges of its superview with some padding
+
+<img alt="image" src="images/auto layout36.jpeg" width = 50%/>
+
+First we can fix the position (origin) of the green view with leading and top constraints to the superview. I’m using 50 points for the padding. Adding trailing and bottom constraints fixes the size (width and height). So we needed four constraints, 2 horizontal + 2 vertical
+
+```swift
+greenView.leading == superview.leading + 50 // 1
+greenView.top == superview.top + 50 // 2
+superview.trailing == greenView.trailing + 50 // 3
+superview.bottom == greenView.bottom + 50 // 4
+```
+
+Что, если вместо этого мы напрямую зафиксируем ширину и
+высоту:
+
 <img alt="image" src="images/auto layout37.jpeg" width = 70%/>
+
+Replacing the trailing and bottom constraints with constant width and height constraints:
+
+```swift
+greenView.leading == superview.leading + 50 // 1
+greenView.top == superview.top + 50 // 2
+greenView.width == 567 // 3
+greenView.height == 275 // 4
+```
+
+Что произойдет, если мы повернем устройство из альбомной ориентации в портретную?
+
 <img alt="image" src="images/auto layout38.jpeg" width = 70%/>
+
+!!! Использование постоянных constraints по ширине и высоте не позволяет view адаптироваться к изменениям размера его superview. По возможности избегайте добавления постоянных constraints по ширине и высоте для
+ваших view. Предпочитайте делать их относительно
+какого-либо другого измерения в вашем макете.
+
+### Equal Sizing
+
 <img alt="image" src="images/auto layout39.jpeg" width = 70%/>
 <img alt="image" src="images/auto layout40.jpeg" width = 70%/>
 <img alt="image" src="images/auto layout41.jpeg" width = 70%/>

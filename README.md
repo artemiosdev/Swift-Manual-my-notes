@@ -2,7 +2,7 @@
 
 ### [UIKit notes](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/UIKit%20notes.md) - краткий коспект по фреймворку.
 
-***Конспект из разных источников***
+### [Modern Auto Layout, Building Adaptive Layouts For iOS](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/Auto%20Layout.md) - краткий коспект по верстке
 
 <a id="contents" />Оглавление
 
