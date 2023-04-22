@@ -1207,12 +1207,73 @@ greenView.height == 275 // 4
 
 ### Equal Sizing
 
-<img alt="image" src="images/auto layout39.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout39.jpeg" width = 50%/>
+
+constraint for the spacing between the two views:
+
+`redView.leading == greenView.trailing + 50 // 3`
+
 <img alt="image" src="images/auto layout40.jpeg" width = 70%/>
+
+`greenView.width == redView.width // 8`
+
+
+For example, replacing the top constraint (4) with a constraint
+that aligns the tops of the green view and red view with each other:
+
+`greenView.top == redView.top // 4`
+
+We could also replace the bottom constraint (6) for the red view with an equal height constraint:
+
+`greenView.height == redView.height // 6`
+
 <img alt="image" src="images/auto layout41.jpeg" width = 70%/>
+
+### Views With An Intrinsic (внутренним) Size
+
+Если мы используем эту label в макете, нам нужно только добавить ограничения, чтобы зафиксировать положение. Механизм компоновки использует естественный размер метки, если на метку не действуют никакие другие ограничения по размеру. Итак, нужно два ограничениям для
+фиксации положения
+
+```swift
+label.leading == superview.leading + 50 // 1
+label.top == superview.top + 50 // 2
+```
+
+Мы, используем только два ограничения. Где находятся два других ограничения для фиксации размера? Когда мы
+более подробно рассмотрим внутренний размер содержимого, мы увидим, что механизм компоновки добавляет дополнительные ограничения по ширине и высоте для нас, исходя из естественного размера метки. Таким образом, в этом макете по-прежнему используются два горизонтальных и два вертикальных ограничения.
+
 <img alt="image" src="images/auto layout42.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout43.jpeg" width = 70%/>
+
+Это прекрасно, но что, если мы хотим, чтобы метка
+заполняла всю ширину экрана
+
+<img alt="image" src="images/auto layout43.jpeg" width = 50%/>
+
+```swift
+label.leading == superview.leading + 50 // 1
+label.top == superview.top + 50 // 2
+superview.trailing == label.trailing + 50 // 3
+```
+
+Эти три ограничения позволяют увеличивать высоту надписи вниз по экрану по мере увеличения текста или размера шрифта.
+
+---
+
+to center this text label in the yellow view
+
+```swift
+textLabel.centerX == yellowView.centerX // 1
+textLabel.centerY == yellowView.centerY // 2
+```
+
 <img alt="image" src="images/auto layout44.jpeg" width = 70%/>
+
+---
+
+Какое из этих ограничений расположило бы зеленый вид на 8 пунктов ниже желтого?
+
+`yellowView.bottom = greenView.top - 8.0`
+
 <img alt="image" src="images/auto layout45.jpeg" width = 70%/>
 <img alt="image" src="images/auto layout46.jpeg" width = 70%/>
 <img alt="image" src="images/auto layout47.jpeg" width = 70%/>
