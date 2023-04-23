@@ -608,7 +608,7 @@ If you’re not creating your view controller with a storyboard, you can still u
 
 4. Connect the view in the nib file to the view property of the view controller. Control-drag from the File’s Owner placeholder to the view and select the view outlet:
 
-<img alt="image" src="images/auto layout20.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout20.jpeg" width = 40%/>
 
 С данным xib можно работать, и добавлять на него элементы из библиотеки, все тоже что и в storyboard.
 
@@ -1019,7 +1019,7 @@ Example: The top of the red view should be 16 points below the bottom of the gre
 
 <img alt="image" src="images/auto layout29.jpeg" width = 70%/>
 
-<img alt="image" src="images/auto layout30.jpeg" width = 45%/>
+<img alt="image" src="images/auto layout30.jpeg" width = 35%/>
 
 Мы могли бы написать ограничение, чтобы поместить верхнюю часть красного вида на 16 пунктов ниже нижней части зеленого вида:
 `redView.top == greenView.bottom x 1.0 + 16.0`
@@ -1096,7 +1096,7 @@ case notAnAttribute
 Значение-заполнитель, указывающее, что второй элемент constraint и второй атрибут не используются ни в каких вычислениях.
 ```
 
-<img alt="image" src="images/auto layout31.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout31.jpeg" width = 35%/>
 
 Используйте `.leading` и `.trailing` вместо `.left` и `.right` для поддержки языков справа налево (RTL). When using an RTL language the `.leading` edge is on the **right** and the `.trailing` edge is on the **left**.
 
@@ -1106,7 +1106,7 @@ you can align text on the first or last baseline:
 
 View также имеет полный набор атрибутов полей margin для случаев, когда вы хотите вставить содержимое по краям представления view edges: 
 
-<img alt="image" src="images/auto layout33.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout33.jpeg" width = 35%/>
 
 We are using pseudo-code to write constraints in this
 chapter, we’ll see the real syntax later
@@ -1164,7 +1164,7 @@ Rule: A constraint принадлежащее view может только вк�
 
 Если вы создаете ограничение между двумя view, они должны иметь общий superview, чтобы владеть ограничением. Пример:
 
-<img alt="image" src="images/auto layout34.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout34.jpeg" width = 40%/>
 
 Распределение, кому принадлежат constraints
 
@@ -1172,7 +1172,7 @@ Rule: A constraint принадлежащее view может только вк�
 
 Let’s start with pinning a single view to the edges of its superview with some padding
 
-<img alt="image" src="images/auto layout36.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout36.jpeg" width = 40%/>
 
 First we can fix the position (origin) of the green view with leading and top constraints to the superview. I’m using 50 points for the padding. Adding trailing and bottom constraints fixes the size (width and height). So we needed four constraints, 2 horizontal + 2 vertical
 
@@ -1186,7 +1186,7 @@ superview.bottom == greenView.bottom + 50 // 4
 Что, если вместо этого мы напрямую зафиксируем ширину и
 высоту:
 
-<img alt="image" src="images/auto layout37.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout37.jpeg" width = 40%/>
 
 Replacing the trailing and bottom constraints with constant width and height constraints:
 
@@ -1199,7 +1199,7 @@ greenView.height == 275 // 4
 
 Что произойдет, если мы повернем устройство из альбомной ориентации в портретную?
 
-<img alt="image" src="images/auto layout38.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout38.jpeg" width = 40%/>
 
 !!! Использование постоянных constraints по ширине и высоте не позволяет view адаптироваться к изменениям размера его superview. По возможности избегайте добавления постоянных constraints по ширине и высоте для
 ваших view. Предпочитайте делать их относительно
@@ -1207,13 +1207,13 @@ greenView.height == 275 // 4
 
 ### Equal Sizing
 
-<img alt="image" src="images/auto layout39.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout39.jpeg" width = 40%/>
 
 constraint for the spacing between the two views:
 
 `redView.leading == greenView.trailing + 50 // 3`
 
-<img alt="image" src="images/auto layout40.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout40.jpeg" width = 40%/>
 
 `greenView.width == redView.width // 8`
 
@@ -1227,7 +1227,7 @@ We could also replace the bottom constraint (6) for the red view with an equal h
 
 `greenView.height == redView.height // 6`
 
-<img alt="image" src="images/auto layout41.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout41.jpeg" width = 40%/>
 
 ### Views With An Intrinsic (внутренним) Size
 
@@ -1242,12 +1242,12 @@ label.top == superview.top + 50 // 2
 Мы, используем только два ограничения. Где находятся два других ограничения для фиксации размера? Когда мы
 более подробно рассмотрим внутренний размер содержимого, мы увидим, что механизм компоновки добавляет дополнительные ограничения по ширине и высоте для нас, исходя из естественного размера метки. Таким образом, в этом макете по-прежнему используются два горизонтальных и два вертикальных ограничения.
 
-<img alt="image" src="images/auto layout42.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout42.jpeg" width = 40%/>
 
 Это прекрасно, но что, если мы хотим, чтобы метка
 заполняла всю ширину экрана
 
-<img alt="image" src="images/auto layout43.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout43.jpeg" width = 40%/>
 
 ```swift
 label.leading == superview.leading + 50 // 1
@@ -1266,7 +1266,7 @@ textLabel.centerX == yellowView.centerX // 1
 textLabel.centerY == yellowView.centerY // 2
 ```
 
-<img alt="image" src="images/auto layout44.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout44.jpeg" width = 40%/>
 
 ---
 
@@ -1274,15 +1274,107 @@ textLabel.centerY == yellowView.centerY // 2
 
 `yellowView.bottom = greenView.top - 8.0`
 
-<img alt="image" src="images/auto layout45.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout46.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout47.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout48.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout49.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout50.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout51.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout52.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout53.jpeg" width = 70%/>
+---
+
+Match the constraints that describe the same relationship:
+
+```swift
+// Constraint A
+greenView.leading == redView.trailing + 8.0
+// Constraint C
+redView.trailing == greenView.leading - 8.0
+
+// and
+// Constraint B
+redView.leading == greenView.trailing + 8.0
+// Constraint D
+greenView.trailing == redView.leading - 8.0
+```
+
+---
+
+### Chapter 4. Using Interface Builder
+
+#### Constraints Tool
+<img alt="image" src="images/auto layout45.jpeg" width = 50%/>
+
+В каждом из полей с интервалами есть выпадающее меню, в котором вы можете выбрать один из возможных видов соседей. При создании интервала между двумя дочерними видами вы также можете выбрать использование “standard” интервала.
+
+#### Align Tool
+
+Например, чтобы отцентрировать три кнопки по горизонтали в желтом superview.
+
+<img alt="image" src="images/auto layout46.jpeg" width = 50%/>
+
+#### Control-Dragging In The Canvas
+
+Вы можете быстро создать ограничение на холсте Interface Builder, перетащив элемент управления внутри элемента или между двумя элементами:
+
+<img alt="image" src="images/auto layout47.jpeg" width = 50%/>
+
+#### Control-Dragging In The Document Outline
+
+<img alt="image" src="images/auto layout48.jpeg" width = 50%/>
+
+Когда вы создаете ограничение на leading, trailing, top or bottom интервал для root view, вы можете выбрать между safe area or margin  root view . Если вы хотите, чтобы constraint распространялось на края root view, вам нужно использовать инспектор атрибутов, чтобы отредактировать ограничение и переключиться с safe area to the superview
+
+#### What About The Autoresizing Mask?
+
+Что происходит с маской автоматического изменения размера (autoresizing mask), когда вы добавляете ограничения для view? Когда вы добавляете новое view в Interface Builder, у него нет ограничений. Он начинает с маски автоматического изменения размера с leading и top: 
+Режим  layout в инспекторе размеров показывает вам, что делает Interface Builder. По умолчанию он делает вывод, что он должен использовать маску автоматического изменения размера (autoresizing mask), когда нет ограничений. Как только вы добавляете ограничение, связанное с представлением, режим компоновки меняется на “Inferred (Constraints)” и интерфейс отключает и скрывает маску. 
+Это позволяет избежать любого конфликта между добавляемыми нами ограничениями и маской автоматического изменения размера.
+Don’t try to mix constraints with autoresizing for the same view in Interface Builder
+
+### Editing A Constraint
+
+Мы можем кликнуть на constraint на холсте, и появится меню с изменениями, elation, the constant value, the priority, and the multiplier. И в боковом меню можно внести точные правки в constraint
+
+<img alt="image" src="images/auto layout49.jpeg" width = 50%/>
+
+1. В первом разделе показаны элементы, используемые ограничением, и вы можете изменить отношение. Выпадающие меню для первого и второго элементов позволяют вам изменить атрибут, используемый для ограничения, переключиться между margin or edge, поменять местами элементы или перейти к использованию superview or safe area:
+2. Измените constant, priority or multiplier. Используйте [+] слева от константы, чтобы добавить изменение.
+3. Добавьте идентификатор для этого ограничения, который отображается в журналах. 
+4. Interface Builder не включает placeholder constraints в созданное вами приложение. Вы можете использовать их, чтобы избежать предупреждений Interface Builder об отсутствующих constraints, которые вы хотите добавить во время выполнения.
+5. Снимите флажок “Installed” для constraints, которые вы хотите активировать во время выполнения, или установите только для некоторых вариантов характеристик. 
+
+#### Creating Outlets For Constraints
+
+<img alt="image" src="images/auto layout50.jpeg" width = 50%/>
+
+You can also create the property yourself in the view controller. Mark it with `@IBOutlet` and then right-click on the view controller in the document outline and drag from the outlet to the constraint:
+
+<img alt="image" src="images/auto layout51.jpeg" width = 50%/>
+
+Once created there are limited changes you can make to a constraint in your code. You can activate or deactivate it, change the priority, or change the constant:
+
+```swift
+// Deactivate a constraint
+centerXConstraint.isActive = false
+
+// Change priority
+centerXConstraint.priority = .defaultLow
+
+// Change constant value
+centerXConstraint.constant = 50.0
+```
+
+You cannot change the items or attributes involved in the constraint, the relation or the multiplier.
+
+---
+
+Add a constraint that gives the red and green views equal height:
+1. Control-drag from the red view to the green view (or наоборот) in the canvas or document outline and choose Equal Heights
+
+<img alt="image" src="images/auto layout52.jpeg" width = 50%/>
+
+---
+
+Centering The Buttons
+
+<img alt="image" src="images/auto layout53.jpeg" width = 50%/>
+
+
+
 <img alt="image" src="images/auto layout54.jpeg" width = 70%/>
 <img alt="image" src="images/auto layout55.jpeg" width = 70%/>
 <img alt="image" src="images/auto layout56.jpeg" width = 70%/>
