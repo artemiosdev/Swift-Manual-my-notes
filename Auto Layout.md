@@ -1,9 +1,5 @@
 ### Modern Auto Layout, Building Adaptive Layouts For iOS 
 
-#### Keith Harrison
-
-Version: 6 (2021-11-09)
-
 Layout - расположение; frame - костяк, рамка
 
 ### Auto Layout Tools
@@ -1367,20 +1363,91 @@ Add a constraint that gives the red and green views equal height:
 
 <img alt="image" src="images/auto layout52.jpeg" width = 50%/>
 
+<img alt="image" src="images/auto layout54.jpeg" width = 60%/>
+
 ---
 
 Centering The Buttons
 
 <img alt="image" src="images/auto layout53.jpeg" width = 50%/>
 
+---
 
+#### Полезный функционал 
 
-<img alt="image" src="images/auto layout54.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout55.jpeg" width = 70%/>
-<img alt="image" src="images/auto layout56.jpeg" width = 70%/>
+Чтобы выделить объект, когда он находится за стопкой других элементов, удерживайте нажатой клавиши
+`Control + Shift`, а затем щелкните по объекту. Выберите нужный элемент во всплывающем меню, отображающем полный вид иерархии
+
+<img alt="image" src="images/auto layout55.jpeg" width = 50%/>
+
+Нажмите на вид на холсте, чтобы выбрать его, а затем удерживайте нажатой клавишу `Option`. Наведите указатель мыши на другие виды сцены, чтобы увидеть расстояния между views
+
+To quickly copy an object in the canvas, hold down the `Option` key and then click on and drag the object.
+
+When adjusting the position of a view in the canvas, the arrow keys move the view one point at a time. Hold the `Shift` key to move by five points at a time.
+
+When creating constraints in the canvas or document outline use the `Shift` key to add multiple constraints
+
+There are some configuration options for the canvas in the Xcode
+`Editor › Canvas` menu:
+
+<img alt="image" src="images/auto layout56.jpeg" width = 40%/>
+
+Не позволяйте вашим storyboards становиться слишком большими. Interface Builder замедляет работу, и если вы сотрудничаете с другими разработчиками, становится все
+труднее избегать конфликтов. Используйте редактор  `Editor › Refactor To Storyboard`, чтобы разбить ее на более мелкие сцены со ссылками на раскадровку.
+
+Используйте `Cmd + =`, чтобы изменить размер метки, кнопки, изображения и т.д. чтобы соответствовать размеру содержимого
+
+Вы можете просмотреть свой макет на разных устройствах и
+в разных ориентациях в Interface Builder. Получите доступ к предварительному просмотру `Editor › Preview`. Предварительный просмотр происходит намного быстрее, чем запуск симулятора или запуск на устройстве. Используйте `[+]` в левом нижнем углу окна, чтобы добавить устройства.
+
+#### Challenge 4.1 - Nested View Layout
+
+Чтобы сделать высоту одного view в процентах % от высоты другого view, требуется выполнить два шага. Сначала вам нужно создать constraint равной высоты между двумя view. Затем отредактируйте constraint, чтобы изменить
+множитель на требуемую пропорцию
+
 <img alt="image" src="images/auto layout57.jpeg" width = 70%/>
+
+#### Challenge 4.2 - Sibling View Layout
+
+Просто добавляем constraints для каждого view по всем сторонам, и приравниваем heights и все. Выставлять margins, приоритеты и общие настройки это ошибочный путь решения
+
 <img alt="image" src="images/auto layout58.jpeg" width = 70%/>
+
+#### Challenge 4.3 - Proportional Centering
+
+Button “1” is at 0.5 the center of the safe area. Button “2” is at the center. Button “3” is at 1.5 the center of the safe area.
+
 <img alt="image" src="images/auto layout59.jpeg" width = 70%/>
+
+#### Challenge 4.4 Changing Constraints
+
+В storyboard мы задаем одно положение кнопки, затем при ее нажатии задается другое положение и она опускается. 
+
 <img alt="image" src="images/auto layout60.jpeg" width = 70%/>
+
+```swift
+import UIKit
+
+class ViewController: UIViewController {
+    @IBOutlet weak var centerConstraint: NSLayoutConstraint!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+
+    @IBAction func button(_ sender: UIButton) {
+        centerConstraint.constant = 0
+    }
+}
+```
+
+---
+
+### Chapter 5. Creating Constraints In Code
+
 <img alt="image" src="images/auto layout61.jpeg" width = 70%/>
+
+
+
 <img alt="image" src="images/auto layout62.jpeg" width = 70%/>
