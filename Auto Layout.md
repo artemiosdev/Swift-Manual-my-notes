@@ -1,10 +1,33 @@
 ### Modern Auto Layout, Building Adaptive Layouts For iOS 
 
-Layout - расположение; frame - костяк, рамка
+<a id="contents" />Оглавление
+
+- [Appendix.  Main concepts](#appendix)
+- [Глава №2. Layout Before Auto Layout.](#chapter2)
+- [Глава №3. Getting Started With Auto Layout.](#chapter3)
+- [Глава №4. Using Interface Builder.](#chapter4)
+- [Глава №5. Creating Constraints In Code.](#chapter5)
+- [Глава №6. .](#chapter6)
+- [Глава №7. .](#chapter7)
+- [Глава №8. .](#chapter8)
+- [Глава №9. .](#chapter9)
+- [Глава №10. .](#chapter10)
+- [Глава №11. .](#chapter11)
+- [Глава №12. .](#chapter12)
+- [Глава №13. .](#chapter13)
+- [Глава №14. .](#chapter14)
+
+---
+
+[К оглавлению](#contents)
+
+###  <a id="appendix" />  Appendix.  Main concepts
 
 ### Auto Layout Tools
 
 <img alt="image" src="images/auto layout6.jpeg" width = 50%/>
+
+Layout - расположение; frame - рамка
 
 - Update Frames - предупреждает вас, когда положение или
 размер вида на холсте не соответствуют вычисленным значениям автоматической компоновки. На нем оранжевым цветом показаны ограничения на выход из положения. Используйте инструмент чтобы обновить рамки, чтобы обновить выбранные виды до расчетных значений.
@@ -233,7 +256,11 @@ let zeroRect = CGRect.zero // {x 0 y 0 w 0 h 0}
 Если вы хотите узнать размер UIKit или масштабный коэффициент scale factor экрана, используйте `bounds` и `scale` properties of the UIScreen. Свойства `nativeBounds` и `nativeScale` дают вам фактический
 размер пикселя и масштаб scale.
 
-### Chapter 2. Layout Before Auto Layout
+---
+
+[К оглавлению](#contents)
+
+###  <a id="chapter2" /> Глава № 2. Layout Before Auto Layout
 
 <img alt="image" src="images/auto layout1.jpeg" width = 70%/>
 
@@ -1007,7 +1034,11 @@ Identity Inspector RGBView -> class RGBView
 
 <img alt="image" src="images/auto layout28.jpeg" width = 70%/>
 
-### Chapter 3. Getting Started With Auto Layout
+---
+
+[К оглавлению](#contents)
+
+###  <a id="chapter3" /> Глава № 3. Getting Started With Auto Layout
 
 С  Auto Layout вы никогда напрямую не устанавливаете размер и положение view. Вы описываете, каким вы хотите видеть layout, и позволяете автоматической компоновке создавать frames за вас.
 
@@ -1289,7 +1320,9 @@ greenView.trailing == redView.leading - 8.0
 
 ---
 
-### Chapter 4. Using Interface Builder
+[К оглавлению](#contents)
+
+###  <a id="chapter4" /> Глава № 4. Using Interface Builder
 
 #### Constraints Tool
 <img alt="image" src="images/auto layout45.jpeg" width = 50%/>
@@ -1306,11 +1339,11 @@ greenView.trailing == redView.leading - 8.0
 
 Вы можете быстро создать ограничение на холсте Interface Builder, перетащив элемент управления внутри элемента или между двумя элементами:
 
-<img alt="image" src="images/auto layout47.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout47.jpeg" width = 60%/>
 
 #### Control-Dragging In The Document Outline
 
-<img alt="image" src="images/auto layout48.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout48.jpeg" width = 60%/>
 
 Когда вы создаете ограничение на leading, trailing, top or bottom интервал для root view, вы можете выбрать между safe area or margin  root view . Если вы хотите, чтобы constraint распространялось на края root view, вам нужно использовать инспектор атрибутов, чтобы отредактировать ограничение и переключиться с safe area to the superview
 
@@ -1335,11 +1368,11 @@ Don’t try to mix constraints with autoresizing for the same view in Interface 
 
 #### Creating Outlets For Constraints
 
-<img alt="image" src="images/auto layout50.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout50.jpeg" width = 70%/>
 
 You can also create the property yourself in the view controller. Mark it with `@IBOutlet` and then right-click on the view controller in the document outline and drag from the outlet to the constraint:
 
-<img alt="image" src="images/auto layout51.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout51.jpeg" width = 70%/>
 
 Once created there are limited changes you can make to a constraint in your code. You can activate or deactivate it, change the priority, or change the constant:
 
@@ -1361,9 +1394,9 @@ You cannot change the items or attributes involved in the constraint, the relati
 Add a constraint that gives the red and green views equal height:
 1. Control-drag from the red view to the green view (or наоборот) in the canvas or document outline and choose Equal Heights
 
-<img alt="image" src="images/auto layout52.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout52.jpeg" width = 40%/>
 
-<img alt="image" src="images/auto layout54.jpeg" width = 60%/>
+<img alt="image" src="images/auto layout54.jpeg" width = 70%/>
 
 ---
 
@@ -1378,7 +1411,7 @@ Centering The Buttons
 Чтобы выделить объект, когда он находится за стопкой других элементов, удерживайте нажатой клавиши
 `Control + Shift`, а затем щелкните по объекту. Выберите нужный элемент во всплывающем меню, отображающем полный вид иерархии
 
-<img alt="image" src="images/auto layout55.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout55.jpeg" width = 35%/>
 
 Нажмите на вид на холсте, чтобы выбрать его, а затем удерживайте нажатой клавишу `Option`. Наведите указатель мыши на другие виды сцены, чтобы увидеть расстояния между views
 
@@ -1391,7 +1424,7 @@ When creating constraints in the canvas or document outline use the `Shift` key 
 There are some configuration options for the canvas in the Xcode
 `Editor › Canvas` menu:
 
-<img alt="image" src="images/auto layout56.jpeg" width = 40%/>
+<img alt="image" src="images/auto layout56.jpeg" width = 70%/>
 
 Не позволяйте вашим storyboards становиться слишком большими. Interface Builder замедляет работу, и если вы сотрудничаете с другими разработчиками, становится все
 труднее избегать конфликтов. Используйте редактор  `Editor › Refactor To Storyboard`, чтобы разбить ее на более мелкие сцены со ссылками на раскадровку.
@@ -1444,10 +1477,327 @@ class ViewController: UIViewController {
 
 ---
 
-### Chapter 5. Creating Constraints In Code
+[К оглавлению](#contents)
 
-<img alt="image" src="images/auto layout61.jpeg" width = 70%/>
+###  <a id="chapter5" /> Глава № 5. Creating Constraints In Code
 
+Apple gives you three choices when it comes to creating your constraints in code:
+- Use the `NSLayoutConstraint class`.
+- Use the Visual Format Language.
+- Use Layout Anchors.
 
+The old `addConstraint` and `removeConstraint` methods не нужно использовать.
 
-<img alt="image" src="images/auto layout62.jpeg" width = 70%/>
+Pаспространенная ошибка - активировать ограничение между двумя subviews до того, как вы добавите их оба в иерархии представлений. Это вызывает ошибку времени выполнения, потому что нет общего superview, которому принадлежало бы ограничение. Не забудьте добавить оба
+views в одну и ту же иерархию view, прежде чем активировать ограничение.
+
+When you create a constraint in code, it’s inactive by default. Неактивные ограничения не имеют собственного view , поэтому механизм компоновки их не видит. `isActive` property.
+
+`widthConstraint.isActive = true`
+
+Установка `isActive` в значение `true` добавляет ограничение к массиву ограничений ближайшего общего superview views, задействованного в ограничении.
+В этот момент ограничение становится видимым для механизма компоновки при расчете макета.
+Установка `isActive` в значение `false` удаляет ограничение из списка ограничений массивa , и ограничение больше не влияет на макет
+
+`redView.widthAnchor.constraint(equalTo: greenView.widthAnchor).isActive = true`
+
+The `NSLayoutConstraint` class has a better way to activate a group of constraints.
+
+```swift
+NSLayoutConstraint.activate([ redView.widthAnchor.constraint(equalTo: greenView.widthAnchor), redView.heightAnchor.constraint(equalTo: greenView.heightAnchor), // other constraints...
+])
+```
+
+There’s a similar method to deactivate a group of constraints:
+
+```swift
+NSLayoutConstraint.deactivate(constraints)
+```
+
+#### Disabling The Autoresizing Mask
+
+Маска автоматического изменения размера (Autoresizing Mask) view определяет, как изменяются его размер и
+положение при изменении размера superview. Возможно, вы удивитесь, узнав, что под обложкой маска автоматически преобразуется в набор Auto Layout constraints. Если мы не будем осторожны, эти автоматически созданные constraints могут вступить в конфликт с нашими constraints.
+
+When you create a view in code, you need to выключить the mask yourself if you want to add constraints for that view:
+
+```swift
+let myView = UIView()
+myView.translatesAutoresizingMaskIntoConstraints = false
+```
+
+Иначе будет ошибка данного типа
+
+```swift
+Frames[93001:7847043] [LayoutConstraints] Unable to simultaneously satisfy constraints.
+...
+("<NSAutoresizingMaskLayoutConstraint:0x60c0000888e0 h=&-&v=&-& UIView:0x7f846e3135f0.width == 168 (active)>",
+...
+)
+```
+
+#### Creating Constraints With NSLayoutConstraint (не рекомендуется)
+
+Наиболее неприятный способ создания ограничения.
+Использование инициализатора `NSLayoutConstraint`:
+
+```swift
+    NSLayoutConstraint(item: view1,
+    attribute: attr1,
+    relatedBy: relation,
+    toItem: view2,
+    attribute: attr2,
+    multiplier: m,
+    constant: c)
+```
+
+Возвращает неактивное ограничение между двумя элементами (view1 и view2). Ограничение создает связь между атрибутом первого view и атрибутом второго view. Отношение может быть `.equal`, `.lessThanOrEqual` or `.greaterThanOrEqua`, поэтому ограничение является одним из этих отношений:
+
+```swift
+view1.attr1 == view2.attr2 x m + c
+view1.attr1 <= view2.attr2 x m + c
+view1.attr1 >= view2.attr2 x m + c
+```
+
+Если ограничение предназначено для одного элемента, используйте nil, `notAnAttribute` для второго элемента и атрибута:
+
+```swift
+// redView.width == 150.0
+NSLayoutConstraint(item: redView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 150.0)
+```
+
+<img alt="image" src="images/auto layout61.jpeg" width = 50%/>
+
+AppDelegate.swiftl
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        window?.rootViewController = ViewController()
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+```
+
+ViewController.swift
+```swift
+import UIKit
+
+final class ViewController: UIViewController {
+    private let padding: CGFloat = 50.0
+    private let redView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .red
+        return view
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.backgroundColor = .yellow
+        view.addSubview(redView)
+
+        NSLayoutConstraint.activate([
+            // redView.leading == view.leading + padding
+            NSLayoutConstraint(item: redView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: padding),
+
+            // view.trailing == redView.trailing + padding
+            NSLayoutConstraint(item: view!, attribute: .trailing, relatedBy: .equal, toItem: redView, attribute: .trailing, multiplier: 1.0, constant: padding),
+
+            // redView.top == view.top + padding
+            NSLayoutConstraint(item: redView, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: padding),
+
+            // view.bottom = redView.bottom + padding
+            NSLayoutConstraint(item: view!, attribute: .bottom, relatedBy: .equal, toItem: redView, attribute: .bottom, multiplier: 1.0, constant: padding)
+        ])
+    }
+}
+```
+
+`var view: UIView!` опционал, рекомендуется не использовать вообще это старое API
+
+### Visual Format Language (не рекомендуется)
+
+Язык визуального формата (VFL) позволяет вам записывать ограничения, используя строку формата в стиле ASCII-art. Это позволяет вам создать набор constraints более лаконично и визуально. Это не лучше чем обычный инициализатор NSLayoutConstraint выше
+
+To create constraints with VFL you use the `NSLayoutConstraint` class method `constraints(withVisualFormat:options:metrics:views:)`. It returns an array of constraints we can then activate:
+
+```swift
+NSLayoutConstraint.constraints(
+withVisualFormat format: String,
+options opts: NSLayoutFormatOptions = [],
+metrics: [String : Any]?,
+views: [String: Any])
+```
+
+Take a look at the format string: `"H|-(padding)-[redView]-(padding)-|"`. The views всегда заключены в квадратные скобки. Вертикальные полосы ( | ) - это края superview, а -
+ограничение интервала. Константа для интервала указана в круглых скобках и взята из словаря метрик. 
+
+The format `redView(==greenView)` делает высоту красного вида равной высоте зеленого вида
+
+<img alt="image" src="images/auto layout62.jpeg" width = 50%/>
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        window?.rootViewController = ViewController()
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+```
+
+ViewController.swift
+```swift
+import UIKit
+
+final class ViewController: UIViewController {
+    private let redView = UIView.makeView(color: .red)
+    private let greenView = UIView.makeView(color: .green)
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.backgroundColor = .yellow
+        view.addSubview(redView)
+        view.addSubview(greenView)
+
+        /*
+         Build a dictionary of the views we will use when creating
+         constraints. The dictionary keys are the strings we use
+         in the VFL format string when creating the constraints.
+         */
+        let views = [
+            "redView" : redView,
+            "greenView" : greenView
+        ]
+
+        /*
+         Build a dictionary of any magic numbers we use in the visual
+         format string.
+         */
+        let metrics = [
+            "padding" : 50.0,
+            "spacing" : 25.0
+        ]
+
+        /*
+         Create the horizontal constraints that pin the red and green view leading and
+         trailing edges to the root view.
+
+         + The `|` represents the edge of the super view.
+         */
+        let hRedConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(padding)-[redView]-(padding)-|", options: [], metrics: metrics, views: views)
+
+        let hGreenConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(padding)-[greenView]-(padding)-|", options: [], metrics: metrics, views: views)
+
+        /*
+         Create the vertical constraints
+         */
+        let vConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(padding)-[redView(==greenView)]-(spacing)-[greenView]-(padding)-|", options: [], metrics: metrics, views: views)
+
+        let constraints = hRedConstraints + hGreenConstraints + vConstraints
+        NSLayoutConstraint.activate(constraints)
+    }
+}
+
+private extension UIView {
+    static func makeView(color: UIColor) -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = color
+        return view
+    }
+}
+```
+
+### Layout Anchors
+
+The `NSLayoutAnchor` class is a factory class for creating
+`NSLayoutConstraint` objects using a fluent API. Use these
+constraints to programatically define your layout using Auto Layout.
+
+UIView имеет anchor макета для каждого из атрибутов ограничения. Каждый anchor макета является подклассом `NSLayoutAnchor` с методами для непосредственного создания ограничений для других anchors макета того
+же типа.
+Вы не используете класс `NSLayoutAnchor` напрямую. Вместо этого вы используете один из его подклассов в зависимости от того, хотите ли вы создать ограничение по горизонтали, вертикали или размеру
+
+#### Horizontal Constraints
+
+Use layout anchors of type `NSLayoutXAxisAnchor` to create horizontal constraints:
+- `centerXAnchor`
+- `leadingAnchor` and `trailingAnchor`
+- `leftAnchor` and `rightAnchor`
+
+For example, to create a constraint that center aligns two views:
+
+`redView.centerXAnchor.constraint(equalTo: greenView.centerXAnchor)`
+
+Prefer the `leadingAnchor` and `trailingAnchor` over the `leftAnchor` and `rightAnchor`. The leading and trailing anchors are aware of Right-To-Left (RTL) languages and
+flip the interface when necessary.
+
+#### Vertical Constraints
+
+Use layout anchors of type `NSLayoutYAxisAnchor` to create vertical constraints:
+- `centerYAnchor`
+- `bottomAnchor` and `topAnchor`
+- `firstBaselineAnchor` and `lastBaselineAnchor`
+
+Например, чтобы создать constraint, которое помещает верхнюю часть top greenView на 25 пунктов ниже bottom redView:
+
+`greenView.topAnchor.constraint(equalTo: redView.bottomAnchor, constant: 25)`
+
+#### Size Based Constraints
+Use layout anchors of type `NSLayoutDimension` to create size-based constraints:
+- `heightAnchor` and `widthAnchor`
+
+For example, to create a constraint that fixes the width of a view to 50 points:
+
+`redView.widthAnchor.constraint(equalToConstant: 50.0)`
+
+To make the height of redView twice the height of greenView:
+
+`redView.heightAnchor.constraint(equalTo: greenView.heightAnchor, multiplier: 2.0)`
+
+#### Creating Constraints With Layout Anchors
+
+```swift
+// anchor (==, >=, <=) otherAnchor
+anchor.constraint(equalTo:otherAnchor)
+anchor.constraint(greaterThanOrEqualTo:otherAnchor)
+anchor.constraint(lessThanOrEqualTo:otherAnchor)
+
+// anchor == otherAnchor + constant
+anchor.constraint(equalTo:otherAnchor constant:8.0)
+
+// dimensionAnchor == otherDimensionAnchor * multiplier, dimension - размер
+widthAnchor.constraint(equalTo:otherWidthAnchor,
+multiplier:2.0)
+
+// dimensionAnchor == otherDimensionAnchor * multiplier + constant
+widthAnchor.constraint(equalTo:otherWidthAnchor, multiplier:1.0, constant:20.0)
+```
+
+<img alt="image" src="images/auto layout63.jpeg" width = 50%/>
