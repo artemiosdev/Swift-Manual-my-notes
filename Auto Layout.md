@@ -7,7 +7,7 @@
 - [Глава №3. Getting Started With Auto Layout.](#chapter3)
 - [Глава №4. Using Interface Builder.](#chapter4)
 - [Глава №5. Creating Constraints In Code.](#chapter5)
-- [Глава №6. .](#chapter6)
+- [Глава №6. Safe Areas And Layout Margins.](#chapter6)
 - [Глава №7. .](#chapter7)
 - [Глава №8. .](#chapter8)
 - [Глава №9. .](#chapter9)
@@ -1488,6 +1488,26 @@ Apple gives you three choices when it comes to creating your constraints in code
 
 The old `addConstraint` and `removeConstraint` methods не нужно использовать.
 
+#### Ключевые понятия главы
+
+- Add your views to the view hierarchy **before** activating their constraints.
+- Activate and deactivate your constraints. Don’t use the old add and remove constraint methods (`addConstraint` and `removeConstraint`).
+- Use the `NSLayoutConstraint` class methods to activate and deactivate your constraints in batches. It’s faster and you’re less likely to miss setting `isActive` on a constraint:
+
+```swift
+NSLayoutConstraint.activate([
+// constraints
+])
+```
+
+- Using `removeFromSuperview` to remove a view from the view hierarchy also removes any constraints involving that view or any of its subviews.
+- Hiding a view doesn’t deactivate its constraints.
+- Don’t forget to disable the translation of the autoresizing mask into constraints when you create a view in code:
+`translatesAutoresizingMaskIntoConstraints = false`
+- Use **layout anchors** when creating your constraints in code.
+
+---
+
 Pаспространенная ошибка - активировать ограничение между двумя subviews до того, как вы добавите их оба в иерархии представлений. Это вызывает ошибку времени выполнения, потому что нет общего superview, которому принадлежало бы ограничение. Не забудьте добавить оба
 views в одну и ту же иерархию view, прежде чем активировать ограничение.
 
@@ -1504,7 +1524,9 @@ When you create a constraint in code, it’s inactive by default. Неактив
 The `NSLayoutConstraint` class has a better way to activate a group of constraints.
 
 ```swift
-NSLayoutConstraint.activate([ redView.widthAnchor.constraint(equalTo: greenView.widthAnchor), redView.heightAnchor.constraint(equalTo: greenView.heightAnchor), // other constraints...
+NSLayoutConstraint.activate([ redView.widthAnchor.constraint(equalTo: greenView.widthAnchor),
+
+redView.heightAnchor.constraint(equalTo: greenView.heightAnchor), // other constraints...
 ])
 ```
 
@@ -1563,12 +1585,14 @@ view1.attr1 >= view2.attr2 x m + c
 
 ```swift
 // redView.width == 150.0
-NSLayoutConstraint(item: redView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 150.0)
+NSLayoutConstraint(item: redView, attribute: .width, relatedBy: .equal, toItem: nil, 
+
+attribute: .notAnAttribute, multiplier: 1.0, constant: 150.0)
 ```
 
 <img alt="image" src="images/auto layout61.jpeg" width = 50%/>
 
-AppDelegate.swiftl
+AppDelegate.swift
 ```swift
 import UIKit
 
@@ -1576,7 +1600,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, 
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         window?.rootViewController = ViewController()
@@ -1610,16 +1635,20 @@ final class ViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             // redView.leading == view.leading + padding
-            NSLayoutConstraint(item: redView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: padding),
+            NSLayoutConstraint(item: redView, attribute: .leading, relatedBy: .equal, toItem: view, 
+            attribute: .leading, multiplier: 1.0, constant: padding),
 
             // view.trailing == redView.trailing + padding
-            NSLayoutConstraint(item: view!, attribute: .trailing, relatedBy: .equal, toItem: redView, attribute: .trailing, multiplier: 1.0, constant: padding),
+            NSLayoutConstraint(item: view!, attribute: .trailing, relatedBy: .equal, toItem: redView, 
+            attribute: .trailing, multiplier: 1.0, constant: padding),
 
             // redView.top == view.top + padding
-            NSLayoutConstraint(item: redView, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: padding),
+            NSLayoutConstraint(item: redView, attribute: .top, relatedBy: .equal, toItem: view, 
+            attribute: .top, multiplier: 1.0, constant: padding),
 
             // view.bottom = redView.bottom + padding
-            NSLayoutConstraint(item: view!, attribute: .bottom, relatedBy: .equal, toItem: redView, attribute: .bottom, multiplier: 1.0, constant: padding)
+            NSLayoutConstraint(item: view!, attribute: .bottom, relatedBy: .equal, toItem: redView, 
+            attribute: .bottom, multiplier: 1.0, constant: padding)
         ])
     }
 }
@@ -1657,7 +1686,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, 
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         window?.rootViewController = ViewController()
@@ -1710,14 +1740,18 @@ final class ViewController: UIViewController {
 
          + The `|` represents the edge of the super view.
          */
-        let hRedConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(padding)-[redView]-(padding)-|", options: [], metrics: metrics, views: views)
+        let hRedConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(padding)-[redView]-(padding)-|",
+        options: [], metrics: metrics, views: views)
 
-        let hGreenConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(padding)-[greenView]-(padding)-|", options: [], metrics: metrics, views: views)
+        let hGreenConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(padding)-[greenView]-(padding)-|",
+        options: [], metrics: metrics, views: views)
 
         /*
          Create the vertical constraints
          */
-        let vConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(padding)-[redView(==greenView)]-(spacing)-[greenView]-(padding)-|", options: [], metrics: metrics, views: views)
+        let vConstraints = NSLayoutConstraint.constraints(withVisualFormat: 
+        "V:|-(padding)-[redView(==greenView)]-(spacing)-[greenView]-(padding)-|", 
+        options: [], metrics: metrics, views: views)
 
         let constraints = hRedConstraints + hGreenConstraints + vConstraints
         NSLayoutConstraint.activate(constraints)
@@ -1800,4 +1834,494 @@ multiplier:2.0)
 widthAnchor.constraint(equalTo:otherWidthAnchor, multiplier:1.0, constant:20.0)
 ```
 
+Несколько удобных методов, которые используют
+стандартный системный интервал (standard system spacing) вместо constant. Для горизонтальных ограничений
+существует три метода определения стандартного системного интервала после anchor:
+
+```swift
+constraint(equalToSystemSpacingAfter anchor:multiplier:)
+
+constraint(greaterThanOrEqualToSystemSpacingAfter anchor:multiplier:)
+
+constraint(lessThanOrEqualToSystemSpacingAfter
+anchor:multiplier:)
+```
+
+The multiplier применяется к системному интервалу spacing. Например, расположить greenView горизонтально с интервалом, в два раза превышающим системный, после redView
+
+```swift
+greenView.leadingAnchor.constraint(equalToSystemSpacingAfter: 
+redView.trailingAnchor, multiplier: 2.0)
+```
+
+Аналогичный набор методов охватывает вертикальные ограничения, создающие standard spacing ниже anchor. Например, blueView со стандартным интервалом ниже redView:
+
+```swift
+blueView.topAnchor.constraint(equalToSystemSpacingBelow:
+redView.bottomAnchor, multiplier: 1.0)
+````
+
+Вы можете создавать ограничения только между anchors одного и того же типа.  Компилятор проверяет это, чтобы предотвратить создание вами бессмысленных constraints. Например, создание constraint между leading anchor and a bottom anchor is an error:
+
+```swift
+redView.leadingAnchor.constraint(equalTo:
+view.bottomAnchor)
+```
+
+```bash
+Cannot convert value of type
+'NSLayoutAnchor<NSLayoutYAxisAnchor>' 
+to expected argument type 'NSLayoutAnchor<NSLayoutXAxisAnchor>'
+````
+
+#### A Layout Anchor Example
+
+<img alt="image" src="images/auto layout62.jpeg" width = 50%/>
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        window?.rootViewController = ViewController()
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+````
+
+ViewController.swift
+```swift
+import UIKit
+
+final class ViewController: UIViewController {
+    private let padding: CGFloat = 50.0
+    private let spacing: CGFloat = 25.0
+
+    private let redView = UIView.makeView(color: .red)
+    private let greenView = UIView.makeView(color: .green)
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.backgroundColor = .yellow
+        view.addSubview(redView)
+        view.addSubview(greenView)
+
+        NSLayoutConstraint.activate([
+            redView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            greenView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+
+            view.trailingAnchor.constraint(equalTo: redView.trailingAnchor, constant: padding),
+            view.trailingAnchor.constraint(equalTo: greenView.trailingAnchor, constant: padding),
+
+            redView.topAnchor.constraint(equalTo: view.topAnchor, constant: padding),
+            greenView.topAnchor.constraint(equalTo: redView.bottomAnchor, constant: spacing),
+
+            view.bottomAnchor.constraint(equalTo: greenView.bottomAnchor, constant: padding),
+
+            redView.heightAnchor.constraint(equalTo: greenView.heightAnchor)
+            ])
+    }
+}
+
+private extension UIView {
+    static func makeView(color: UIColor) -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = color
+        return view
+    }
+}
+````
+
+---
+
+#### Какой способ добавления constraints выбрать?
+
+**NSLayoutConstaint** наиболее подробный и наименее читаемым способом создания constraints. Здесь нет безопасности типов, поэтому легко допустить ошибки.
+
+**Visual Format Language** более лаконичен и удобочитаем, но необходимость настройки словарей view и метрик сопряжена с трудностями. Apple не обновляет его, и не расширила его для поддержки новых концепций, таких как поля макета и безопасная зона.
+
+**Layout anchors** самый безопасный и удобный формат. Рекомендуется
+
+#### Constraints In A Custom View. Example app
+
+<img alt="image" src="images/auto layout62.jpeg" width = 50%/>
+
+Name the our custom view class StopGoView, make sure it’s a subclass of `UIView`.
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        window?.rootViewController = ViewController()
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+````
+
+ViewController.swift
+```swift
+import UIKit
+
+final class ViewController: UIViewController {
+    private let stopGoView: StopGoView = {
+        let view = StopGoView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .yellow
+        return view
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.backgroundColor = .yellow
+        view.addSubview(stopGoView)
+
+        NSLayoutConstraint.activate([
+            stopGoView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stopGoView.topAnchor.constraint(equalTo: view.topAnchor),
+            stopGoView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            stopGoView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+    }
+}
+````
+
+StopGoView.swift
+```swift
+import UIKit
+
+final class StopGoView: UIView {
+    private let padding: CGFloat = 50.0
+    private let spacing: CGFloat = 25.0
+
+    private let redView = UIView.makeView(color: .red)
+    private let greenView = UIView.makeView(color: .green)
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+
+    private func setupView() {
+        addSubview(redView)
+        addSubview(greenView)
+
+        NSLayoutConstraint.activate([
+            redView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            greenView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+
+            trailingAnchor.constraint(equalTo: redView.trailingAnchor, constant: padding),
+            trailingAnchor.constraint(equalTo: greenView.trailingAnchor, constant: padding),
+
+            redView.topAnchor.constraint(equalTo: topAnchor, constant: padding),
+            greenView.topAnchor.constraint(equalTo: redView.bottomAnchor, constant: spacing),
+            bottomAnchor.constraint(equalTo: greenView.bottomAnchor, constant: padding),
+
+            redView.heightAnchor.constraint(equalTo: greenView.heightAnchor)
+            ])
+    }
+}
+
+private extension UIView {
+    static func makeView(color: UIColor) -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = color
+        return view
+    }
+}
+````
+
+---
+
+#### Challenge 5.1 Nested View Layout
+
 <img alt="image" src="images/auto layout63.jpeg" width = 50%/>
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        window?.rootViewController = ViewController()
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+````
+
+ViewController.swift
+```swift
+import UIKit
+
+final class ViewController: UIViewController {
+    private let externalPadding: CGFloat = 50.0
+    private let internalSpacing: CGFloat = 25.0
+
+    private let redView = UIView.makeView(color: .red)
+    private let greenView = UIView.makeView(color: .green)
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.backgroundColor = .yellow
+        view.addSubview(greenView)
+        greenView.addSubview(redView)
+
+        NSLayoutConstraint.activate([
+            greenView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: externalPadding),
+            greenView.topAnchor.constraint(equalTo: view.topAnchor, constant: externalPadding),
+            view.bottomAnchor.constraint(equalTo: greenView.bottomAnchor, constant: externalPadding),
+            view.trailingAnchor.constraint(equalTo: greenView.trailingAnchor, constant: externalPadding),
+
+            redView.leadingAnchor.constraint(equalTo: greenView.leadingAnchor, constant: internalSpacing),
+            greenView.trailingAnchor.constraint(equalTo: redView.trailingAnchor, constant: internalSpacing),
+            redView.centerYAnchor.constraint(equalTo: greenView.centerYAnchor),
+            redView.heightAnchor.constraint(equalTo: greenView.heightAnchor, multiplier: 0.2)
+            ])
+    }
+}
+
+private extension UIView {
+    static func makeView(color: UIColor) -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = color
+        return view
+    }
+}
+````
+
+---
+
+#### Challenge 5.2 The Tile View
+
+<img alt="image" src="images/auto layout64.jpeg" width = 50%/>
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        window?.rootViewController = ViewController()
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+```
+
+ViewController.swift
+```swift
+import UIKit
+
+final class ViewController: UIViewController {
+    private let padding: CGFloat = 50.0
+    // for height 25%
+    private let tileProportion: CGFloat = 0.25
+
+    private let tileView: TileView = {
+        let view = TileView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .green
+        return view
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.backgroundColor = .yellow
+        view.addSubview(tileView)
+
+        NSLayoutConstraint.activate([
+            tileView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            tileView.topAnchor.constraint(equalTo: view.topAnchor, constant: padding),
+            view.trailingAnchor.constraint(equalTo: tileView.trailingAnchor, constant: padding),
+            tileView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: tileProportion)
+            ])
+    }
+}
+```
+
+TileView.swift
+```swift
+import UIKit
+
+final class TileView: UIView {
+    private let padding: CGFloat = 25.0
+
+    private let blueView = UIView.makeView(color: .blue)
+    private let redView = UIView.makeView(color: .red)
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+
+    private func setupView() {
+        addSubview(blueView)
+        addSubview(redView)
+
+        NSLayoutConstraint.activate([
+            blueView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            blueView.topAnchor.constraint(equalTo: topAnchor, constant: padding),
+            redView.topAnchor.constraint(equalTo: topAnchor, constant: padding),
+            trailingAnchor.constraint(equalTo: redView.trailingAnchor, constant: padding),
+            bottomAnchor.constraint(equalTo: redView.bottomAnchor, constant: padding),
+            bottomAnchor.constraint(equalTo: blueView.bottomAnchor, constant: padding),
+
+            redView.leadingAnchor.constraint(equalTo: blueView.trailingAnchor, constant: padding),
+            redView.widthAnchor.constraint(equalTo: blueView.widthAnchor)
+            ])
+    }
+}
+
+private extension UIView {
+    static func makeView(color: UIColor) -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = color
+        return view
+    }
+}
+```
+
+---
+
+[К оглавлению](#contents)
+
+###  <a id="chapter6" />Глава 6. Safe Areas And Layout Margins
+
+```swift
+
+```
+
+```swift
+
+```
+
+```swift
+
+```
+<img alt="image" src="images/auto layout65.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout66.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout67.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout68.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout69.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout70.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout71.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout72.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout73.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout74.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout75.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout76.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout77.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout78.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout79.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout80.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout81.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout82.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout83.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout84.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout85.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout86.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout87.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout88.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout89.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout90.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout91.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout92.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout93.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout94.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout95.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout96.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout97.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout98.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout99.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout100.jpeg" width = 50%/>
