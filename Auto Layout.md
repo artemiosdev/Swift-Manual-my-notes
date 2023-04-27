@@ -1324,24 +1324,24 @@ greenView.trailing == redView.leading - 8.0
 
 ###  <a id="chapter4" /> Глава № 4. Using Interface Builder
 
-#### Constraints Tool
+### Constraints Tool
 <img alt="image" src="images/auto layout45.jpeg" width = 50%/>
 
 В каждом из полей с интервалами есть выпадающее меню, в котором вы можете выбрать один из возможных видов соседей. При создании интервала между двумя дочерними видами вы также можете выбрать использование “standard” интервала.
 
-#### Align Tool
+### Align Tool
 
 Например, чтобы отцентрировать три кнопки по горизонтали в желтом superview.
 
 <img alt="image" src="images/auto layout46.jpeg" width = 50%/>
 
-#### Control-Dragging In The Canvas
+### Control-Dragging In The Canvas
 
 Вы можете быстро создать ограничение на холсте Interface Builder, перетащив элемент управления внутри элемента или между двумя элементами:
 
 <img alt="image" src="images/auto layout47.jpeg" width = 60%/>
 
-#### Control-Dragging In The Document Outline
+### Control-Dragging In The Document Outline
 
 <img alt="image" src="images/auto layout48.jpeg" width = 60%/>
 
@@ -1366,7 +1366,7 @@ Don’t try to mix constraints with autoresizing for the same view in Interface 
 4. Interface Builder не включает placeholder constraints в созданное вами приложение. Вы можете использовать их, чтобы избежать предупреждений Interface Builder об отсутствующих constraints, которые вы хотите добавить во время выполнения.
 5. Снимите флажок “Installed” для constraints, которые вы хотите активировать во время выполнения, или установите только для некоторых вариантов характеристик. 
 
-#### Creating Outlets For Constraints
+### Creating Outlets For Constraints
 
 <img alt="image" src="images/auto layout50.jpeg" width = 70%/>
 
@@ -1406,7 +1406,7 @@ Centering The Buttons
 
 ---
 
-#### Полезный функционал 
+### Полезный функционал 
 
 Чтобы выделить объект, когда он находится за стопкой других элементов, удерживайте нажатой клавиши
 `Control + Shift`, а затем щелкните по объекту. Выберите нужный элемент во всплывающем меню, отображающем полный вид иерархии
@@ -1434,26 +1434,26 @@ There are some configuration options for the canvas in the Xcode
 Вы можете просмотреть свой макет на разных устройствах и
 в разных ориентациях в Interface Builder. Получите доступ к предварительному просмотру `Editor › Preview`. Предварительный просмотр происходит намного быстрее, чем запуск симулятора или запуск на устройстве. Используйте `[+]` в левом нижнем углу окна, чтобы добавить устройства.
 
-#### Challenge 4.1 - Nested View Layout
+### Challenge 4.1 - Nested View Layout
 
 Чтобы сделать высоту одного view в процентах % от высоты другого view, требуется выполнить два шага. Сначала вам нужно создать constraint равной высоты между двумя view. Затем отредактируйте constraint, чтобы изменить
 множитель на требуемую пропорцию
 
 <img alt="image" src="images/auto layout57.jpeg" width = 70%/>
 
-#### Challenge 4.2 - Sibling View Layout
+### Challenge 4.2 - Sibling View Layout
 
 Просто добавляем constraints для каждого view по всем сторонам, и приравниваем heights и все. Выставлять margins, приоритеты и общие настройки это ошибочный путь решения
 
 <img alt="image" src="images/auto layout58.jpeg" width = 70%/>
 
-#### Challenge 4.3 - Proportional Centering
+### Challenge 4.3 - Proportional Centering
 
 Button “1” is at 0.5 the center of the safe area. Button “2” is at the center. Button “3” is at 1.5 the center of the safe area.
 
 <img alt="image" src="images/auto layout59.jpeg" width = 70%/>
 
-#### Challenge 4.4 Changing Constraints
+### Challenge 4.4 Changing Constraints
 
 В storyboard мы задаем одно положение кнопки, затем при ее нажатии задается другое положение и она опускается. 
 
@@ -1488,7 +1488,7 @@ Apple gives you three choices when it comes to creating your constraints in code
 
 The old `addConstraint` and `removeConstraint` methods не нужно использовать.
 
-#### Ключевые понятия главы
+### Ключевые понятия главы
 
 - Add your views to the view hierarchy **before** activating their constraints.
 - Activate and deactivate your constraints. Don’t use the old add and remove constraint methods (`addConstraint` and `removeConstraint`).
@@ -1536,7 +1536,7 @@ There’s a similar method to deactivate a group of constraints:
 NSLayoutConstraint.deactivate(constraints)
 ```
 
-#### Disabling The Autoresizing Mask
+### Disabling The Autoresizing Mask
 
 Маска автоматического изменения размера (Autoresizing Mask) view определяет, как изменяются его размер и
 положение при изменении размера superview. Возможно, вы удивитесь, узнав, что под обложкой маска автоматически преобразуется в набор Auto Layout constraints. Если мы не будем осторожны, эти автоматически созданные constraints могут вступить в конфликт с нашими constraints.
@@ -1558,7 +1558,7 @@ Frames[93001:7847043] [LayoutConstraints] Unable to simultaneously satisfy const
 )
 ```
 
-#### Creating Constraints With NSLayoutConstraint (не рекомендуется)
+### Creating Constraints With NSLayoutConstraint (не рекомендуется)
 
 Наиболее неприятный способ создания ограничения.
 Использование инициализатора `NSLayoutConstraint`:
@@ -1778,7 +1778,7 @@ UIView имеет anchor макета для каждого из атрибут�
 же типа.
 Вы не используете класс `NSLayoutAnchor` напрямую. Вместо этого вы используете один из его подклассов в зависимости от того, хотите ли вы создать ограничение по горизонтали, вертикали или размеру
 
-#### Horizontal Constraints
+### Horizontal Constraints
 
 Use layout anchors of type `NSLayoutXAxisAnchor` to create horizontal constraints:
 - `centerXAnchor`
@@ -1792,7 +1792,7 @@ For example, to create a constraint that center aligns two views:
 Prefer the `leadingAnchor` and `trailingAnchor` over the `leftAnchor` and `rightAnchor`. The leading and trailing anchors are aware of Right-To-Left (RTL) languages and
 flip the interface when necessary.
 
-#### Vertical Constraints
+### Vertical Constraints
 
 Use layout anchors of type `NSLayoutYAxisAnchor` to create vertical constraints:
 - `centerYAnchor`
@@ -1803,7 +1803,7 @@ Use layout anchors of type `NSLayoutYAxisAnchor` to create vertical constraints:
 
 `greenView.topAnchor.constraint(equalTo: redView.bottomAnchor, constant: 25)`
 
-#### Size Based Constraints
+### Size Based Constraints
 Use layout anchors of type `NSLayoutDimension` to create size-based constraints:
 - `heightAnchor` and `widthAnchor`
 
@@ -1815,7 +1815,7 @@ To make the height of redView twice the height of greenView:
 
 `redView.heightAnchor.constraint(equalTo: greenView.heightAnchor, multiplier: 2.0)`
 
-#### Creating Constraints With Layout Anchors
+### Creating Constraints With Layout Anchors
 
 ```swift
 // anchor (==, >=, <=) otherAnchor
@@ -1874,7 +1874,7 @@ Cannot convert value of type
 to expected argument type 'NSLayoutAnchor<NSLayoutXAxisAnchor>'
 ````
 
-#### A Layout Anchor Example
+### A Layout Anchor Example
 
 <img alt="image" src="images/auto layout62.jpeg" width = 50%/>
 
@@ -1947,7 +1947,7 @@ private extension UIView {
 
 ---
 
-#### Какой способ добавления constraints выбрать?
+### Какой способ добавления constraints выбрать?
 
 **NSLayoutConstaint** наиболее подробный и наименее читаемым способом создания constraints. Здесь нет безопасности типов, поэтому легко допустить ошибки.
 
@@ -1955,7 +1955,7 @@ private extension UIView {
 
 **Layout anchors** самый безопасный и удобный формат. Рекомендуется
 
-#### Constraints In A Custom View. Example app
+### Constraints In A Custom View. Example app
 
 <img alt="image" src="images/auto layout62.jpeg" width = 50%/>
 
@@ -2063,7 +2063,7 @@ private extension UIView {
 
 ---
 
-#### Challenge 5.1 Nested View Layout
+### Challenge 5.1 Nested View Layout
 
 <img alt="image" src="images/auto layout63.jpeg" width = 50%/>
 
@@ -2132,7 +2132,7 @@ private extension UIView {
 
 ---
 
-#### Challenge 5.2 The Tile View
+### Challenge 5.2 The Tile View
 
 <img alt="image" src="images/auto layout64.jpeg" width = 50%/>
 
@@ -2243,20 +2243,135 @@ private extension UIView {
 
 ###  <a id="chapter6" />Глава 6. Safe Areas And Layout Margins
 
-```swift
+### Safe Area Layout Guide
 
+Apple added safe area layout guides in iOS 11 to define a rectangle safe for you to show content. The status, navigation, and tab bars never не перекрывают the safe area.
+
+Example: [iPhone 14 Screen Sizes](https://useyourloaf.com/blog/iphone-14-screen-sizes/)
+
+<img alt="image" src="images/iPhone 14 Pro Max.jpeg" width = 50%/>
+
+
+<img alt="image" src="images/iPhone 14.jpeg" width = 50%/>
+
+The safe area layout guide is a property of the view. It’s a UILayoutGuide with a layoutFrame and a set of layout anchors that mark out the safe area of the view. В общем, вы хотите сохранить свой контент в безопасной зоне. При использовании Auto Layout вы создаете свои ограничения для привязок layout anchors. Например, чтобы привязать leading and trailing edges краям безопасной области safe area of a view:
+
+```swift
+let guide = view.safeAreaLayoutGuide
+redView.leadingAnchor.constraint(equalTo: guide.leadingAnchor)
+redView.trailingAnchor.constraint(equalTo:
+guide.trailingAnchor)
 ```
 
-```swift
-
-```
+The `safeAreaInsets` property of UIView дает вам размер безопасной области, вставленной от края view. Если view полностью находится внутри безопасной области, в нем нет вставок.
 
 ```swift
-
+// UIEdgeInsets
+let safeInsets = view.safeAreaInsets
 ```
+
+View должно быть загружено и выведено на экран, чтобы установить его безопасную область (поэтому не полагайтесь на вставки в `viewDidLoad`). Вы не можете изменить руководство по компоновке безопасной зоны (safe area
+layout) или вставки безопасной зоны (safe area insets). Чтобы увеличить размер безопасной области для view controller, используйте свойство `additionalSafeAreaInsets`. Например, увеличить верхнюю вставку, чтобы создать пользовательскую панель инструментов-toolbar:
+
+```swift
+additionalSafeAreaInsets = UIEdgeInsets(top: toolbarHeight, left: 0, bottom: 0, right: 0)
+```
+
+If your view controller needs to know when the safe area changes use the view controller method `viewSafeAreaInsetsDidChange()` or in a custom view use `safeAreaInsetsDidChange()`
+
+### Using The Safe Area With Interface Builder 
+
 <img alt="image" src="images/auto layout65.jpeg" width = 50%/>
 
+You can also control-drag diagonally in the canvas from the red
+view to the yellow root view.
+
+В режиме радактирования constraint можно сменить на superview игнорируя рамки safe area
+
+### Using The Safe Area In Code
+
 <img alt="image" src="images/auto layout66.jpeg" width = 50%/>
+
+The safe area layout guide is a property of the view
+`let guide = view.safeAreaLayoutGuide`
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        let rootViewController = ViewController()
+        rootViewController.title = NSLocalizedString("Title", comment: "Title")
+        let navigationController = UINavigationController(rootViewController: rootViewController)
+        window?.rootViewController = navigationController
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+```
+
+ViewController.swift
+```swift
+import UIKit
+
+final class ViewController: UIViewController {
+    private let externalPadding: CGFloat = 50.0
+    private let internalSpacing: CGFloat = 25.0
+
+    private let redView = UIView.makeView(color: .red)
+    private let greenView = UIView.makeView(color: .green)
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.backgroundColor = .yellow
+        view.addSubview(redView)
+        view.addSubview(greenView)
+
+        let guide = view.safeAreaLayoutGuide
+        NSLayoutConstraint.activate([
+            redView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: externalPadding),
+            greenView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: externalPadding),
+
+            guide.trailingAnchor.constraint(equalTo: redView.trailingAnchor, constant: externalPadding),
+            guide.trailingAnchor.constraint(equalTo: greenView.trailingAnchor, constant: externalPadding),
+
+            redView.topAnchor.constraint(equalTo: guide.topAnchor, constant: externalPadding),
+            greenView.topAnchor.constraint(equalTo: redView.bottomAnchor, constant: internalSpacing),
+
+            guide.bottomAnchor.constraint(equalTo: greenView.bottomAnchor, constant: externalPadding),
+
+            redView.heightAnchor.constraint(equalTo: greenView.heightAnchor)
+            ])
+    }
+}
+
+private extension UIView {
+    static func makeView(color: UIColor) -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = color
+        return view
+    }
+}
+```
+
+
+```swift
+
+```
+
+
+
 
 <img alt="image" src="images/auto layout67.jpeg" width = 50%/>
 
