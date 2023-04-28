@@ -2065,7 +2065,7 @@ private extension UIView {
 
 ### Challenge 5.1 Nested View Layout
 
-<img alt="image" src="images/auto layout63.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout63.jpeg" width = 60%/>
 
 AppDelegate.swift
 ```swift
@@ -2281,7 +2281,7 @@ If your view controller needs to know when the safe area changes use the view co
 
 ### Using The Safe Area With Interface Builder 
 
-<img alt="image" src="images/auto layout65.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout65.jpeg" width = 70%/>
 
 You can also control-drag diagonally in the canvas from the red
 view to the yellow root view.
@@ -2290,7 +2290,7 @@ view to the yellow root view.
 
 ### Using The Safe Area In Code
 
-<img alt="image" src="images/auto layout66.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout66.jpeg" width = 60%/>
 
 The safe area layout guide is a property of the view
 `let guide = view.safeAreaLayoutGuide`
@@ -2303,7 +2303,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, 
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         let rootViewController = ViewController()
@@ -2365,17 +2366,142 @@ private extension UIView {
 }
 ```
 
+### Проверка наличия safe area
 
+Плохая новость, если вы создаете свой макет в коде, заключается в том, что вам нужно самостоятельно справиться с этим резервным вариантом, проверив доступность. Давайте изменим для нашего последнего проекта на iOS 9
+
+Мы используем руководство safe area layout guide, которое недоступно до iOS 11. Следующая строка кода больше не будет компилироваться:
+
+`let guide = view.safeAreaLayoutGuide`
+
+Чтобы исправить это, мы можем протестировать доступность iOS 11 перед использованием
+safe area layout guide. В противном случае мы возвращаемся к созданию ограничений с помощью верхних и нижних направляющих компоновки (устаревшие свойства, для старых версий ios).
+
+Example:
 ```swift
+if #available(iOS 11.0, *) {
+  // Running iOS 11 OR NEWER
+} else {
+  // Earlier version of iOS
+}
 
+// or
+if #available(iOS 11, *) {
+let guide = view.safeAreaLayoutGuide
+  // Create constraints using safe area
+} else {
+  // fallback to top and bottom layout guides
+  // and leading and trailing edges.
+}
 ```
 
+UIViewController+SafeAnchor.swift. Вычисляются доступные constraints и далее в ViewController.swift они будут применены в `NSLayoutConstraint.activate([ ...])`
 
+```swift
+import UIKit
 
+@available(iOS 7.0, tvOS 9.0, *)
+public extension UIViewController {
+    var safeTopAnchor: NSLayoutYAxisAnchor {
+        if #available(iOS 11, *) {
+            return view.safeAreaLayoutGuide.topAnchor
+        } else {
+            return topLayoutGuide.bottomAnchor
+        }
+    }
+
+    var safeBottomAnchor: NSLayoutYAxisAnchor {
+        if #available(iOS 11, *) {
+            return view.safeAreaLayoutGuide.bottomAnchor
+        } else {
+            return bottomLayoutGuide.topAnchor
+        }
+    }
+
+    var safeLeadingAnchor: NSLayoutXAxisAnchor {
+        if #available(iOS 11, *) {
+            return view.safeAreaLayoutGuide.leadingAnchor
+        } else {
+            return view.leadingAnchor
+        }
+    }
+
+    var safeTrailingAnchor: NSLayoutXAxisAnchor {
+        if #available(iOS 11, *) {
+            return view.safeAreaLayoutGuide.trailingAnchor
+        } else {
+            return view.trailingAnchor
+        }
+    }
+}
+```
+
+ViewController.swift
+
+```swift
+import UIKit
+
+final class ViewController: UIViewController {
+    private let externalPadding: CGFloat = 50.0
+    private let internalSpacing: CGFloat = 25.0
+
+    private let redView = UIView.makeView(color: .red)
+    private let greenView = UIView.makeView(color: .green)
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.backgroundColor = .yellow
+        view.addSubview(redView)
+        view.addSubview(greenView)
+
+        NSLayoutConstraint.activate([
+            redView.topAnchor.constraint(equalTo: safeTopAnchor, constant: externalPadding),
+            safeBottomAnchor.constraint(equalTo: greenView.bottomAnchor, constant: externalPadding),
+            redView.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: externalPadding),
+            greenView.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: externalPadding),
+            safeTrailingAnchor.constraint(equalTo: redView.trailingAnchor, constant: externalPadding),
+            safeTrailingAnchor.constraint(equalTo: greenView.trailingAnchor, constant: externalPadding),
+            greenView.topAnchor.constraint(equalTo: redView.bottomAnchor, constant: internalSpacing),
+            redView.heightAnchor.constraint(equalTo: greenView.heightAnchor)
+            ])
+    }
+}
+
+private extension UIView {
+    static func makeView(color: UIColor) -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = color
+        return view
+    }
+}
+```
+
+<img alt="image" src="images/auto layout66.jpeg" width = 50%/>
+
+### Layout Margins
+
+The `layoutMarginsGuide` property of a view is a layout guide with the usual set of layout anchors for creating constraints with the margin (краям/полям) of the view. 
+
+Благодаря Shift можно выбрать несколько constraints, удерживая клавишу Option мы переключаем значения constraints на значение с margins и выбираем нужные
 
 <img alt="image" src="images/auto layout67.jpeg" width = 50%/>
 
 <img alt="image" src="images/auto layout68.jpeg" width = 50%/>
+
+You can отключить safe area относительные margins for a view with the Size Inspector in Interface Builder. The default setting is enabled "Safe Area Relative Margins"
+
+In code use the `insetsLayoutMarginsFromSafeArea` property of the view:
+```swift
+if #available(iOS 11, *) {
+    // default is true
+    view.insetsLayoutMarginsFromSafeArea = false
+}
+```
 
 <img alt="image" src="images/auto layout69.jpeg" width = 50%/>
 
