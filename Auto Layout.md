@@ -1887,7 +1887,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, 
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         window?.rootViewController = ViewController()
@@ -1969,7 +1970,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, 
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         window?.rootViewController = ViewController()
@@ -2075,7 +2077,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, 
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         window?.rootViewController = ViewController()
@@ -2144,7 +2147,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, 
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         window?.rootViewController = ViewController()
@@ -2493,7 +2497,7 @@ The `layoutMarginsGuide` property of a view is a layout guide with the usual set
 
 <img alt="image" src="images/auto layout68.jpeg" width = 50%/>
 
-You can отключить safe area относительные margins for a view with the Size Inspector in Interface Builder. The default setting is enabled "Safe Area Relative Margins"
+Ты можешь отключить safe area относительные margins for a view with the Size Inspector in Interface Builder. The default setting is enabled "Safe Area Relative Margins"
 
 In code use the `insetsLayoutMarginsFromSafeArea` property of the view:
 ```swift
@@ -2503,14 +2507,312 @@ if #available(iOS 11, *) {
 }
 ```
 
+### Changing The Size Of Margins
+A new `UIView` has default layout margins by 8 points on
+all sides. You can change the default margin for a view using the size inspector in Interface Builder "Layout Margins"
+
+You have two choices depending on whether you need to deploy to targets earlier than iOS 11 - “Fixed” or “Language Directional”
+
+If you need to support iOS 10 or earlier use the “Fixed” layout margins to set left, top, right and bottom insets (`UIEdgeInsets`)
+
+If your minimum deployment target is iOS 11 use the “Language Directional” layout margins which replace the left and right insets with leading and trailing insets (`NSDirectionalEdgeInsets`)
+
+example with Interface Builder
+
 <img alt="image" src="images/auto layout69.jpeg" width = 50%/>
+
+### Changing The Root View Margins (iOS 11)
+
+В отличие от других views, система управляет margins of a view controller’s root view. По умолчанию он устанавливает минимальные левое и правое поля 16 или 20 точек в зависимости от ширины view. Верхнее и нижнее поля
+по умолчанию равны нулю.
+
+Начиная с iOS 11, вы можете изменять layout margins в root view и контролировать, устанавливает ли система minimum margin. Свойство `systemMinimumLayoutMargins` view controller задает минимальные системные поля:
+
+```swift
+// iPhone X (iOS 11) portrait
+print(systemMinimumLayoutMargins)
+NSDirectionalEdgeInsets(top: 0.0, leading: 16.0, bottom: 0.0, trailing: 16.0)
+```
+
+Set `viewRespectsSystemMinimumLayoutMargins` to false in the view controller if you want a margin less than the system minimum. 
+
+```swift
+if #available(iOS 11, *) {
+    viewRespectsSystemMinimumLayoutMargins = false
+    view.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0.0, leading: 8.0, bottom: 0.0, trailing: 8.0)
+}
+```
+
+### Using Margins In Programmatic Layouts
 
 <img alt="image" src="images/auto layout70.jpeg" width = 50%/>
 
-<img alt="image" src="images/auto layout71.jpeg" width = 50%/>
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        window?.rootViewController = ViewController()
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+```
+
+ViewController.swift
+```swift
+import UIKit
+
+final class ViewController: UIViewController {
+// внутреннее поле в red view
+    private let margin: CGFloat = 50.0
+
+    private let nestedView: NestedView = {
+        let view = NestedView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .red
+        return view
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.backgroundColor = .yellow
+        view.addSubview(nestedView)
+        changeNestedMargins(inset: margin)
+
+        NSLayoutConstraint.activate([
+            nestedView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            nestedView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            nestedView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+            nestedView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor)
+            ])
+    }
+
+    private func changeNestedMargins(inset: CGFloat) {
+        nestedView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: inset, leading: inset, bottom: inset, trailing: inset)
+    }
+}
+
+    /* or for support ios 9 and early version
+    private func changeNestedMargins(inset: CGFloat) {
+        if #available(iOS 11, *) {
+            nestedView.directionalLayoutMargins =
+            NSDirectionalEdgeInsets(top: inset, leading: inset,
+                                    bottom: inset, trailing: inset)
+        } else {
+            nestedView.layoutMargins = UIEdgeInsets(top: inset,
+                                                    left: inset, bottom: inset, right: inset)
+        }
+    }
+     */
+```
+
+NestedView.swift
+```swift
+import UIKit
+
+final class NestedView: UIView {
+    var nestedColor: UIColor = .green {
+        didSet {
+            nestedView.backgroundColor = nestedColor
+        }
+    }
+
+    private lazy var nestedView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = nestedColor
+        return view
+    }()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+
+    private func setupView() {
+        addSubview(nestedView)
+        NSLayoutConstraint.activate([
+            nestedView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            nestedView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            nestedView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+            nestedView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor)
+            ])
+    }
+}
+```
+
+### Layout Guides
+
+Использование скрытых разделителей spacer или фиктивных views - это хорошо используемый метод компоновки для управления расстоянием между views или группами views компоновки layout. Недостатком является то, что разделительные views по-прежнему являются реальными views в иерархии views, потребляющими память и способными реагировать на события. Введение
+класса `UILayoutGuide` в iOS 9 позволяет нам выполнять ту же работу без накладных расходов. К сожалению, вы не можете создавать руководства по компоновке в Interface Builder
+
+
+<img alt="image" src="images/auto layout71.jpeg" width = 60%/>
+
+### Equal Spacing With Layout Guides
+
+Create the three layout guides, т.е наши фиктивные view для пространства. In setupView:
+
+```swift
+let leadingGuide = UILayoutGuide()
+let middleGuide = UILayoutGuide()
+let trailingGuide = UILayoutGuide()
+```
+
+Remember that layout guides are not part of the view hierarchy. **! We don’t add them to the view hierarchy with `addSubview`**. Use the `addLayoutGuide` method to add the guides to the root view:
+
+```swift
+view.addLayoutGuide(leadingGuide)
+view.addLayoutGuide(middleGuide)
+view.addLayoutGuide(trailingGuide)
+```
 
 <img alt="image" src="images/auto layout72.jpeg" width = 50%/>
 
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, 
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        window?.rootViewController = ViewController()
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+```
+
+ViewController.swift
+```swift
+import UIKit
+
+final class ViewController: UIViewController {
+    private lazy var cancelButton: UIButton = {
+        let title = NSLocalizedString("Cancel", comment: "Cancel button")
+        let button = UIButton.customButton(title: title, titleColor: .white, tintColor: .red, background: UIImage(named: "buttonTemplate"))
+        button.addTarget(self, action: #selector(cancelAction(_:)), for: .touchUpInside)
+        return button
+    }()
+
+    private lazy var okButton: UIButton = {
+        let title = NSLocalizedString("OK", comment: "OK buton")
+        let button = UIButton.customButton(title: title, titleColor: .white, tintColor: .green, background: UIImage(named: "buttonTemplate"))
+        button.addTarget(self, action: #selector(okAction(_:)), for: .touchUpInside)
+        return button
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.addSubview(cancelButton)
+        view.addSubview(okButton)
+
+        let leadingGuide = UILayoutGuide()
+        let middleGuide = UILayoutGuide()
+        let trailingGuide = UILayoutGuide()
+
+        view.addLayoutGuide(leadingGuide)
+        view.addLayoutGuide(middleGuide)
+        view.addLayoutGuide(trailingGuide)
+
+        NSLayoutConstraint.activate([
+
+// leading layout guide which controls the space
+// between the leading edge and the cancel button
+            view.leadingAnchor.constraint(equalTo: leadingGuide.leadingAnchor),
+            leadingGuide.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor),
+
+// Add constraints for the middle guide
+// to set the spacing between the two buttons
+            cancelButton.trailingAnchor.constraint(equalTo: middleGuide.leadingAnchor),
+            middleGuide.trailingAnchor.constraint(equalTo: okButton.leadingAnchor),
+
+// trailing layout guide for the space between 
+// the OK button and the trailing edge
+            okButton.trailingAnchor.constraint(equalTo: trailingGuide.leadingAnchor),
+            trailingGuide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+
+            cancelButton.widthAnchor.constraint(equalTo: okButton.widthAnchor),
+            leadingGuide.widthAnchor.constraint(equalTo: middleGuide.widthAnchor),
+            leadingGuide.widthAnchor.constraint(equalTo: trailingGuide.widthAnchor),
+
+            cancelButton.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            okButton.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
+            ])
+    }
+}
+
+extension ViewController {
+    @objc private func cancelAction(_ sender: UIButton) {
+        print("Cancel")
+    }
+
+    @objc private func okAction(_ sender: UIButton) {
+        print("OK")
+    }
+}
+
+extension UIButton {
+    static func customButton(title: String, titleColor: UIColor, tintColor: UIColor, background: UIImage?) -> UIButton {
+        let button = UIButton(type: .custom)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(titleColor, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 30.0)
+        button.setBackgroundImage(background, for: .normal)
+        button.tintColor = tintColor
+        button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        return button
+    }
+}
+```
+
+Обратите внимание, что в отличие от spacer views в Interface Builder, мы не заботимся о фиксации высоты и вертикального положения layout guides, поскольку ни то, ни другое не влияет на наш макет.
+
+### Keyboard Layout Guide
+
+
+
+```swift
+
+```
+
+```swift
+
+```
+
+```swift
+
+```
+
+```swift
+
+```
 <img alt="image" src="images/auto layout73.jpeg" width = 50%/>
 
 <img alt="image" src="images/auto layout74.jpeg" width = 50%/>
@@ -2518,7 +2820,21 @@ if #available(iOS 11, *) {
 <img alt="image" src="images/auto layout75.jpeg" width = 50%/>
 
 <img alt="image" src="images/auto layout76.jpeg" width = 50%/>
+```swift
 
+```
+
+```swift
+
+```
+
+```swift
+
+```
+
+```swift
+
+```
 <img alt="image" src="images/auto layout77.jpeg" width = 50%/>
 
 <img alt="image" src="images/auto layout78.jpeg" width = 50%/>
@@ -2526,7 +2842,21 @@ if #available(iOS 11, *) {
 <img alt="image" src="images/auto layout79.jpeg" width = 50%/>
 
 <img alt="image" src="images/auto layout80.jpeg" width = 50%/>
+```swift
 
+```
+
+```swift
+
+```
+
+```swift
+
+```
+
+```swift
+
+```
 <img alt="image" src="images/auto layout81.jpeg" width = 50%/>
 
 <img alt="image" src="images/auto layout82.jpeg" width = 50%/>
