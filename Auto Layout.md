@@ -2796,30 +2796,373 @@ extension UIButton {
 
 ### Keyboard Layout Guide
 
+`UIKeyboardLayoutGuide` 
 
-
-```swift
-
-```
-
-```swift
-
-```
-
-```swift
-
-```
-
-```swift
-
-```
 <img alt="image" src="images/auto layout73.jpeg" width = 50%/>
+
+Настройка макета для использования клавиатуры означает регистрацию для получения уведомлений notifications, которые сообщают вам, когда система показывает или скрывает клавиатуру. Мы увидим пример использования уведомлений с клавиатуры для перемещения содержимого в сторону от клавиатуры, когда рассмотрим виды прокрутки scroll views (содержимое поднимается/опускается при отображении/скрытии клавиатуры ). Ограничив constraining our views to the keyboard layout guide, нам теперь больше не нужно прослушивать уведомления с клавиатуры или вручную корректировать нашу layout.
+В простых ситуациях нам может потребоваться constrain the bottom нашего view содержимого как top anchor of the keyboard layout guide:
+
+```swift
+contentView.bottomAnchor.constraint(equalTo:
+view.keyboardLayoutGuide.topAnchor)
+```
+
+!!! В iOS 15 (релиз данного функционала) встречались многие баги по работе с `UIKeyboardLayoutGuide`, возможно они актуальны и сейчас. 
+
+### Adding A Toolbar Above The Keyboard
 
 <img alt="image" src="images/auto layout74.jpeg" width = 50%/>
 
+By default, the keyboard layout guide does не отслеживает незакрепленную плавающую floating keyboard (данная фича есть в ipad).
+
+[Пример кода](https://github.com/kharrison/ALBookCode/tree/main/sample-code/safe-areas-layout-margins/Keyboard-v1/)
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
+}
+```
+
+SceneDelegate.swift
+```swift
+import UIKit
+
+final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    var window: UIWindow?
+}
+```
+
+toolbar -> it’s a custom view built with a horizontal stack view containing three buttons
+
+Toolbar.swift
+```swift
+import UIKit
+
+final class Toolbar: UIView {
+    private lazy var favouriteButton: UIButton = {
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration(scale: .large))
+        config.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+
+        let button = UIButton(configuration: config, primaryAction: UIAction { _ in
+            print("Favourite")
+        })
+        return button
+    }()
+
+    private lazy var editButton: UIButton = {
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "square.and.pencil", withConfiguration: UIImage.SymbolConfiguration(scale: .large))
+        config.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+
+        let button = UIButton(configuration: config, primaryAction: UIAction { _ in
+            print("Edit")
+        })
+        return button
+    }()
+
+    private lazy var deleteButton: UIButton = {
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(scale: .large))
+        config.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+
+        let button = UIButton(configuration: config, primaryAction: UIAction { _ in
+            print("Delete")
+        })
+        button.role = .destructive
+        return button
+    }()
+
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [favouriteButton, editButton, deleteButton])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = 8.0
+        stackView.distribution = .fillEqually
+        stackView.backgroundColor = .systemGroupedBackground
+        stackView.layer.cornerRadius = 10
+        return stackView
+    }()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
+    }
+
+    private func setupView() {
+        addSubview(stackView)
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            stackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+    }
+}
+```
+
+RootViewController.swift здесь 2 простых constraints в NSLayoutConstraint, ниже еще один пример, с изменениями
+
+```swift
+import UIKit
+
+final class RootViewController: UIViewController {
+    private lazy var toolbar: Toolbar = {
+        let toolbar = Toolbar()
+        toolbar.translatesAutoresizingMaskIntoConstraints = false
+        return toolbar
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+       
+    private func setupView() {
+        view.addSubview(toolbar)
+        NSLayoutConstraint.activate([
+            toolbar.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor),
+            toolbar.centerXAnchor.constraint(equalTo: view.keyboardLayoutGuide.centerXAnchor)
+        ])
+    }
+}
+```
+
+### Tracking The Undocked Keyboard
+
+Чтобы сохранить toolbar панель инструментов с отстыкованной клавиатурой undocked keyboard, нам нужно настроить руководство по раскладке клавиатуры для отслеживания отстыкованной клавиатуры:
+
+`view.keyboardLayoutGuide.followsUndockedKeyboard = true`
+
+Наши исправленные ограничения, привязывающие панель инструментов к top centre of the layout guide, почти выполняют свою работу. Панель инструментов прилипает к верхней части отсоединенной клавиатуры, когда мы перемещаем ее по экрану. Однако есть некоторые проблемы. Панель инструментов исчезает за кадром, когда клавиатура находится в верхней части экрана. Более серьезная проблема возникает, когда мы разделяем
+экран iPad
+
+Направляющая клавиатуры соответствует области клавиатуры, которая закрывает вид пользователя. По мере перемещения клавиатуры по разделителю разделенного экрана ширина направляющей уменьшается до нуля. Это проблема, поскольку я ограничил панель инструментов центром направляющей клавиатуры.
+
+Проблема с отстыкованной плавающей клавиатурой заключается в том, что нет единого набора ограничений, которые будут работать при перемещении клавиатуры по
+экрану. Что нам нужно, так это адаптивные adaptive constraints, которые активируются в зависимости
+от положения клавиатуры.
+
+### Adaptive Keyboard Constraints
+
+The `UIKeyboardLayoutGuide` is more than your usual layout guide. It’s a subclass of `UITrackingLayoutGuide` which can automatically activate and deactivate constraints depending on how near (or far) it is from an edge.
+
+Вы не активируете/деактивируете ограничения самостоятельно. Вместо этого вы передаете свои ограничения одному из двух методов:
+
+```swift
+// Add tracked constraints to guide
+setConstraints(_:activeWhenNearEdge:)
+setConstraints(_:activeWhenAwayFrom:)
+```
+
+Оба эти метода принимают массив ограничений и `NSDirectionalRectEdge`.  The tracking guide автоматически активирует или деактивирует ограничения, когда направляющая приближается к указанным краям (leading, trailing, top, bottom) или удаляется от них.
+
 <img alt="image" src="images/auto layout75.jpeg" width = 50%/>
 
+```swift
+// Constraints when near top edge
+view.keyboardLayoutGuide.setConstraints([nearTop],
+                                        activeWhenNearEdge: .top)
+                                        
+// Constraints when away from top edge
+view.keyboardLayoutGuide.setConstraints([awayFromTop],
+                                        activeWhenAwayFrom: .top)
+                                        
+// Constraints when away from leading and trailing edges
+view.keyboardLayoutGuide.setConstraints([inMiddle],
+                                        activeWhenAwayFrom: [.leading, .trailing])
+```
+
+
+[Пример кода](https://github.com/kharrison/ALBookCode/tree/main/sample-code/safe-areas-layout-margins/Keyboard-v2/)
+
+Как и пример выше, он такой же, просто применены настройки незакрепленной клавиатуры.
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
+}
+```
+
+SceneDelegate.swift
+```swift
+import UIKit
+
+final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    var window: UIWindow?
+}
+```
+
+RootViewController.swift
+```swift
+import UIKit
+
+final class RootViewController: UIViewController {
+    private lazy var toolbar: Toolbar = {
+        let toolbar = Toolbar()
+        toolbar.translatesAutoresizingMaskIntoConstraints = false
+        return toolbar
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+    
+    private func setupView() {
+        view.addSubview(toolbar)
+        view.keyboardLayoutGuide.followsUndockedKeyboard = true
+        
+        let awayFromTop = toolbar.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
+        awayFromTop.identifier = "KB-awayFromTop"
+        view.keyboardLayoutGuide.setConstraints([awayFromTop], activeWhenAwayFrom: .top)
+        
+        let nearTop = toolbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        nearTop.identifier = "KB-nearTop"
+        view.keyboardLayoutGuide.setConstraints([nearTop], activeWhenNearEdge: .top)
+        
+        let inMiddle = toolbar.centerXAnchor.constraint(equalTo: view.keyboardLayoutGuide.centerXAnchor)
+        inMiddle.identifier = "KB-inMiddle"
+        view.keyboardLayoutGuide.setConstraints([inMiddle], activeWhenAwayFrom: [.leading, .trailing])
+        
+        let nearLeading = toolbar.leadingAnchor.constraint(equalTo: view.keyboardLayoutGuide.leadingAnchor)
+        nearLeading.identifier = "KB-nearLeading"
+        view.keyboardLayoutGuide.setConstraints([nearLeading], activeWhenNearEdge: .leading)
+        
+        let nearTrailing = toolbar.trailingAnchor.constraint(equalTo: view.keyboardLayoutGuide.trailingAnchor)
+        nearTrailing.identifier = "KB-nearTrailing"
+        view.keyboardLayoutGuide.setConstraints([nearTrailing], activeWhenNearEdge: .trailing)
+    }
+}
+```
+
+Toolbar.swift . Он без изменений, из примера выше, дублирую для удобства чтения.
+```swift
+import UIKit
+
+final class Toolbar: UIView {
+    private lazy var favouriteButton: UIButton = {
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration(scale: .large))
+        config.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+
+        let button = UIButton(configuration: config, primaryAction: UIAction { _ in
+            print("Favourite")
+        })
+        return button
+    }()
+
+    private lazy var editButton: UIButton = {
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "square.and.pencil", withConfiguration: UIImage.SymbolConfiguration(scale: .large))
+        config.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+
+        let button = UIButton(configuration: config, primaryAction: UIAction { _ in
+            print("Edit")
+        })
+        return button
+    }()
+
+    private lazy var deleteButton: UIButton = {
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(scale: .large))
+        config.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+
+        let button = UIButton(configuration: config, primaryAction: UIAction { _ in
+            print("Delete")
+        })
+        button.role = .destructive
+        return button
+    }()
+
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [favouriteButton, editButton, deleteButton])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = 8.0
+        stackView.distribution = .fillEqually
+        stackView.backgroundColor = .systemGroupedBackground
+        stackView.layer.cornerRadius = 10
+        return stackView
+    }()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
+    }
+
+    private func setupView() {
+        addSubview(stackView)
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            stackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+    }
+}
+```
+
+### Away From The Top Edge
+
+Давайте начнем с верхнего края. Когда клавиатура находится вдали от верхнего края, я хочу, чтобы панель инструментов располагалась поверх keyboard layout guide
+
+```swift
+  let awayFromTop = toolbar.bottomAnchor.constraint(equalTo:
+  view.keyboardLayoutGuide.topAnchor)
+        awayFromTop.identifier = "KB-awayFromTop"
+        view.keyboardLayoutGuide.setConstraints([awayFromTop], activeWhenAwayFrom: .top)
+```
+
+Когда направляющая клавиатуры находится вдали от верхнего края, мы активируем ограничение,  bottom anchor of the toolbar to the top anchor of the guide. Когда направляющая клавиатуры приблизится к верхнему краю, мы отключаем constraint. Также добавлены идентификаторы для удобства debugging the guide.
+
+### Near The Top Edge
+
+Когда клавиатура приблизится к верхнему краю, я хочу, чтобы панель инструментов опустилась
+в нижнюю часть экрана. Нам нужно ограничение, которое фиксирует the bottom
+anchor of the toolbar to the bottom anchor of the safe area layout guide
+
+```swift
+let nearTop = toolbar.bottomAnchor.constraint(equalTo:
+view.safeAreaLayoutGuide.bottomAnchor)
+        nearTop.identifier = "KB-nearTop"
+        view.keyboardLayoutGuide.setConstraints([nearTop], activeWhenNearEdge: .top)
+```
+
+### In The Middle
+When the keyboard is away from both the leading and trailing edges. I want the toolbar horizontally centered with the keyboard.
+
+```swift
+        let inMiddle = toolbar.centerXAnchor.constraint(equalTo:
+        view.keyboardLayoutGuide.centerXAnchor)
+        inMiddle.identifier = "KB-inMiddle"
+        view.keyboardLayoutGuide.setConstraints([inMiddle], activeWhenAwayFrom: [.leading, .trailing])
+```
+
+Don’t forget that this constraint is only active when the keyboard guide is away from both the leading and trailing edges. It deactivates if we are near either the leading or trailing edges.
+
+### Near Leading
+
+
+
+
 <img alt="image" src="images/auto layout76.jpeg" width = 50%/>
+
 ```swift
 
 ```
