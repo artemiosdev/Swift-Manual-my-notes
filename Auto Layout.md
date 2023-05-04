@@ -2247,6 +2247,24 @@ private extension UIView {
 
 ###  <a id="chapter6" />Глава 6. Safe Areas And Layout Margins
 
+### Key Points To Remember
+If you’re only supporting iOS 11 or later:
+- Create constraints to the safe area layout guide of the superview for content subviews that you don’t want to be covered by bars or clipped by the rounded corners of an iPhone X style device.
+- If you want some extra padding inside the safe area create your
+constraints to the margins of the superview. (Margins allow for the safe area by default in iOS 11).
+- Use the directional layout margins for right-to-left language support.
+- You can change the margins of the root view.
+
+If you need to support iOS 9 or iOS 10:
+- If you create your layout in Interface Builder you can continue to
+constrain your content to the safe area layout guide. Interface Builder takes care of making this backward compatible for iOS 9 and iOS 10.
+- If you create your constraints in code you need to take care of falling back to using the top and bottom layout guides and leading and trailing edges when the safe area layout guide is not available.
+- Remember that margins don’t take into account the top and bottom layout guides in iOS 9 and iOS 10. If you constrain your content to a margin, a parent view may cover your content.
+- You cannot change the margins of the root view.
+
+In both cases:
+-  Create constraints to the edges of the superview for background subviews where you don’t care if something clips or covers the view. For example, a background image that you want to fill the screen.
+
 ### Safe Area Layout Guide
 
 Apple added safe area layout guides in iOS 11 to define a rectangle safe for you to show content. The status, navigation, and tab bars never не перекрывают the safe area.
@@ -2519,7 +2537,7 @@ If your minimum deployment target is iOS 11 use the “Language Directional” l
 
 example with Interface Builder
 
-<img alt="image" src="images/auto layout69.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout69.jpeg" width = 70%/>
 
 ### Changing The Root View Margins (iOS 11)
 
@@ -2555,7 +2573,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: 
+    [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         window?.rootViewController = ViewController()
@@ -2599,7 +2618,8 @@ final class ViewController: UIViewController {
     }
 
     private func changeNestedMargins(inset: CGFloat) {
-        nestedView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: inset, leading: inset, bottom: inset, trailing: inset)
+        nestedView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: inset, leading: inset, 
+        bottom: inset, trailing: inset)
     }
 }
 
@@ -2663,7 +2683,7 @@ final class NestedView: UIView {
 класса `UILayoutGuide` в iOS 9 позволяет нам выполнять ту же работу без накладных расходов. К сожалению, вы не можете создавать руководства по компоновке в Interface Builder
 
 
-<img alt="image" src="images/auto layout71.jpeg" width = 60%/>
+<img alt="image" src="images/auto layout71.jpeg" width = 70%/>
 
 ### Equal Spacing With Layout Guides
 
@@ -2683,7 +2703,7 @@ view.addLayoutGuide(middleGuide)
 view.addLayoutGuide(trailingGuide)
 ```
 
-<img alt="image" src="images/auto layout72.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout72.jpeg" width = 35%/>
 
 AppDelegate.swift
 ```swift
@@ -2711,14 +2731,16 @@ import UIKit
 final class ViewController: UIViewController {
     private lazy var cancelButton: UIButton = {
         let title = NSLocalizedString("Cancel", comment: "Cancel button")
-        let button = UIButton.customButton(title: title, titleColor: .white, tintColor: .red, background: UIImage(named: "buttonTemplate"))
+        let button = UIButton.customButton(title: title, titleColor: .white, tintColor: .red, 
+        background: UIImage(named: "buttonTemplate"))
         button.addTarget(self, action: #selector(cancelAction(_:)), for: .touchUpInside)
         return button
     }()
 
     private lazy var okButton: UIButton = {
         let title = NSLocalizedString("OK", comment: "OK buton")
-        let button = UIButton.customButton(title: title, titleColor: .white, tintColor: .green, background: UIImage(named: "buttonTemplate"))
+        let button = UIButton.customButton(title: title, titleColor: .white, tintColor: .green, 
+        background: UIImage(named: "buttonTemplate"))
         button.addTarget(self, action: #selector(okAction(_:)), for: .touchUpInside)
         return button
     }()
@@ -2798,7 +2820,7 @@ extension UIButton {
 
 `UIKeyboardLayoutGuide` 
 
-<img alt="image" src="images/auto layout73.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout73.jpeg" width = 60%/>
 
 Настройка макета для использования клавиатуры означает регистрацию для получения уведомлений notifications, которые сообщают вам, когда система показывает или скрывает клавиатуру. Мы увидим пример использования уведомлений с клавиатуры для перемещения содержимого в сторону от клавиатуры, когда рассмотрим виды прокрутки scroll views (содержимое поднимается/опускается при отображении/скрытии клавиатуры ). Ограничив constraining our views to the keyboard layout guide, нам теперь больше не нужно прослушивать уведомления с клавиатуры или вручную корректировать нашу layout.
 В простых ситуациях нам может потребоваться constrain the bottom нашего view содержимого как top anchor of the keyboard layout guide:
@@ -2812,7 +2834,7 @@ view.keyboardLayoutGuide.topAnchor)
 
 ### Adding A Toolbar Above The Keyboard
 
-<img alt="image" src="images/auto layout74.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout74.jpeg" width = 60%/>
 
 By default, the keyboard layout guide does не отслеживает незакрепленную плавающую floating keyboard (данная фича есть в ipad).
 
@@ -2845,7 +2867,8 @@ import UIKit
 final class Toolbar: UIView {
     private lazy var favouriteButton: UIButton = {
         var config = UIButton.Configuration.plain()
-        config.image = UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration(scale: .large))
+        config.image = UIImage(systemName: "heart", 
+        withConfiguration: UIImage.SymbolConfiguration(scale: .large))
         config.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
 
         let button = UIButton(configuration: config, primaryAction: UIAction { _ in
@@ -2856,7 +2879,8 @@ final class Toolbar: UIView {
 
     private lazy var editButton: UIButton = {
         var config = UIButton.Configuration.plain()
-        config.image = UIImage(systemName: "square.and.pencil", withConfiguration: UIImage.SymbolConfiguration(scale: .large))
+        config.image = UIImage(systemName: "square.and.pencil", 
+        withConfiguration: UIImage.SymbolConfiguration(scale: .large))
         config.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
 
         let button = UIButton(configuration: config, primaryAction: UIAction { _ in
@@ -2965,7 +2989,7 @@ setConstraints(_:activeWhenAwayFrom:)
 
 Оба эти метода принимают массив ограничений и `NSDirectionalRectEdge`.  The tracking guide автоматически активирует или деактивирует ограничения, когда направляющая приближается к указанным краям (leading, trailing, top, bottom) или удаляется от них.
 
-<img alt="image" src="images/auto layout75.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout75.jpeg" width = 60%/>
 
 ```swift
 // Constraints when near top edge
@@ -3065,7 +3089,8 @@ final class Toolbar: UIView {
 
     private lazy var editButton: UIButton = {
         var config = UIButton.Configuration.plain()
-        config.image = UIImage(systemName: "square.and.pencil", withConfiguration: UIImage.SymbolConfiguration(scale: .large))
+        config.image = UIImage(systemName: "square.and.pencil", 
+        withConfiguration: UIImage.SymbolConfiguration(scale: .large))
         config.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
 
         let button = UIButton(configuration: config, primaryAction: UIAction { _ in
@@ -3158,10 +3183,38 @@ Don’t forget that this constraint is only active when the keyboard guide is aw
 
 ### Near Leading
 
+Когда мы приближаемся к leading edge краю, мы привязываем leading anchor панели инструментов к leading anchor of the keyboard guide
 
+```swift
+let nearLeading = toolbar.leadingAnchor.constraint(equalTo: 
+view.keyboardLayoutGuide.leadingAnchor)
+nearLeading.identifier = "KB-nearLeading"
+view.keyboardLayoutGuide.setConstraints([nearLeading], 
+activeWhenNearEdge: .leading)
+```
 
+### Near Trailing
+When we are near the trailing edge мы привязываем the trailing anchor of the toolbar к the trailing anchor of the keyboard guide:
+
+```swift
+let nearTrailing = toolbar.trailingAnchor.constraint(equalTo: 
+view.keyboardLayoutGuide.trailingAnchor)
+nearTrailing.identifier = "KB-nearTrailing"
+view.keyboardLayoutGuide.setConstraints([nearTrailing],
+activeWhenNearEdge: .trailing)
+```
+
+### Docked Keyboard
+When we have the keyboard docked, it’s near the bottom and away from all other edges. That means my away from top and in the middle constraints are active pinning the toolbar to the top and horizontal center of the keyboard:
 
 <img alt="image" src="images/auto layout76.jpeg" width = 50%/>
+
+### Советы по отладке Debugging
+Вам необходимо учитывать конфигурации состыкованного, отстыкованного и разделенного экрана. Для каждой позиции клавиатуры вам нужно достаточное
+количество ограничений для корректной раскладки без создания конфликтов. Находясь на разделенном экране, не забудьте протестировать приложение как слева, так и справа от разделителя.
+Отладчик просмотра оказывает огромную помощь в понимании того, какие ограничения активны при перемещении отстыкованной клавиатуры. Я настоятельно рекомендую вам добавить идентификаторы id к каждому из ограничений. Я добавил к своим идентификаторам ограничений префикс `KB-` чтобы я мог легко фильтровать их по поиску в отладчике.
+
+### Challenge 6.1 Margins In Interface Builder
 
 ```swift
 
