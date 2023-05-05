@@ -8,7 +8,7 @@
 - [Глава №4. Using Interface Builder.](#chapter4)
 - [Глава №5. Creating Constraints In Code.](#chapter5)
 - [Глава №6. Safe Areas And Layout Margins.](#chapter6)
-- [Глава №7. .](#chapter7)
+- [Глава №7. Layout Priorities and Content Size.](#chapter7)
 - [Глава №8. .](#chapter8)
 - [Глава №9. .](#chapter9)
 - [Глава №10. .](#chapter10)
@@ -2252,7 +2252,7 @@ If you’re only supporting iOS 11 or later:
 - Create constraints to the safe area layout guide of the superview for content subviews that you don’t want to be covered by bars or clipped by the rounded corners of an iPhone X style device.
 - If you want some extra padding inside the safe area create your
 constraints to the margins of the superview. (Margins allow for the safe area by default in iOS 11).
-- Use the directional layout margins for right-to-left language support.
+- Use the directional layout margins for right-to-left language support. `directionalLayoutMargins` - интервал по умолчанию, используемый при размещении содержимого в view с учетом текущего направления языка (current language direction).
 - You can change the margins of the root view.
 
 If you need to support iOS 9 or iOS 10:
@@ -3214,26 +3214,144 @@ When we have the keyboard docked, it’s near the bottom and away from all other
 количество ограничений для корректной раскладки без создания конфликтов. Находясь на разделенном экране, не забудьте протестировать приложение как слева, так и справа от разделителя.
 Отладчик просмотра оказывает огромную помощь в понимании того, какие ограничения активны при перемещении отстыкованной клавиатуры. Я настоятельно рекомендую вам добавить идентификаторы id к каждому из ограничений. Я добавил к своим идентификаторам ограничений префикс `KB-` чтобы я мог легко фильтровать их по поиску в отладчике.
 
-### Challenge 6.1 Margins In Interface Builder
+### Challenge 6.1 Margins In Interface Builder (only storyboard)
 
-```swift
-
-```
-
-```swift
-
-```
-
-```swift
-
-```
-
-```swift
-
-```
 <img alt="image" src="images/auto layout77.jpeg" width = 50%/>
 
+### Challenge 6.2 Backwards Compatibility With Interface Builder
+
+Устаревшая информация о поддержке старый версий (ios 10 и ранее). 
+
+### Challenge 6.3 Programmatic Margins
+
 <img alt="image" src="images/auto layout78.jpeg" width = 50%/>
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        let rootViewController = RootViewController()
+        let navigationController = UINavigationController(rootViewController: rootViewController)
+        window?.rootViewController = navigationController
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+```
+
+RootViewController.swift
+```swift
+import UIKit
+
+final class RootViewController: UIViewController {
+
+    private let spacing: CGFloat = 50.0
+    private let internalPadding: CGFloat = 25.0
+
+    private let tileView: TileView = {
+        let view = TileView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .green
+        return view
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.backgroundColor = .yellow
+        view.addSubview(tileView)
+
+        view.directionalLayoutMargins = NSDirectionalEdgeInsets(top: spacing, leading: spacing, bottom: spacing, trailing: spacing)
+        tileView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: internalPadding, leading: internalPadding, bottom: internalPadding, trailing: internalPadding)
+
+        let guide = view.layoutMarginsGuide
+        NSLayoutConstraint.activate([
+            tileView.leadingAnchor.constraint(equalTo: guide.leadingAnchor),
+            tileView.topAnchor.constraint(equalTo: guide.topAnchor),
+            tileView.trailingAnchor.constraint(equalTo: guide.trailingAnchor),
+            tileView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.25)
+            ])
+    }
+}
+```
+
+TileView.swift
+```swift
+import UIKit
+
+final class TileView: UIView {
+
+    private let internalSpacing: CGFloat = 25.0
+    private let blueView = UIView.coloredView(.blue)
+    private let redView = UIView.coloredView(.red)
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+
+    private func setupView() {
+        addSubview(blueView)
+        addSubview(redView)
+
+        NSLayoutConstraint.activate([
+            blueView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            blueView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            blueView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+
+            redView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+            redView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            redView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+
+            redView.leadingAnchor.constraint(equalTo: blueView.trailingAnchor, constant: internalSpacing),
+            blueView.widthAnchor.constraint(equalTo: redView.widthAnchor)
+            ])
+    }
+}
+
+private extension UIView {
+    static func coloredView(_ color: UIColor) -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = color
+        return view
+    }
+}
+```
+
+### Challenge 6.4 Backwards Compatibility In Code
+
+Устаревшая информация о поддержке старый версий (ios 10 и ранее). 
+
+---
+
+[К оглавлению](#contents)
+
+###  <a id="chapter7" /> Глава 7. Layout Priorities and Content Size
+
+
+
+```swift
+
+```
+
+
 
 <img alt="image" src="images/auto layout79.jpeg" width = 50%/>
 
