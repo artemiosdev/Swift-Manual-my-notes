@@ -4397,4 +4397,465 @@ class UserController {
 Причина выбрать класс No 2. Совместимость c Objective-C 
 Необходимость поддержки старых проектов, написанных на Objective-C, или использования старых библиотек, то классы нужны.
 
+---
+
+Глава . Разработка приложения в Xcode Playground UIKit и SwiftUI 
+
+Фреймворк предоставляет готовые решения для нужной функциональности
+#UIKit – это фреймворк, обеспечивающий ключевую инфраструктуру, необходимую для создания и функционирования iOS-приложений. UIKit содержит большое количество объектных типов данных, благодаря которым функционируют приложения, строится их графический интерфейс, обрабатывается анимация и события (например, прикосновение к экрану устройства или получение push-уведомления), рассчитывается физическое взаимодействие предметов. 
+Несмотря на такой широкий перечень обязанностей, одной из наиболее используемых возможностей UIKit является создание графического интерфейса приложений: разработка его отдельных экранов и правил перехода между ними, размещение кнопок, надписей и картинок и т. д. Все это позволяет делать UIKit. 
+Обратите внимание, что UIKit используется только при разработке приложений под iOS. В рамках операционной системы macOS работает фреймворк #AppKit 
+#SwiftUI – это новая библиотека от Apple, которая пришла на замену UIKit в части, касающейся создания графического интерфейса. iOS-приложения все еще функционируют на основе UIKit, но графическая составляющая может быть разработана как средствами UIKit, так и средствами SwiftUI либо при их совместном использовании. 
+Библиотека SwiftUI предлагает совершенно новый способ создания интерфейса приложений. Основным отличием SwiftUI от UIKit (в части построения графического интерфейса) является декларативный подход вместо императивного 
+https://tproger.ru/translations/imperative-declarative-programming-concepts/
+#Императивный подход (как): Я вижу, что тот угловой столик свободен. Мы пойдём туда и сядем там.
+#Декларативный подход (что): Столик для двоих, пожалуйста.
+Императивный подход означает то, как вы займёте место. Вы должны перечислить все шаги этого процесса. Декларативный же подход заявляет, что вам нужен столик на двоих.
+«Я у Ашана. Как мне пройти до твоего дома?»
+Императивный ответ:
+«Пройди через северный выход парковки и поверни налево. Сядь на автобус 678 и выйди на остановке «Улица Победы». Поверни направо, как если бы ты шёл в Икею. Иди прямо и поверни направо у первого светофора. На следующем светофоре поверни налево. Номер моего дома — 134.»
+Декларативный ответ:
+Мой адрес: Энск, улица Победы, дом 134.
+Прежде чем мы обратимся к коду, важно понять, что многие декларативные подходы имеют определённый слой императивных абстракций. Вернёмся к нашим примерам. Декларативное обращение к сотруднику ресторана подразумевает, что он знает все императивные шаги по предоставлению вам столика. Знание адреса подразумевает, что у вас есть GPS-навигатор, который знает императивные шаги по составлению маршрута. У автомобиля с автоматической КПП есть определённый слой абстракций над передключением передач.
+Итак, я повторюсь: многие (если не все) декларативные подходы имеют слой неких императивных абстракций.
+
+Разработка интерактивного приложения Ball
+Приложение будет отображать прямоугольную площадку с размещенными на ней цветными шариками. При перемещении шариков (с помощью мыши) будет обрабатываться физика их столкновения друг с другом и с границами площадки. Для создания такого графического интерактивного интерфейса будет использоваться UIKit. 
+-Создайте новый playground-проект типа Blank. Назовите его Balls и удалите весь программный код, присутствующий в нем. 
+
+Библиотека PlaygroundSupport
+Ранее, при работе с Xcode Playground, мы не использовали какие-либо интерактивные элементы, только выводили значения на консоль. Но благодаря Interactive playground (интерактивная игровая площадка) у нас есть возможность создания интерактивных графических элементов прямо в окне playground-проекта. Работу Interactive playground обеспечивает библиотека PlaygroundSupport, наиболее важным элементом которой является класс PlaygroundPage. 
+В созданный ранее проект Balls импортируйте библиотеки PlaygroundSupport и UIKit 
+
+Структура проекта
+Одним из важнейших элементов UIKit является класс UIView, предназначенный для создания графических элементов. На его основе базируются все доступные по умолчанию элементы (кнопки, надписи, текстовые поля и т. д.). Таким образом, на его основе можно создать любой графический элемент, в том числе прямоугольную площадку с шариками. Стоит обратить внимание, что сущности «Шарик» и «Площадка» — это два независимых элемента, каждый из которых будет создан на основе UIView: 
+-Для реализации шарика создадим класс Ball, потомок класса UIView. 
+-Для реализации площадки создадим класс SquareArea, потомок класса UIView. Любой графический элемент, основанный на UIView, называется отображением, или представлением. 
+При создании любого элемента программы вы должны решить, с помощью каких конструкций языка он должен быть реализован (структура, класс, перечисление и т. д.). В данном случае мы делаем «выбор без возможности выбора» использовать классы для обеих сущностей, так как они будут основаны на классе UIView. 
+Напомню, что структуры не поддерживают наследование, и в частности, не могут быть дочерними элементами класса UIView. 
+Для того чтобы логически разделить элементы программы, вынесем реализацию каждой сущности в отдельный файл: 
+-в главном файле playground-проекта размещался код, отображающий графический интерфейс (с помощью класса PlaygroundSupport); 
+-в дополнительных файлах размещался код, описывающий графические элементы (классы SquareArea и Ball). 
+На панели Project Navigator в папке Source создайте два новых файла с именами SquareArea.swift и Ball.swift. Для этого щелкните по названию папки правой кнопкой мыши, выберите пункт New File и укажите имя создаваемого файла. В результате файлы будут в составе папки Sources. 
+
+Класс Ball
+Реализацию программы начнем с создания шарика. В Project Navigator выберите файл Ball.swift. Вместо библиотеки Foundation импортируйте UIKit. Реализацию сущности «Шарик» начнем с создания протокола 
+import UIKit 
+protocol BallProtocol {
+    init(color: UIColor, radius: Int, coordinates: (x: Int, y: Int))
+}
+Начнем реализацию именно с протокола, а не с класса. 
+Протокол BallProtocol предусматривает наличие в принимаемом типе только инициализатора, в который передаются следующие аргументы: 
+color — определяет цвет шарика, представленный классом UIColor. Это встроенный в UIKit объектный тип, предназначенный специально для работы с цветом. 
+radius — определяет радиус шарика в виде целого числа (тип Int). 
+coordinates — определяет координаты шарика, представленные в виде кортежа. Теперь объявим новый класс Ball, потомок UIView 
+public class Ball: UIView, BallProtocol {  }
+В соответствии с требованиями протокола BallProtocol, класс Ball должен иметь инициализатор. 
+required public init(color: UIColor, radius: Int, coordinates: (x:Int, y: Int)) {
+    // создание графического прямоугольника
+    super.init(frame:
+        CGRect(x: coordinates.x,
+               y: coordinates.y,
+               width: radius * 2,
+               height: radius * 2))
+    // скругление углов
+    self.layer.cornerRadius = self.bounds.width / 2.0
+    // изменение цвета фона
+    self.backgroundColor = color
+} 
+Данный инициализатор должен быть требуемым (required, мы говорили об этом при изучении протоколов), а также публичным (public, так как по умолчанию он internal). В инициализаторе вызывается родительский инциализатор init(frame: ), который входит в состав класса UIView. С его помощью создается графический элемент «Прямоугольник», характеристики которого передаются в объекте типа CGRect (координаты левого верхнего угла, ширина и высота). 
+На данном этапе мы создали лишь программный аналог прямоугольника, который в дальнейшем будет дополнительно настроен и выведен на экран. Воспринимайте класс UIView как шаблон для создания графических элементов. С его помощью вы программно описываете элемент и в дальнейшем выводите его на экран. 
+Далее с помощью цепочки свойств #layer.cornerRaduis происходит скругление углов прямоугольника, и он превращается в круг. 
+Свойство backgroundColor – установить цвет создаваемого объекта. 
+Данный класс также должен иметь специальный инициализатор init?(coder:), о чем вам, , уже сказал Xcode в сообщении об ошибке. 
+required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+}
+Весь код
+import UIKit
+protocol BallProtocol {
+    init(color: UIColor, radius: Int, coordinates: (x: Int, y: Int))
+}
+public class Ball: UIView, BallProtocol {
+    required public init(color: UIColor, radius: Int, coordinates: (x:Int, y: Int)) {
+        // создание графического прямоугольника
+        super.init(frame:
+            CGRect(x: coordinates.x,
+                   y: coordinates.y,
+                   width: radius * 2,
+                   height: radius * 2))
+        // скругление углов
+        self.layer.cornerRadius = self.bounds.width / 2.0
+        // изменение цвета фона
+        self.backgroundColor = color
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+Класс SquareArea
+Теперь перейдем к реализации класса SquareArea, представляющего прямоугольную площадку, по которой будут перемещаться шарики. Перейдите к файлу SquareArea.swift в Project Navigator и вместо библиотеки Foundation импортируйте UIKit. 
+import UIKit 
+protocol SquareAreaProtocol {
+    init(size: CGSize, color: UIColor)
+    // установить шарики в область
+    func setBalls(withColors: [UIColor], andRadius: Int)
+}
+Протокол SquareAreaProtocol содержит два требования: 
+Инициализатор, в который передаются размеры прямоугольной области и цвет фона. Класс CGSize позволяет создать объект со свойствами width и height. То есть вместо того, чтобы передавать отдельно два аргумента для ширины и высоты, мы объединяем их в значение типа CGSize. 
+Метод setBalls(withColors:andRadius:), с помощью которого на площадке будут размещаться шарики. Обратите внимание, что мы не будем передавать в данный метод значения типа Ball, а вместо этого передадим просто коллекцию цветов, в которые должны быть окрашены шарики, и их радиус. Тип Ball будет использоваться уже внутри реализации метода. 
+public class SquareArea: UIView, SquareAreaProtocol {
+    // коллекция всех шариков
+    private var balls: [Ball] = []
+    // аниматор графических объектов
+    private var animator: UIDynamicAnimator?
+    // обработчик перемещений объектов
+    private var snapBehavior: UISnapBehavior?
+    // обработчик столкновений
+    private var collisionBehavior: UICollisionBehavior
+}
+Свойство balls будет использоваться для хранения экземпляров типа Ball,
+то есть шариков, размещенных на площадке. 
+Благодаря трем следующим свойствам создается та самая интерактивность, о которой мы говорили ранее: 
+Свойство animator типа UIDynamicAnimator будет использоваться для анимации движений шариков. 
+Свойство snapBehavior типа UISnapBehavior будет использоваться при обработке взаимодействия пользователя с шариками (их перемещении). 
+Свойство collisionBehavior типа UICollisionBehavior будет обрабатывать столкновения шариков друг с другом и с границами прямоугольной области. 
+Реализуем два инициализатора и метод setBalls (временно оставим пустым) 
+required public init(size: CGSize, color: UIColor) {
+    // создание обработчика столкновений
+    collisionBehavior = UICollisionBehavior(items: [])
+    // строим прямоугольную графическую область
+    super.init(frame:
+        CGRect(x: 0, y: 0, width: size.width, height: size.height))
+    // изменяем цвет фона
+    self.backgroundColor = color
+    // указываем границы прямоугольной области, 
+    // как объекты  взаимодействия, чтобы об них могли ударяться шарики
+    collisionBehavior.setTranslatesReferenceBoundsIntoBoundary(
+                      with: UIEdgeInsets(top: 1, left: 1, bottom: 1, right: 1))
+    // подключаем аниматор с указанием на сам класс
+    animator = UIDynamicAnimator(referenceView: self)
+    // подключаем к аниматору обработчик столкновений
+    animator?.addBehavior(collisionBehavior)
+} 
+required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+}
+public func setBalls(withColors ballsColor: [UIColor], andRadius radius: Int) {}
+
+Теперь перейдите к основному файлу проекта Balls в Project Navigator и создайте экземпляр класса SquareArea и с помощью PlaygroundPage отобразите его.
+// размеры прямоугольной области
+let sizeOfArea = CGSize(width: 400, height: 400)
+// создание экземпляра
+var area = SquareArea(size: sizeOfArea, color: UIColor.gray)
+// установка экземпляра в качестве текущего отображения
+PlaygroundPage.current.liveView = area
+Свойство #current класса PlaygroundPage возвращает текущую страницу playground-проекта. Данный проект состоит всего из одной страницы (что видно в Project Navigator), но вы всегда можете создать дополнительные с помощью кнопки «+» в левом нижнем углу. Свойству #liveView может быть передано произвольное отображение (класс UIView или его потомок), которое в дальнейшем будет выведено на экран. 
+Файлы с расширением .swift не являются отдельными страницам, они входят в состав страниц. Непосредственно страницы в Project Navigator помечаются изображением листа бумаги с логотипом Swift голубого цвета. 
+Если сейчас запустить проект, то в правой части Xcode Playground отобразится область Live View, содержащая прямоугольник серого цвета, в котором в дальнейшем будут расположены цветные шарики 
+Для указания цвета площадки передается значение UIColor.gray, соответствующее серому цвету. Тип UIColor имеет большое количество свойств: UIColor.white для белого, UIColor.red для красного и т. д. 
+
+Файл Balls.playground
+import PlaygroundSupport
+import UIKit
+
+// размеры прямоугольной области
+let sizeOfArea = CGSize(width: 400, height: 400)
+// создание экземпляра
+var area = SquareArea(size: sizeOfArea, color: UIColor.gray)
+// установка экземпляра в качестве текущего отображения
+PlaygroundPage.current.liveView = area
+
+Файл Ball.swift
+import UIKit
+protocol BallProtocol {
+    init(color: UIColor, radius: Int, coordinates: (x: Int, y: Int))
+}
+
+public class Ball: UIView, BallProtocol {
+    required public init(color: UIColor, radius: Int, coordinates: (x:Int, y: Int)) {
+        // создание графического прямоугольника
+        super.init(frame:
+            CGRect(x: coordinates.x,
+                   y: coordinates.y,
+                   width: radius * 2,
+                   height: radius * 2))
+        // скругление углов
+        self.layer.cornerRadius = self.bounds.width / 2.0
+        // изменение цвета фона
+        self.backgroundColor = color
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+Файл SquareArea.swift 
+import UIKit
+protocol SquareAreaProtocol {
+    init(size: CGSize, color: UIColor)
+    // установить шарики в область
+    func setBalls(withColors: [UIColor], andRadius: Int)
+}
+
+public class SquareArea: UIView, SquareAreaProtocol {
+    // коллекция всех шариков
+    private var balls: [Ball] = []
+    // аниматор графических объектов
+    private var animator: UIDynamicAnimator?
+    // обработчик перемещений объектов
+    private var snapBehavior: UISnapBehavior?
+    // обработчик столкновений
+    private var collisionBehavior: UICollisionBehavior
+    
+    required public init(size: CGSize, color: UIColor) {
+        // создание обработчика столкновений
+        collisionBehavior = UICollisionBehavior(items: [])
+        // строим прямоугольную графическую область
+        super.init(frame:
+  CGRect(x: 0, y: 0, width: size.width, height: size.height))
+        // изменяем цвет фона
+        self.backgroundColor = color
+        // указываем границы прямоугольной области
+        // как объекты взаимодействия
+        // чтобы об них могли ударяться шарики
+        collisionBehavior.setTranslatesReferenceBoundsIntoBoundary(
+   with: UIEdgeInsets(top: 1, left: 1, bottom: 1, right: 1))
+        // подключаем аниматор с указанием на сам класс
+        animator = UIDynamicAnimator(referenceView: self)
+        // подключаем к аниматору обработчик столкновений
+        animator?.addBehavior(collisionBehavior)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    public func setBalls(withColors ballsColor: [UIColor], andRadius radius: Int) {}
+}
+Xcode Playground все еще периодически работает некорректно. Если в процессе работы над проектом вы увидите ошибку Cannot find type 'Ball' in scope или подобную, то пишите весь программный код в одном файле. 
+ 
+
+ 
+Xcode позволяет преобразовать некоторые ресурсы из текстового вида в графический. Так, например, описание цвета может быть представлено в виде визуального элемента прямо в редакторе кода! 
+Для этого вместо UIColor.gray укажите специальный литерал:
+#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) 
+где с помощью red, green, blue определяется цвет, а с помощью alpha — прозрачность. После его написания этот код будет преобразован к графическому квадрату черного цвета. Для выбора нового цвета вам необходимо дважды щелкнуть на квадрате и выбрать подходящий из появившейся палитры. 
+Такой подход возможен только в файлах страниц playground. В файлах с исходным кодом (Balls.swift и SquareArea.swift) вся информация отображается исключительно в текстовом виде. 
+Файл SquareArea.swift. Наполним метод setBalls для вывода шариков
+public func setBalls(withColors ballsColor: [UIColor], andRadius radius: Int) {
+    // перебираем переданные цвета
+    // один цвет — один шарик
+    for (index, oneBallColor) in ballsColor.enumerated() {
+        // рассчитываем координаты левого верхнего угла шарика
+        let coordinateX = 10 + (2 * radius) * index
+        let coordinateY = 10 + (2 * radius) * index
+        // создаем экземпляр сущности "Шарик"
+        let ball = Ball(color: oneBallColor,
+                        radius: radius,
+                        coordinates: (x: coordinateX, y: coordinateY))
+// добавляем шарик в текущее отображение (в состав прямоугольной
+// площадки)
+self.addSubview(ball)
+// добавляем шарик в коллекцию шариков
+self.balls.append(ball)
+// добавляем шарик в обработчик столкновений
+collisionBehavior.addItem(ball)
+   } 
+} 
+Основная задача данного метода – создание экземпляров типа Ball и размещение их на прямоугольной площадке. Работа включает шаги: 
+1.Производится перебор всех переданных цветов, так как количество шариков соответствует количеству цветов. Используется известный вам метод #enumerated(), позволяющий получить целочисленный индекс и значение каждого элемента коллекции. 
+2.Рассчитываются координаты очередного шарика. Указанная формула позволяет разместить элементы каскадом, то есть каждый последующий находится правее и ниже предыдущего. 
+3.Создается экземпляр типа Ball (созданный ранее инициализатор). 
+4.Созданное отображение шарика включается в состав отображения прямоугольной области с помощью метода #addSubview(_: )
+Данный пункт я хотел бы рассмотреть чуть подробнее. 
+Как вы видели ранее, чтобы отобразить графический элемент в Live view, мы инициализировали его в качестве значения свойству #liveView текущей страницы Playground. Но данному свойству в качестве значения может быть проинициализирован только один экземпляр, а в нашем случае их пять (один SquareArea и четыре Ball). Как в таком случае отобразить все графические элементы? 
+У каждого экземпляра типа UIView (или его потомков) есть свойство #subviews, которое содержит подпредставления данного представления. То есть одно представление в своем составе может содержать другие представления. При отрисовке графического элемента на экране устройства Swift определяет, есть ли в его свойстве subviews элементы. И если они найдены, то также отрисовываются. 
+Далее у каждого из дочерних элементов также происходит проверка значения свойства subviews. И так далее, пока все элементы иерархии представлений не будут выведены на экран. 
+Метод #addSubview(_: ) предназначен для того, чтобы включить одни представления в состав другого. 
+5.Созданный экземпляр добавляется в приватную коллекцию. 
+6.Созданный экземпляр добавляется в обработчик столкновений. 
+Теперь вернемся к главному файлу проекта и после создания переменной area добавим вызов метода setBall, передав в него цвета четырех шариков. После запуска проекта шарики отобразятся поверх черной площадки.
+ 
+Нам осталось реализовать возможность перемещения шариков указателем мыши, обработку их столкновений между собой и с границами площадки. 
+Как говорилось ранее, UIKit обеспечивает не только вывод графических элементов, но и обработку событий, в том числе касаний. Как только пользователь касается пальцем экрана устройства, операционная система формирует специальный объект, передающийся в приложение, который «путешествует» там и в конце концов достигает графического элемента, с которым произошло взаимодействие. 
+Класс UVIew позволяет добавить к графическому элементу специальные методы, обрабатывающие произошедшие с ним события касания: 
+   touchesBegan(_: with: )
+Метод срабатывает в момент касания экрана. 
+   touchesMoved(_: with: )
+Метод срабатывает при каждом перемещении пальца, уже коснувшегося экрана. 
+   touchesEnded(_: with: )
+Метод вызывается по окончании взаимодействия с экраном (когда палец убран). 
+Все методы уже определены в классе UIView, поэтому при создании собственной реализации этих методов в дочерних классах (в нашем случае в SquareArea и Ball) потребуется их переопределять с использованием ключевого слова #override. Данные методы будут реализованы только в классе SquareArea, так как класс Ball занимается исключительно отображением шариков. При нажатии на определенную точку в прямоугольной области будет определяться, соответствуют ли координаты нажатия текущему положению одного из шариков. 
+Реализуем метод touchesBegan(_: with: ) 
+override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    if let touch = touches.first {
+        let touchLocation = touch.location( in: self )
+        for ball in balls {
+            if (ball.frame.contains( touchLocation )) {
+                snapBehavior = UISnapBehavior(item: ball, snapTo: touchLocation)
+                snapBehavior?.damping = 0.5
+                animator?.addBehavior(snapBehavior!)
+            } 
+        } 
+    }
+  } 
+Аргумент touches содержит данные обо всех текущих касаниях. Это связано с тем, что экран всех современных смартфонов поддерживает мультитач, то есть одновременное касание несколькими пальцами. В начале метода извлекаются данные о первом элементе множества touches и помещаются в константу touch. 
+Константа touchLocation содержит координаты касания относительно площадки, на которой расположены шарики. 
+С помощью метода ball.frame.contains() мы определяем, относятся ли координаты касания к какому-либо из шариков. Если находится соответствие, то в свойство snapBehavior записываются данные о шарике, с которым в текущий момент происходит взаимодействие, и о координатах касания. 
+Свойство #damping определяет плавность и затухание при движении шарика. 
+Далее, используя метод addBehavior(_: ) аниматора, указываем, что обрабатываемое классом UISnapBehavior поведение объекта должно быть анимировано. Таким образом, все изменения состояния объекта будут анимированы. 
+Далее необходимо обрабатывать перемещение пальца. Для этого реализуем метод touchesMoved(_: with: ) 
+override public func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+    if let touch = touches.first {
+        let touchLocation = touch.location( in: self )
+        if let snapBehavior = snapBehavior {
+            snapBehavior.snapPoint = touchLocation
+        }
+   } 
+  } 
+Так как в свойстве snapBehavior уже содержится указание на определенный шарик, с которым происходит взаимодействие, нет необходимости проходить по всему массиву шариков снова. Единственной задачей данного метода является изменение свойства snapPoint, которое указывает на координаты объекта. 
+Для завершения обработки перемещения объектов касанием необходимо переопределить метод touchesEnded(_: with: ) 
+public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    if let snapBehavior = snapBehavior {
+        animator?.removeBehavior(snapBehavior)
+    }
+    snapBehavior = nil
+}
+Этот метод служит для решения одной очень важной задачи – очистки используемых ресурсов. После того как взаимодействие с шариком окончено, хранить информацию об обработчике поведения в snapBehavior уже нет необходимости. 
+Возьмите за привычку удалять ресурсы, пользоваться которыми вы уже не будете. Это сэкономит изрядное количество памяти и уменьшит вероятность возникновения ошибок. 
+Перейдите к странице Balls, и после запуска проекта в окне Assistant Editor вы увидите изображение четырех шариков, но теперь с помощью указателя мыши вы можете перемещать и сталкивать их друг с другом и с границами площадки! 
+
+
+Файл Balls.playground
+import PlaygroundSupport
+import UIKit
+
+// размеры прямоугольной области
+let sizeOfArea = CGSize(width: 400, height: 400)
+// создание экземпляра
+var area = SquareArea(size: sizeOfArea, color:  colorLiteral(red: 0.1764705926, green: 0.01176470611, blue: 0.5607843399, alpha: 1) )
+// установка экземпляра в качестве текущего отображения
+area.setBalls(withColors: [UIColor.red , colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1) , colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1), UIColor.green ], andRadius: 40)
+PlaygroundPage.current.liveView = area
+
+Файл Ball.swift
+import UIKit
+
+protocol BallProtocol {
+    init(color: UIColor, radius: Int, coordinates: (x: Int, y: Int))
+}
+
+public class Ball: UIView, BallProtocol {
+    required public init(color: UIColor, radius: Int, coordinates: (x:Int, y: Int)) {
+        // создание графического прямоугольника
+        super.init(frame:
+            CGRect(x: coordinates.x,
+                   y: coordinates.y,
+                   width: radius * 2,
+                   height: radius * 2))
+        // скругление углов
+        self.layer.cornerRadius = self.bounds.width / 2.0
+        // изменение цвета фона
+        self.backgroundColor = color
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+Файл SquareArea.swift 
+import UIKit
+
+protocol SquareAreaProtocol {
+    init(size: CGSize, color: UIColor)
+    // установить шарики в область
+    func setBalls(withColors: [UIColor], andRadius: Int)
+}
+
+    public class SquareArea: UIView, SquareAreaProtocol {
+    // коллекция всех шариков
+    private var balls: [Ball] = []
+    // аниматор графических объектов
+    private var animator: UIDynamicAnimator?
+    // обработчик перемещений объектов
+    private var snapBehavior: UISnapBehavior?
+    // обработчик столкновений
+    private var collisionBehavior: UICollisionBehavior
+    
+    required public init(size: CGSize, color: UIColor) {
+        // создание обработчика столкновений
+        collisionBehavior = UICollisionBehavior(items: [])
+        // строим прямоугольную графическую область
+        super.init(frame:
+  CGRect(x: 0, y: 0, width: size.width, height: size.height))
+        // изменяем цвет фона
+        self.backgroundColor = color
+        // указываем границы прямоугольной области
+        // как объекты взаимодействия
+        // чтобы об них могли ударяться шарики
+        collisionBehavior.setTranslatesReferenceBoundsIntoBoundary(
+  with: UIEdgeInsets(top: 1, left: 1, bottom: 1, right: 1))
+        // подключаем аниматор с указанием на сам класс
+        animator = UIDynamicAnimator(referenceView: self)
+        // подключаем к аниматору обработчик столкновений
+        animator?.addBehavior(collisionBehavior)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    public func setBalls(withColors ballsColor: [UIColor], andRadius radius: Int) {
+        // перебираем переданные цвета
+        // один цвет — один шарик
+     for (index, oneBallColor) in ballsColor.enumerated() {
+     // рассчитываем координаты левого верхнего угла шарика
+            let coordinateX = 10 + (2 * radius) * index
+            let coordinateY = 10 + (2 * radius) * index
+            // создаем экземпляр сущности "Шарик"
+            let ball = Ball(color: oneBallColor,
+                            radius: radius,
+            coordinates: (x: coordinateX, y: coordinateY))
+             // добавляем шарик в текущее отображение 
+             // в состав прямоугольной площадки
+            self.addSubview(ball)
+            // добавляем шарик в коллекцию шариков
+            self.balls.append(ball)
+            // добавляем шарик в обработчик столкновений
+              collisionBehavior.addItem(ball)
+       }
+    }
+    
+    override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touch = touches.first {
+            let touchLocation = touch.location( in: self )
+            for ball in balls {
+                if (ball.frame.contains( touchLocation )) {
+                    snapBehavior = UISnapBehavior(item: ball, snapTo: touchLocation)
+                    snapBehavior?.damping = 0.5
+                    animator?.addBehavior(snapBehavior!)
+                }
+            }
+        }
+      }
+
+    override public func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touch = touches.first {
+            let touchLocation = touch.location( in: self )
+            if let snapBehavior = snapBehavior {
+                snapBehavior.snapPoint = touchLocation
+            }
+       }
+      }
+
+    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let snapBehavior = snapBehavior {
+            animator?.removeBehavior(snapBehavior)
+        }
+        snapBehavior = nil
+    }
+    
+}
+Библиотеки UIKit и Foundation предоставляют огромное количество возможностей. Так, например, можно создать гравитационное, магнитное взаимодействие элементов, смоделировать силу тяжести или турбулентность, установить параметры скорости и ускорения. 
 
