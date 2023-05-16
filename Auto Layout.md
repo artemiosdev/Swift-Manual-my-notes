@@ -3410,3 +3410,11 @@ private extension UIView {
 <img alt="image" src="images/auto layout99.jpeg" width = 50%/>
 
 <img alt="image" src="images/auto layout100.jpeg" width = 50%/>
+
+```swift
+
+````
+
+<img alt="image" src="images/.jpg"  width = 70%/>
+
+<img alt="image" src="images/.jpeg"/>
