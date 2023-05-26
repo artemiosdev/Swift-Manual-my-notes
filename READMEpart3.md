@@ -5847,7 +5847,7 @@ struct SecondContentView_Previews: PreviewProvider {
     }
 } 
 После обновления на Canvas будет отображено два устройства, каждое из которых соответствует своей структуре, подписанной на протокол PreviewProvider. При обновлении Canvas среда разработки Xcode автоматически распознает все структуры, соответствующие протоколу PreviewProvider, и создает для них отдельный Preview (предпросмотр). 
- 
+
 Чтобы осуществить предпросмотр интерфейса на другой модели iPhone, достаточно сменить ее в списке рядом с кнопкой запуска проекта, после чего Canvas автоматически обновится. 
 -Удалите структуры ContentView_Previews и SecondContentView_Previews из файла ContentView.swift. 
 -Запустите приложение на симуляторе. 
@@ -5872,7 +5872,7 @@ struct ContentView_Previews: PreviewProvider {
 Изменим некоторые характеристики метки с текстом.
 -Щелкните на строчке, в которой объявляется экземпляр структуры Text
 На панели Attributes Inspector отобразились параметры метки 
- 
+
 Для выбора элемента и доступа к его настройкам можно просто щелкнуть на нем на Canvas. Измените следующие параметры метки: 
 -Font на Title. 
 -Weight на Bold. 
@@ -5909,7 +5909,7 @@ struct ContentView: View {
 } 
 В коде появился новый для вас элемент #@State. С его помощью помечаются свойства, при изменении которых графический интерфейс должен перерисовываться. Как только значение одного из State-свойств будет изменено (в данном случае с помощью ползунка), интерфейс приложения сразу же автоматически обновится, вследствие чего соответствующим образом изменится и цвет прямоугольника. 
 Все элементы будут сгруппированы с помощью структуры VStack (вертикальный стек), позволяющей размещать вложенные в него элементы столбиком. Как видно из окна автодополнения, VStack имеет два инициализатора. 
- 
+
 В данном случае нас интересует второй инициализатор, принимающий только замыкание в качестве значения аргумента content. Если бы вы выбрали его, то получили бы следующий код: 
 VStack(content: {
 
@@ -5934,7 +5934,7 @@ SwiftUI содержит несколько компонентов, которы
 2.Откройте библиотеку отображений (Views library). 
 3.В списке элементов найдите Slider. 
 4.Перетяните его внутрь замыкания в инициализаторе VStack. 
- 
+
 В качестве аргумента для Slider необходимо указать свойство redComponent, но так как оно помечено с помощью @State и слайдер должен изменять его, необходимо использовать символ $ 
 VStack { 
     Slider(value: $redComponent)
@@ -5960,7 +5960,7 @@ VStack {
 Добавим отступы от краев экрана: 
 -Сделайте активным элемент VStack (щелкните по нему в редакторе кода). 
 -На панели Attributes Inspector в разделе Padding отметьте все четыре галочки, а в центральном поле впишите 10 
- 
+
 
 Глава 39. Паттерны проектирования 
 В своей практике разработчикам часто приходится решать типовые задачи, для реализации которых уже найдены оптимальные пути и шаблоны. #Паттерны проектирования – формализуют и описывают решение типовых задач программирования. 
@@ -6001,4 +6001,101 @@ pref.backgroundColor = .red
 Prefences.shared.backgroundColor // UIColor.red
 Примером использования паттерна Singleton при разработке под iOS может служить класс #UIApplication, экземпляр которого является стартовой точкой каждого приложения. Любое создаваемое вами приложение содержит в себе и использует только один экземпляр класса UIApplication, доступ к которому обеспечивается с помощью шаблона Singleton. Класс UIApplication выполняет большое количество задач, в том числе обеспечивает вывод на экран устройства окна вашего приложения (экземпляр класса UIWindow) и отображение в нем стартовой сцены. Вам, как разработчику, никогда не придется самостоятельно создавать экземпляр класса UIApplication, система делает это автоматически, независимо от кода приложения, и постоянно работает фоном. 
 Мы еще не сталкивались с классом #UIWindow. Он создается автоматически и обеспечивает отображение UI ваших приложений. Мобильные программы обычно имеют только один экземпляр класса UIWindow, так как одновременно отображают только одно окно (исключением является подключение внешнего дисплея), в отличие от программ настольных компьютеров, которые могут отображать несколько окон одной программы в один момент времени. 
+
+Паттерн Delegation. Класс UIApplicationDelegate 
+Паттерн #Delegation #делегирование #UIApplicationDelegate понадобится при создании приложений в Xcode. Его суть состоит в том, чтобы один класс делегировал (передавал) ответственность за выполнение некоторых функций другому классу. Со стороны это выглядит так, словно главный класс самостоятельно выполняет все возложенные на него функции (даже делегированные другому классу). Фреймворк Cocoa Touch очень активно использует делегаты в своей работе, чтобы одни объекты выполняли часть своих функций от лица других. 
+Ярким примером использования паттерна делегирования является уже знакомый нам класс UIApplication. Напомню, что каждое приложение имеет один единственный экземпляр этого класса-синглтона. Во время работы приложения UIApplication вызывает некоторые специфические методы своих делегатов, если, конечно, делегаты существуют и реализуют в себе эти методы. 
+
+Часть VII Проекты и приложения
+Фонарик. Guided Project—Light
+Create a variable called lightOn and set the initial value to true, since the screen starts off with a white background.
+var lightOn = true
+Each time the button is tapped, the value should change from true to false, or from false to true. Swift booleans have a method, #toggle(), that does precisely this. Since the buttonPressed(_:) method is called whenever the tap is executed, make the change there.
+@IBAction func buttonPressed(_ sender: Any) {
+    lightOn.toggle()
+}
+After the value has been changed, you can use the new value to determine how to change the background color. If the light is supposed to be off, change it to black. 
+@IBAction func buttonPressed(_ sender: Any) {
+    lightOn.toggle()
+    if lightOn {
+      view.backgroundColor = .white
+    } else {
+      view.backgroundColor = .black
+    }
+}
+
+Editor menu choose Refactor > Extract to Method.
+ 
+ 
+
+ 
+Обратите внимание на ключевое слово #fileprivate, которое Xcode использовал перед именем метода. Swift использует этот специальный модификатор доступа access modifier, чтобы указать, откуда может быть вызван метод. Если вы используете функцию рефакторинга Xcode и вам нужно вызвать свой метод вне файла, в котором он определен, удалите перед ним ключевое слово fileprivate.
+Вам будет намного проще устранять проблемы интерфейса, если код, обновляющий представление, содержится в одном методе.
+
+@IBOutlet var lightButton: UIButton!
+#UIButton! – Тип свойства – UIButton!. Восклицательный знак предупреждает вас, что программа выйдет из строя, если вы попытаетесь получить доступ к этому свойству, а outlet не будет подключена. Создав розетку, теперь вы можете программно вносить изменения в кнопку. Начните с поиска подходящего места для обновления заголовка кнопки и правильного действия, которое она должна выполнить
+To learn how to set the title of lightButton, start by reading the documentation on its type, UIButton. Window > Developer Documentation. 
+UIButton – Scroll down to the Symbols section to find a list called “Configuring the Button.” There you’ll find a function to set the title: func setTitle(String?, for: UIControl.State). 
+ 
+Используйте этот метод для установки заголовка для кнопки. Заголовок, который вы указываете, получает его форматирование от связанного объекта кнопки. Если вы устанавливаете как заголовок, так и приписанный заголовок для кнопки, кнопка предпочитает использование приписанного заголовка над этим.
+#Переименование/#смена названия у переменной и тп
+Выделите свое свойство/функцию и выберите меню Редактора -> Рефакторинг -> Переименование
+
+Как минимум, вы должны установить значение для нормального состояния. Если вы не укажете заголовок для других состояний, кнопка использует заголовок, связанный с обычным состоянием. 
+Click UIControl.State in the Declaration section.
+In this new list of symbols, the Constants section contains a normal constant , which corresponds to the state of the button when it’s enabled and sitting idle on the screen. This is the correct state for setting the button’s title.
+ 
+Добавляем функционал
+func updateUI() {
+  if lightOn {
+    view.backgroundColor = .white
+    lightButton.setTitle("Off", for: .normal)
+  } else {
+    view.backgroundColor = .black
+    lightButton.setTitle("On", for: .normal)
+  }
+}
+В вашем проекте уже есть код, который будет следить за тем, чтобы текст кнопки соответствовал состоянию включения или выключения света: updateUI(). Вам нужно вызвать его при первой загрузке view, чтобы кнопка обновлялась при появлении view, а не при первом нажатии кнопки пользователем. Вы можете запустить установочный код в функции viewDidLoad(), которая уже определена и вызывается, когда view controller готов появиться на экране.
+override func viewDidLoad() {
+    super.viewDidLoad()
+    updateUI()
+}
+  
+Лучше удалить текст с кнопки и сделать кнопку во весь экран. Так пользователь может нажать где угодно на экране, чтобы включить и выключить свет. Преобразуем код, и увеличим кнопку во весь экран
+func updateUI() {
+    if lightOn {
+        view.backgroundColor = .white
+    } else {
+        view.backgroundColor = .black
+    }
+}
+В этом обновленном дизайне свойства кнопки не нужно менять, пока кто-то использует приложение. Это означает, что outlet– который вы создали в начале проекта, больше не требуется. Поэтому очистите IBOutlet.
+Сначала удалите связь между кнопкой и его outlet. Чтобы сделать это, выберите кнопку в Interface Builder, then show the Connections inspector. Здесь вы можете увидеть все events and outlets, подключенные к определенному объекту. В этом случае вы можете увидеть, что кнопка привязана buttonPressed: action and to the lightButton outlet. Нажмите на X рядом с outlet, чтобы удалить его.
+ 
+Поскольку к lightButton больше нет объектов, маленький кружок рядом с @IBOutlet больше не закрашен. И ее можно удалить. И еще сократим код и уберем if-else statement
+func updateUI() {
+  view.backgroundColor = lightOn ? .white : .black
+}
+ViewController.swift
+import UIKit
+class ViewController: UIViewController {
+    var lightOn = true
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        updateUI()
+    }
+    
+    func updateUI() {
+        view.backgroundColor = lightOn ? .white : .black
+    }
+    
+    @IBAction func buttonPressed(_ sender: Any) {
+        lightOn.toggle()
+        updateUI()
+    }
+}
+
+
+
 
