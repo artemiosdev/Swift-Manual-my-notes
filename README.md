@@ -64,7 +64,18 @@
 ### ЧАСТЬ VII АРХИТЕКТУРЫ И ПАТТЕРНЫ
 - [Глава №33. Архитектурный паттерн MVC](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#mvc)
 - [Глава №34. Архитектурный паттерн MVVM](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#mvvm)
-- [Глава №33. Паттерны проектирования](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#patterns)
+- [Глава №35. Паттерны проектирования](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#patterns)
+
+### ЧАСТЬ VIII. РАЗНОЕ
+
+- [Глава №36. Опциональные цепочки ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#chapter36)
+- [Глава №37. Protocols ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#chapter37)
+- [Глава №38. Расширения ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#chapter38)
+- [Глава №39. Протокол-ориентированное программирование ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#chapter39)
+- [Глава №40. Знакомство с SwiftUI, сравнение с UIKit ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#chapter40)
+- [Глава №41. Универсальные шаблоны (Generic) ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#chapter41)
+- [Глава №42. Обработка ошибок ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#chapter42)
+- [Глава №43. Нетривиальное использование операторов ](https://github.com/artemiosdev/Swift-Manual-my-notes/blob/main/READMEpart3.md#chapter43)
 
 ---
 
