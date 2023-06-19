@@ -3345,23 +3345,110 @@ private extension UIView {
 
 ###  <a id="chapter7" /> Глава 7. Layout Priorities and Content Size
 
+### Layout Priorities
+Optional And Required Priorities.  
+All constraints have a layout priority from 1 to 1000. The priority is of type UILayoutPriority and UIKit helpfully defines constants for arbitrary “low” and “high” values which it uses as default values:
 
+- .fittingSize (50)
 
-```swift
+- .defaultLow (250)
 
-```
+- .defaultHigh (750)
 
+- .required (1000)
 
+Constraints with a priority lower than `.required (1000)` are optional.
+
+Чтобы закрепить что-либо можно перетащить его на view и выбрать стороны используем Option + Shift
 
 <img alt="image" src="images/auto layout79.jpeg" width = 50%/>
 
-<img alt="image" src="images/auto layout80.jpeg" width = 50%/>
-```swift
+### Creating Optional Constraints In Code
 
+Вариант с storyboard
+<img alt="image" src="images/auto layout80.jpeg" width = 50%/>
+
+Вариант с programmatic layout.  
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        window?.rootViewController = RootViewController()
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
 ```
 
+RootViewController.swift
 ```swift
+import UIKit
 
+final class RootViewController: UIViewController {
+    private let sunView = UIImageView(named: "Sun", backgroundColor: .orange)
+    private let snowView = UIImageView(named: "Snow", backgroundColor: .blue)
+
+    private let captionLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "This label should be below the tallest of the two images"
+        label.font = UIFont.systemFont(ofSize: 32.0)
+        label.numberOfLines = 0
+        return label
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.addSubview(sunView)
+        view.addSubview(snowView)
+        view.addSubview(captionLabel)
+
+        let margins = view.layoutMarginsGuide
+        // the optional top constraint for the label
+        let captionTopConstraint = captionLabel.topAnchor.constraint(equalTo: margins.topAnchor)
+        // Set the priority to .defaultLow (250) to make it optional
+        captionTopConstraint.priority = .defaultLow
+
+        NSLayoutConstraint.activate([
+            sunView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            sunView.topAnchor.constraint(equalTo: margins.topAnchor),
+
+            snowView.topAnchor.constraint(equalTo: margins.topAnchor),
+            snowView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+
+            captionLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            captionLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            
+// constraints that position the label at least
+// a standard amount of spacing below the two images
+captionLabel.topAnchor.constraint(greaterThanOrEqualToSystemSpacingBelow: sunView.bottomAnchor, multiplier: 1.0),
+            captionLabel.topAnchor.constraint(greaterThanOrEqualToSystemSpacingBelow: snowView.bottomAnchor, multiplier: 1.0),
+
+            captionTopConstraint
+            ])
+    }
+}
+
+// we need two properties in the view controller
+// for the image views
+private extension UIImageView {
+    convenience init(named name: String, backgroundColor: UIColor) {
+        self.init(image: UIImage(named: name))
+        self.backgroundColor = backgroundColor
+        translatesAutoresizingMaskIntoConstraints = false
+    }
+}
 ```
 
 ```swift
