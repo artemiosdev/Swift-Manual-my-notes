@@ -3349,24 +3349,25 @@ private extension UIView {
 Optional And Required Priorities.  
 All constraints have a layout priority from 1 to 1000. The priority is of type UILayoutPriority and UIKit helpfully defines constants for arbitrary “low” and “high” values which it uses as default values:
 
-- .fittingSize (50)
+- **.fittingSize (50)**
 
-- .defaultLow (250)
+- **.defaultLow (250)**
 
-- .defaultHigh (750)
+- **.defaultHigh (750)**
 
-- .required (1000)
+- **.required (1000)**
 
 Constraints with a priority lower than `.required (1000)` are optional.
 
 Чтобы закрепить что-либо можно перетащить его на view и выбрать стороны используем Option + Shift
 
-<img alt="image" src="images/auto layout79.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout79.jpeg" width = 60%/>
 
 ### Creating Optional Constraints In Code
 
 Вариант с storyboard
-<img alt="image" src="images/auto layout80.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout80.jpeg" width = 70%/>
 
 Вариант с programmatic layout.  
 AppDelegate.swift
@@ -3451,20 +3452,112 @@ private extension UIImageView {
 }
 ```
 
-```swift
+### Intrinsic Content Size (Размер внутреннего содержимого или же natural size)
 
-```
+All views have an `intrinsicContentSize` property. This
+is a `CGSize` with a width and a height. A view can use the
+value `UIViewNoIntrinsicMetric` when it has no intrinsic
+size for a dimension.
 
-```swift
+Common UIKit controls like the button, label, switch, stepper, segmented control, and text field have both an intrinsic width and height.
 
-```
+### UIButton
+
 <img alt="image" src="images/auto layout81.jpeg" width = 50%/>
+
+```swift
+let button = UIButton(type: .custom)
+button.setTitle("Hello", for: .normal)
+button.backgroundColor = .green
+button.intrinsicContentSize // (w 41 h 34)
+```
 
 <img alt="image" src="images/auto layout82.jpeg" width = 50%/>
 
+```swift
+button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+button.intrinsicContentSize // (w 81 h 42)
+```
+
+```swift
+// corner radius
+button.layer.cornerRadius = 10.0
+button.intrinsicContentSize // (w 81 42)
+```
+
+### UILabel
+
+```swift
+label.intrinsicContentSize // (w 853 h 20.5)
+label.bounds.size // (w 343 h 20.5)
+```
+
+Если вы ограничиваете ширину label, но оставляете высоту свободной и устанавливаете значение `numberOfLines` равным 0, размер внутреннего содержимого label регулируется в соответствии с количеством строк, необходимым для отображения полного текста.
+
+### UISlider and UIProgressView
+
+They only have an intrinsic height, not a width. You must add constraints to fix the width of the track. 
+
+```swift
+let slider = UISlider()
+slider.intrinsicContentSize // (w -1 h 33)
+```
+
+### UIImageView
+
+```swift
+let imageView = UIImageView()
+// empty image view doesn’t have intrinsic content size
+imageView.intrinsicContentSize // (w -1 h -1)
+
+imageView.image = UIImage(named: "Star")
+imageView.intrinsicContentSize // (w 100 h 100)
+```
+
+### Custom Views
+When you create a custom subclass of UIView, you can choose to override `intrinsicContentSize` and return a size based on the content of your custom view. If your view doesn’t have a natural size for one dimension return `UIViewNoIntrinsicMetric` for that dimension:
+
+```swift
+// Custom view with an intrinsic height of 100 points
+class CustomView: UIView {
+override var intrinsicContentSize: CGSize {
+return CGSize(width: UIViewNoIntrinsicMetric, height: 100)
+}
+// ...
+}
+```
+
+If the intrinsic content size of your custom view changes tell the layout engine by calling `invalidateIntrinsicContentSize()`.
+
+### Content Mode
+
+Свойство `contentMode` UIView управляет тем, как настраивать view при изменении его границ bounds. По умолчанию система не будет перерисовывать view каждый
+раз при изменении границ. Это было бы расточительно.
+
+You can also set the content mode of a view in code:
+
+```swift
+imageView.contentMode = .scaleAspectFit
+```
+
+#### Scaling the View - Масштабирование
+
+- **.scaleToFill**: Растягивает содержимое, чтобы заполнить доступное пространство, без сохранения соотношения сторон. Режим по умолчанию.
+- **.scaleAspectFit**: Масштабирует содержимое в соответствии с пространством, сохраняя соотношение сторон.
+- **.scaleAspectFill**: Масштабируйте содержимое, чтобы заполнить пространство, сохраняя соотношение сторон. Содержимое может оказаться больше границ
+view, что приведет к отсечению.
+
 <img alt="image" src="images/auto layout83.jpeg" width = 50%/>
 
+#### Positioning the View
+
 <img alt="image" src="images/auto layout84.jpeg" width = 50%/>
+
+- **.center**
+- **.top, .bottom, .left, .right**
+- **.topLeft, .topRight, .bottomLeft, .bottomRight**
+
+
 
 <img alt="image" src="images/auto layout85.jpeg" width = 50%/>
 
