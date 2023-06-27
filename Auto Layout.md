@@ -2840,7 +2840,7 @@ view.keyboardLayoutGuide.topAnchor)
 
 ### Adding A Toolbar Above The Keyboard
 
-<img alt="image" src="images/auto layout74.jpeg" width = 60%/>
+<img alt="image" src="images/auto layout74.jpeg" width = 70%/>
 
 By default, the keyboard layout guide does не отслеживает незакрепленную плавающую floating keyboard (данная фича есть в ipad).
 
@@ -2995,7 +2995,7 @@ setConstraints(_:activeWhenAwayFrom:)
 
 Оба эти метода принимают массив ограничений и `NSDirectionalRectEdge`.  The tracking guide автоматически активирует или деактивирует ограничения, когда направляющая приближается к указанным краям (leading, trailing, top, bottom) или удаляется от них.
 
-<img alt="image" src="images/auto layout75.jpeg" width = 60%/>
+<img alt="image" src="images/auto layout75.jpeg" width = 80%/>
 
 ```swift
 // Constraints when near top edge
@@ -3222,7 +3222,7 @@ When we have the keyboard docked, it’s near the bottom and away from all other
 
 ### Challenge 6.1 Margins In Interface Builder (only storyboard)
 
-<img alt="image" src="images/auto layout77.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout77.jpeg" width = 80%/>
 
 ### Challenge 6.2 Backwards Compatibility With Interface Builder
 
@@ -3230,7 +3230,7 @@ When we have the keyboard docked, it’s near the bottom and away from all other
 
 ### Challenge 6.3 Programmatic Margins
 
-<img alt="image" src="images/auto layout78.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout78.jpeg" width = 70%/>
 
 AppDelegate.swift
 ```swift
@@ -3241,7 +3241,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions 
+    launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         let rootViewController = RootViewController()
@@ -3278,8 +3279,10 @@ final class RootViewController: UIViewController {
         view.backgroundColor = .yellow
         view.addSubview(tileView)
 
-        view.directionalLayoutMargins = NSDirectionalEdgeInsets(top: spacing, leading: spacing, bottom: spacing, trailing: spacing)
-        tileView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: internalPadding, leading: internalPadding, bottom: internalPadding, trailing: internalPadding)
+        view.directionalLayoutMargins = NSDirectionalEdgeInsets(top: spacing, leading: spacing, bottom: spacing, 
+        trailing: spacing)
+        tileView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: internalPadding, leading: internalPadding, 
+        bottom: internalPadding, trailing: internalPadding)
 
         let guide = view.layoutMarginsGuide
         NSLayoutConstraint.activate([
@@ -3413,7 +3416,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions 
+    launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         window?.rootViewController = RootViewController()
@@ -3469,7 +3473,8 @@ final class RootViewController: UIViewController {
 // constraints that position the label at least
 // a standard amount of spacing below the two images
 captionLabel.topAnchor.constraint(greaterThanOrEqualToSystemSpacingBelow: sunView.bottomAnchor, multiplier: 1.0),
-            captionLabel.topAnchor.constraint(greaterThanOrEqualToSystemSpacingBelow: snowView.bottomAnchor, multiplier: 1.0),
+            captionLabel.topAnchor.constraint(greaterThanOrEqualToSystemSpacingBelow: snowView.bottomAnchor, 
+            multiplier: 1.0),
 
             captionTopConstraint
             ])
@@ -3555,10 +3560,10 @@ When you create a custom subclass of UIView, you can choose to override `intrins
 ```swift
 // Custom view with an intrinsic height of 100 points
 class CustomView: UIView {
-override var intrinsicContentSize: CGSize {
-return CGSize(width: UIViewNoIntrinsicMetric, height: 100)
-}
-// ...
+    override var intrinsicContentSize: CGSize {
+        return CGSize(width: UIViewNoIntrinsicMetric, height: 100)
+    }
+    // ...
 }
 ```
 
@@ -3582,7 +3587,7 @@ imageView.contentMode = .scaleAspectFit
 - **.scaleAspectFill**: Масштабируйте содержимое, чтобы заполнить пространство, сохраняя соотношение сторон. Содержимое может оказаться больше границ
 view, что приведет к отсечению.
 
-<img alt="image" src="images/auto layout83.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout83.jpeg" width = 80%/>
 
 #### Positioning the View
 
@@ -3630,7 +3635,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions
+    launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         window?.rootViewController = RootViewController()
@@ -3677,7 +3683,8 @@ final class RootViewController: UIViewController {
             sunImage.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             sunImage.topAnchor.constraint(equalTo: margins.topAnchor),
 
-           caption.leadingAnchor.constraint(equalToSystemSpacingAfter: sunImage.trailingAnchor, multiplier: 1.0), caption.topAnchor.constraint(equalTo: margins.topAnchor),
+           caption.leadingAnchor.constraint(equalToSystemSpacingAfter: sunImage.trailingAnchor, multiplier: 1.0), 
+           caption.topAnchor.constraint(equalTo: margins.topAnchor),
             caption.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
             ])
     }
@@ -3700,7 +3707,9 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions
+    
+    launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         window?.rootViewController = RootViewController()
@@ -3748,7 +3757,8 @@ final class RootViewController: UIViewController {
         view.addSubview(authorLabel)
         view.addSubview(quoteLabel)
 
-        let optionalWidthConstraint = quoteLabel.widthAnchor.constraint(equalTo: authorLabel.widthAnchor, multiplier: 2.0)
+        let optionalWidthConstraint = quoteLabel.widthAnchor.constraint(equalTo: authorLabel.widthAnchor, 
+        multiplier: 2.0)
         optionalWidthConstraint.priority = .defaultHigh
 
         let margins = view.layoutMarginsGuide
@@ -3757,7 +3767,8 @@ final class RootViewController: UIViewController {
             authorLabel.topAnchor.constraint(equalTo: margins.topAnchor),
             quoteLabel.topAnchor.constraint(equalTo: margins.topAnchor),
             quoteLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            quoteLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: authorLabel.trailingAnchor, multiplier: 1.0),
+            quoteLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: authorLabel.trailingAnchor, 
+            multiplier: 1.0),
             authorLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: minimumWidth),
             optionalWidthConstraint
             ])
@@ -3774,7 +3785,7 @@ final class RootViewController: UIViewController {
 ```swift
 
 ````
-<img alt="image" src="images/auto layout86.jpeg" width = 50%/>
+
 
 <img alt="image" src="images/auto layout87.jpeg" width = 50%/>
 
