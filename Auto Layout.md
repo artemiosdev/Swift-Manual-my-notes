@@ -23,6 +23,12 @@
 
 ###  <a id="appendix" />  Appendix.  Main concepts
 
+Simple rule of thumb for answering the question **How Many Constraints Do I Need?**
+
+> **To fix the size and position of each view in a layout we
+needed at least two horizontal and two vertical constraints
+for every view**.
+
 ### Auto Layout Tools
 
 <img alt="image" src="images/auto layout6.jpeg" width = 50%/>
@@ -3345,6 +3351,35 @@ private extension UIView {
 
 ###  <a id="chapter7" /> Глава 7. Layout Priorities and Content Size
 
+### Key Points To Remember
+
+Simple rule of thumb for answering the question **How Many Constraints Do I Need?**
+
+> **To fix the size and position of each view in a layout we
+needed at least two horizontal and two vertical constraints
+for every view**.
+
+Note the at least as the two constraints per view “rule” only works with **required, equality constraints**. Once we introduce optional and inequality constraints it gets more complicated.
+
+- All constraints have a layout priority from 1 to 1000. By default,
+constraints are `.required` which corresponds to a value of 1000.
+- Constraints with a priority less than `.required` are **optional**. The layout engine - механизм компоновки сначала пытается удовлетворить ограничения с более высоким приоритетом, но всегда старается максимально приблизиться к необязательным ограничениям.
+- Combine optional constraints with required inequality неравенства constraints, чтобы максимально приблизить вид к размеру или положению, не нарушая других ограничений.
+- После того как вы добавили ограничение к view, вы не сможете изменить его priority from required to optional или наоборот.
+
+Мы  можем ослабить наше  правило при работе с view, которые имеют внутренний размер содержимого. Это включает в себя многие стандартные элементы управления UIKit, labels, switches, and buttons.
+
+- Внутренний размер содержимого view (intrinsic content size) - это естественный размер, который должен быть у view, чтобы соответствовать его содержимому.  
+- По умолчанию UIKit добавляет для нас ограничения по ширине и высоте, которые задают внутренний размер.
+- Вы всегда можете переопределить внутренний размер, добавив ограничения.
+- Они могут "сопротивляться" сжатию/растягиванию/охвату решается приоритетами.
+
+- Может ли мой макет когда-нибудь стать слишком большим, чтобы поместиться в доступном пространстве? Если это так, решите, какой вид сжимать в первую очередь, и отдайте ему приоритет с наименьшим сопротивлением сжатию (CompressionResistance).
+-  Может ли мой макет когда-нибудь стать слишком маленьким, чтобы поместиться в доступном пространстве? Если да, решите, какой вид растягивать в первую очередь, и присвоите ему наименьший приоритет при просмотре содержимого (ContentHugging).
+
+
+---
+
 ### Layout Priorities
 Optional And Required Priorities.  
 All constraints have a layout priority from 1 to 1000. The priority is of type UILayoutPriority and UIKit helpfully defines constants for arbitrary “low” and “high” values which it uses as default values:
@@ -3367,7 +3402,7 @@ Constraints with a priority lower than `.required (1000)` are optional.
 
 Вариант с storyboard
 
-<img alt="image" src="images/auto layout80.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout80.jpeg" width = 80%/>
 
 Вариант с programmatic layout.  
 AppDelegate.swift
@@ -3463,7 +3498,7 @@ Common UIKit controls like the button, label, switch, stepper, segmented control
 
 ### UIButton
 
-<img alt="image" src="images/auto layout81.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout81.jpeg" width = 55%/>
 
 ```swift
 let button = UIButton(type: .custom)
@@ -3472,7 +3507,7 @@ button.backgroundColor = .green
 button.intrinsicContentSize // (w 41 h 34)
 ```
 
-<img alt="image" src="images/auto layout82.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout82.jpeg" width = 60%/>
 
 ```swift
 button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
@@ -3547,20 +3582,198 @@ imageView.contentMode = .scaleAspectFit
 - **.scaleAspectFill**: Масштабируйте содержимое, чтобы заполнить пространство, сохраняя соотношение сторон. Содержимое может оказаться больше границ
 view, что приведет к отсечению.
 
-<img alt="image" src="images/auto layout83.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout83.jpeg" width = 70%/>
 
 #### Positioning the View
 
-<img alt="image" src="images/auto layout84.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout84.jpeg" width = 80%/>
 
 - **.center**
 - **.top, .bottom, .left, .right**
 - **.topLeft, .topRight, .bottomLeft, .bottomRight**
 
+### Defaults When Creating Views
+Most views have a `.defaultLow` (250) content hugging priority when created and a compression resistance of `.defaultHigh` (750). These defaults apply to both horizontal and vertical priorities.
+
+| Views   |     Content Hugging     |  Compression Resistance |
+|----------|:-------------:|------:|
+| UIView UIButton UITextField UITextView UISlider UISegmentedControl |  250 | 750 |
+| UILabel UIImageView |    250 (Code) 251 (IB)  |   750 |
+| UISwitch UIStepper UIDatePicker UIPageControl | 750 |    750 |
+
+1. Элементы управления, такие как switch, stepper, data picker и page control, всегда должны отображаться в их естественном размере, поэтому используйте `.defaultHigh
+(750)` priorities.
+2. Если вы создаете UILabel или UIImageView с помощью Interface Builder, они имеют приоритет охвата содержимого **251**. Если вы создадите их в коде, вы получите значение по умолчанию **250**. Конструктор интерфейсов предполагает, что в большинстве случаев вы хотите, чтобы метки и изображения сохраняли свой естественный
+размер содержимого.
+
+<img alt="image" src="images/auto layout85.jpeg" width = 60%/>
+
+#### Working With Priorities In Code
+```swift
+    private let sunImage: UIImageView = {
+        let view = UIImageView(image: UIImage(named: "Sun"))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
+        view.setContentCompressionResistancePriority(.defaultHigh + 1, for: .horizontal)
+        view.backgroundColor = .orange
+        return view
+    }()
+```
+
+All the code
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        window?.rootViewController = RootViewController()
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+```
+
+```swift
+import UIKit
+
+final class RootViewController: UIViewController {
+    private let sunImage: UIImageView = {
+        let view = UIImageView(image: UIImage(named: "Sun"))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
+        view.setContentCompressionResistancePriority(.defaultHigh + 1, for: .horizontal)
+        view.backgroundColor = .orange
+        return view
+    }()
+
+    private let caption: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "A sunny day"
+        label.font = UIFont.systemFont(ofSize: 64.0)
+        label.backgroundColor = .yellow
+        label.numberOfLines = 0
+        return label
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.addSubview(sunImage)
+        view.addSubview(caption)
+
+        let margins = view.layoutMarginsGuide
+        NSLayoutConstraint.activate([
+            sunImage.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            sunImage.topAnchor.constraint(equalTo: margins.topAnchor),
+
+           caption.leadingAnchor.constraint(equalToSystemSpacingAfter: sunImage.trailingAnchor, multiplier: 1.0), caption.topAnchor.constraint(equalTo: margins.topAnchor),
+            caption.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
+            ])
+    }
+}
+```
+
+### Test Your Knowledge
+
+Challenge 7.1 Twice As Big If Possible.
+
+Both labels are using the 24 pt system font. The author label must be at least 160 points wide (but it can be wider)
+
+<img alt="image" src="images/auto layout86.jpeg" width = 60%/>
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        window?.rootViewController = RootViewController()
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+````
+
+RootViewController.swift
+```swift
+import UIKit
+
+final class RootViewController: UIViewController {
+    private let fontSize: CGFloat = 24.0
+    private let minimumWidth: CGFloat = 160.0
+
+    private lazy var authorLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.backgroundColor = .yellow
+        label.font = UIFont.systemFont(ofSize: fontSize)
+        label.numberOfLines = 0
+        return label
+    }()
+
+    private lazy var quoteLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.backgroundColor = .purple
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: fontSize)
+        label.numberOfLines = 0
+        return label
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+        authorLabel.text = "William Shakespeare"
+        quoteLabel.text = "To be, or not to be, that is the question"
+    }
+
+    private func setupView() {
+        view.addSubview(authorLabel)
+        view.addSubview(quoteLabel)
+
+        let optionalWidthConstraint = quoteLabel.widthAnchor.constraint(equalTo: authorLabel.widthAnchor, multiplier: 2.0)
+        optionalWidthConstraint.priority = .defaultHigh
+
+        let margins = view.layoutMarginsGuide
+        NSLayoutConstraint.activate([
+            authorLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            authorLabel.topAnchor.constraint(equalTo: margins.topAnchor),
+            quoteLabel.topAnchor.constraint(equalTo: margins.topAnchor),
+            quoteLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            quoteLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: authorLabel.trailingAnchor, multiplier: 1.0),
+            authorLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: minimumWidth),
+            optionalWidthConstraint
+            ])
+    }
+}
+````
 
 
-<img alt="image" src="images/auto layout85.jpeg" width = 50%/>
+```swift
 
+````
+
+
+```swift
+
+````
 <img alt="image" src="images/auto layout86.jpeg" width = 50%/>
 
 <img alt="image" src="images/auto layout87.jpeg" width = 50%/>
