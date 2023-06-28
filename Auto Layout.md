@@ -9,7 +9,7 @@
 - [Глава №5. Creating Constraints In Code.](#chapter5)
 - [Глава №6. Safe Areas And Layout Margins.](#chapter6)
 - [Глава №7. Layout Priorities and Content Size.](#chapter7)
-- [Глава №8. .](#chapter8)
+- [Глава №8. Stack Views.](#chapter8)
 - [Глава №9. .](#chapter9)
 - [Глава №10. .](#chapter10)
 - [Глава №11. .](#chapter11)
@@ -3405,7 +3405,7 @@ Constraints with a priority lower than `.required (1000)` are optional.
 
 Вариант с storyboard
 
-<img alt="image" src="images/auto layout80.jpeg" width = 80%/>
+<img alt="image" src="images/auto layout80.jpeg" width = 100%/>
 
 Вариант с programmatic layout.  
 AppDelegate.swift
@@ -3693,9 +3693,15 @@ final class RootViewController: UIViewController {
 
 ### Test Your Knowledge
 
-Challenge 7.1 Twice As Big If Possible.
+#### Challenge 7.1 Twice As Big If Possible.
 
 Both labels are using the 24 pt system font. The author label must be at least 160 points wide (but it can be wider)
+
+Storyboard:
+
+<img alt="image" src="images/auto layout87.jpeg" width = 70%/>
+
+Code:
 
 <img alt="image" src="images/auto layout86.jpeg" width = 60%/>
 
@@ -3776,26 +3782,173 @@ final class RootViewController: UIViewController {
 }
 ````
 
+#### Challenge 7.2 Stretch Or Squeeze?
 
-```swift
-
-````
-
-
-```swift
-
-````
-
-
-<img alt="image" src="images/auto layout87.jpeg" width = 50%/>
+Кнопка должна оставаться в своем естественном размере, а размер надписи должен быть изменен, чтобы заполнить
+доступную ширину. При необходимости текст может растягиваться на несколько строк.
 
 <img alt="image" src="images/auto layout88.jpeg" width = 50%/>
 
+Storyboard:
+
 <img alt="image" src="images/auto layout89.jpeg" width = 50%/>
+
+Code:
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        window?.rootViewController = RootViewController()
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+````
+
+RootViewController.swift
+```swift
+import UIKit
+
+final class RootViewController: UIViewController {
+    private let fontSize: CGFloat = 24.0
+
+    private lazy var shareButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(NSLocalizedString("Share", comment: "Share button title"), for: .normal)
+        button.backgroundColor = .yellow
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
+        button.contentEdgeInsets = UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
+        button.addTarget(self, action: #selector(shareQuote(_:)), for: .touchUpInside)
+        return button
+    }()
+
+    private lazy var quoteLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.backgroundColor = .purple
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: fontSize)
+        label.numberOfLines = 0
+        label.setContentHuggingPriority(.defaultLow - 1, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultHigh - 1, for: .horizontal)
+        return label
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        quoteLabel.text = "To be, or not to be, that is the question"
+        setupView()
+    }
+
+    private func setupView() {
+        view.addSubview(shareButton)
+        view.addSubview(quoteLabel)
+
+        let margins = view.layoutMarginsGuide
+        NSLayoutConstraint.activate([
+            shareButton.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            shareButton.topAnchor.constraint(equalTo: margins.topAnchor),
+            quoteLabel.topAnchor.constraint(equalTo: margins.topAnchor),
+            quoteLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            quoteLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: shareButton.trailingAnchor, multiplier: 1.0)
+            ])
+    }
+
+    @objc private func shareQuote(_ sender: UIButton) {
+        print("Share quote")
+    }
+}
+````
+
+#### Challenge 7.3 A Big As Possible Square
 
 <img alt="image" src="images/auto layout90.jpeg" width = 50%/>
 
+Storyboard:
+
 <img alt="image" src="images/auto layout91.jpeg" width = 50%/>
+
+Code:
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        window?.rootViewController = ViewController()
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+````
+
+RootViewController.swift
+```swift
+import UIKit
+
+final class ViewController: UIViewController {
+    private let backgroundView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .green
+        return view
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.backgroundColor = .yellow
+        view.addSubview(backgroundView)
+
+        let optionalWidth = backgroundView.widthAnchor.constraint(equalTo: view.widthAnchor)
+        optionalWidth.priority = .defaultHigh
+
+        NSLayoutConstraint.activate([
+            // center the background view in the root view
+            backgroundView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            backgroundView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+
+            // Aspect ratio 1:1 - makes the background view square
+            backgroundView.widthAnchor.constraint(equalTo: backgroundView.heightAnchor),
+
+            // width and height can grow up to the size of the root view
+            backgroundView.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor),
+            backgroundView.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor),
+
+            // Pull the width as close as possible to the width
+            // of the root view (without violating other required constraints)
+            optionalWidth
+            ])
+    }
+}
+````
+
+---
+
+[К оглавлению](#contents)
+
+###  <a id="chapter8" /> Глава №8. Stack Views
+
+
 
 <img alt="image" src="images/auto layout92.jpeg" width = 50%/>
 
