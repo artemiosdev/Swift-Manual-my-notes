@@ -3699,11 +3699,11 @@ Both labels are using the 24 pt system font. The author label must be at least 1
 
 Storyboard:
 
-<img alt="image" src="images/auto layout87.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout87.jpeg" width = 100%/>
 
 Code:
 
-<img alt="image" src="images/auto layout86.jpeg" width = 60%/>
+<img alt="image" src="images/auto layout86.jpeg" width = 70%/>
 
 AppDelegate.swift
 ```swift
@@ -3787,11 +3787,11 @@ final class RootViewController: UIViewController {
 Кнопка должна оставаться в своем естественном размере, а размер надписи должен быть изменен, чтобы заполнить
 доступную ширину. При необходимости текст может растягиваться на несколько строк.
 
-<img alt="image" src="images/auto layout88.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout88.jpeg" width = 70%/>
 
 Storyboard:
 
-<img alt="image" src="images/auto layout89.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout89.jpeg" width = 100%/>
 
 Code:
 
@@ -3872,11 +3872,11 @@ final class RootViewController: UIViewController {
 
 #### Challenge 7.3 A Big As Possible Square
 
-<img alt="image" src="images/auto layout90.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout90.jpeg" width = 60%/>
 
 Storyboard:
 
-<img alt="image" src="images/auto layout91.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout91.jpeg" width = 100%/>
 
 Code:
 
@@ -3948,15 +3948,99 @@ final class ViewController: UIViewController {
 
 ###  <a id="chapter8" /> Глава №8. Stack Views
 
+A stack view doesn’t automatically scroll its contents like a table or collection view.
 
+Now select all  buttons or another things and embed them in a stack view using the **[Embed In]** tool in the toolbar at the bottom of the Interface Builder window. Or use the menu **Editor › Embed in › Stack View**.
 
-<img alt="image" src="images/auto layout92.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout92.jpeg" width = 80%/>
 
-<img alt="image" src="images/auto layout93.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout93.jpeg" width = 70%/>
 
-<img alt="image" src="images/auto layout94.jpeg" width = 50%/>
+### Embedding Stack Views In Stack Views
+
+<img alt="image" src="images/auto layout94.jpeg" width = 60%/>
 
 <img alt="image" src="images/auto layout95.jpeg" width = 50%/>
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        window?.rootViewController = RootViewController()
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+```
+
+RootViewController.swift
+```swift
+import UIKit
+
+final class RootViewController: UIViewController {
+    private enum ViewMetrics {
+        static let fontSize: CGFloat = 24.0
+        static let spacing: CGFloat = 16.0
+    }
+
+    private let redButton = UIButton.customButton(title: "Red", color: .red, fontSize: ViewMetrics.fontSize)
+    private let greenButton = UIButton.customButton(title: "Green", color: .green, fontSize: ViewMetrics.fontSize)
+    private let blueButton = UIButton.customButton(title: "Blue", color: .blue, fontSize: ViewMetrics.fontSize)
+
+    private lazy var buttonStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [redButton, greenButton, blueButton])
+        stackView.spacing = ViewMetrics.spacing
+        stackView.distribution = .fillEqually
+        return stackView
+    }()
+
+    private let colorLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Pick a color"
+        label.font = UIFont.systemFont(ofSize: ViewMetrics.fontSize)
+        return label
+    }()
+
+    private lazy var rootStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [colorLabel, buttonStackView])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = ViewMetrics.spacing
+        return stackView
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.addSubview(rootStackView)
+        NSLayoutConstraint.activate([
+            rootStackView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            rootStackView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
+            ])
+    }
+}
+
+private extension UIButton {
+    static func customButton(title: String, color: UIColor, fontSize: CGFloat) -> UIButton {
+        let button = UIButton(type: .custom)
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(color, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
+        return button
+    }
+}
+```
 
 <img alt="image" src="images/auto layout96.jpeg" width = 50%/>
 
