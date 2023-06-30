@@ -3803,7 +3803,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions 
+    launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         window?.rootViewController = RootViewController()
@@ -3888,7 +3889,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions
+    launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         window?.rootViewController = ViewController()
@@ -3952,15 +3954,17 @@ A stack view doesn’t automatically scroll its contents like a table or collect
 
 Now select all  buttons or another things and embed them in a stack view using the **[Embed In]** tool in the toolbar at the bottom of the Interface Builder window. Or use the menu **Editor › Embed in › Stack View**.
 
-<img alt="image" src="images/auto layout92.jpeg" width = 80%/>
+<img alt="image" src="images/auto layout92.jpeg" width = 70%/>
 
 <img alt="image" src="images/auto layout93.jpeg" width = 70%/>
 
 ### Embedding Stack Views In Stack Views
 
-<img alt="image" src="images/auto layout94.jpeg" width = 60%/>
+<img alt="image" src="images/auto layout94.jpeg" width = 70%/>
 
-<img alt="image" src="images/auto layout95.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout95.jpeg" width = 70%/>
+
+The stack view defaults to the `.horizontal` axis. Отключаем маску автоматического изменения размера (autoresizing mask) только для представления rootStackView, а не для кнопок и метки buttonStackView. Получается, что rootStackView отключает преобразование маски автоматического изменения размера для представлений, которыми оно управляет. Таким образом, buttonStackView заботится о кнопках, а rootStackView управляет пbuttonStackView.
 
 AppDelegate.swift
 ```swift
@@ -3970,7 +3974,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions
+    launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         window?.rootViewController = RootViewController()
@@ -4042,7 +4047,70 @@ private extension UIButton {
 }
 ```
 
-<img alt="image" src="images/auto layout96.jpeg" width = 50%/>
+Stack View Arranged Views
+A stack view manages the layout of views in its arrangedSubviews property. This can be confusing at first as a stack view also has a subviews
+property inherited from UIView.
+
+### Stack View Arranged Views
+Представление стека управляет расположением view в своем свойстве **`arrangedSubviews`**. Поначалу это может сбить с толку, поскольку view стека также имеет свойство `subviews`, унаследованное от UIView.
+
+```swift
+let stackView = UIStackView(arrangedSubviews: [view1, view2, view3])
+stackView.addArrangedSubview(view4)
+stackView.insertArrangedSubview(view5, at: 0)
+```
+
+Don’t use addSubview when you want addArrangedSubview. Adding the view to subviews makes it visible as part of the view hierarchy, but the layout is not managed by the stack view so it will be missing constraints:
+```swift
+// Add to subviews
+stackView.addSubview(redButton)
+// Add to arrangedSubviews and subviews
+stackView.addArrangedSubview(redButton)
+```
+
+### Removing views from a stack view
+You can use `removeArrangedSubview(_:)` to remove a view from a stack view **but be careful**. This removes the view from `arrangedSubviews`, and the stack view  больше не управляет макетом view. The view не удаляется из subviews поэтому все еще видно, если вы не скроете его или не удалите с помощью `removeFromSuperview()`.
+
+```swift
+// remove from arrangedSubviews (view still visible)
+stackView.removeArrangedSubview(redButton)
+// remove from arrangedSubviews and subviews
+redButton.removeFromSuperview()
+```
+
+Чтобы удалить view из `arrangedSubviews`, так и из `subviews` за один раз, используйте `removeFromSuperview`.
+Возможно, вам будет проще скрыть представление, установив свойство `isHidden`, а не удаляя его.  The stack view заботится только о видимых views и не добавляет ограничений для скрытого view.
+
+### Stack View Axis
+A stack view has a **horizontal** axis by default. 
+```swift
+// Set the axis to vertical
+stackView.axis = .vertical
+// Change to horizontal
+stackView.axis = .horizontal
+```
+
+### Stack View Distribution
+A stack view pins the first and last views in its arranged subviews to the edges/margins of the stack view along the axis of the stack view. For a **horizontal stack** view, this is the **leading and trailing** edge/margin of the stack view. For a **vertical stack** view the** top and bottom** edge/margin.
+
+По умолчанию stack view добавляет ограничения по краям
+stack view. Для ограничений с полями stack view установите свойство `layoutMarginsRelativeArrangement`.
+
+Распределение упорядоченных subviews, чтобы
+заполнить пространство вдоль оси свойством `distribution`:
+
+<img alt="image" src="images/auto layout96.jpeg" width = 70%/>
+
+- **`.fill`** (распределение по умолчанию): пытается заполнить доступное пространство, сохраняя размер просмотров на уровне их внутреннего содержимого. Если пространство не заполнено, это растягивает view с наименьшим приоритетом охвата содержимого (intrinsic content size). Если views слишком велики, он сжимает view с наименьшим приоритетом сопротивления сжатию.
+- **`.fillEqually`**: изменяет размеры всех views до одинакового размера, достаточного для заполнения
+пространства вместе с любым интервалом между views.
+- **`.fillProportionally`**: пропорционально изменяет размеры views на основе их внутреннего размера содержимого  (intrinsic content size), сохраняя относительный размер каждого view.
+- **`.equalSpacing`**: Если места достаточно, это позволяет сохранить размер содержимого views в соответствии с их внутренним размером и заполнить пространство, равномерно заполнив интервал между views. В противном случае view сжимается с наименьшим
+приоритетом сопротивления сжатию (compression resistance priority), чтобы сохранить минимальный интервал свойства `spacing`.
+- **`.equalCentering`**: увеливает расстояние между views, чтобы попытаться создать равное расстояние между центрами каждого вида. При необходимости
+представление с наименьшим приоритетом сжатия содержимого сжимается (compression resistance priority), чтобы сохранить минимальный интервал свойства `spacing`.
+
+### Stack View Alignment
 
 <img alt="image" src="images/auto layout97.jpeg" width = 50%/>
 
