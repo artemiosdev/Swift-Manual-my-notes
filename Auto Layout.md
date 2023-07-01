@@ -4112,6 +4112,66 @@ stack view. Для ограничений с полями stack view устан�
 
 ### Stack View Alignment
 
+The `alignment` property изменяет способ выравнивания view перпендикулярно оси to the stack view axis. 
+The `.fill` alignment is the default and together with the .center alignment works for both stack view orientations:
+
+The .fill alignment stretches and squeezes the arranged views perpendicular to the stack view axis to fill the available space. If the stack view is not constrained perpendicular to the axis, the arranged views take their intrinsic content size, and the largest arranged view sets the stack view size in that direction,
+The .top, .bottom, .firstBaseline, .lastBaseline alignments only apply to horizontal stack views:
+
+Apple warns that the first and last baseline alignments
+only work for views at their intrinsic content size. If you
+stretch or squeeze the views the baseline can be wrong.
+
+For vertical stack views you can use leading and trailing alignments:
+
+Stack View Spacing
+The spacing property sets the space between arranged subviews along the axis of the stack view. For the fill, fill equally and fill proportionally distributions, this is the exact spacing to use, and the stack view stretches or squeezes views to fit.
+For the .equalSpacing or .equalCentering distributions this is the minimum spacing to use. The padding between views may increase beyond this spacing, but the stack view squeezes views if needed to keep at least the minimum spacing.
+
+```swift
+// Set the spacing to 16 points
+stackView.spacing = 16
+```
+
+Use a negative value to overlap views. The order of the
+views in subviews controls the appearance from background to foreground of the views.
+
+Custom Spacing (iOS 11)
+The spacing property applies spacing evenly to the arranged subviews of the stack view. If you want the spacing between subviews to vary you need some extra steps. Take a look at this layout with five labels:
+
+The spacing between the three central labels is 8 points, and the spacing after the header and before the footer is 32 points. Before iOS 11 you would do this either with nested stack views or by adding extra spacer views into the stack view which is a pain.
+Starting with iOS 11 you can customize the spacing between views.
+Interface Builder doesn’t support this, so you need to configure the stack view in code.
+Suppose we have a stack view configured with 8 points of spacing. To get the extra spacing after the header label and before the footer label:
+
+```swift
+// available in iOS 11
+stackView.setCustomSpacing(32.0, after: headerLabel)
+stackView.setCustomSpacing(32.0, after: bottomLabel)
+```
+
+You always set the spacing after the arranged subview.
+There’s no method to set the spacing before a view.
+Standard and Default Spacing (iOS 11)
+Apple also added two new properties on the UIStackView class in iOS 11 that define default and system spacing:
+
+```swift
+class let spacingUseDefault: CGFloat
+class let spacingUseSystem: CGFloat
+```
+
+You don’t directly use the values these properties return. You use them to set or reset the custom spacing after a view. For example to use the system defined spacing after the top label:
+
+```swift
+stackview.setCustomSpacing(UIStackView.spacingUseSystem, after: topLabel)
+```
+
+To reset the spacing after this label back to the value of the spacing property (removing the custom spacing):
+
+```swift
+stackview.setCustomSpacing(UIStackView.spacingUseDefault, after: topLabel)
+```
+
 <img alt="image" src="images/auto layout97.jpeg" width = 50%/>
 
 <img alt="image" src="images/auto layout98.jpeg" width = 50%/>
