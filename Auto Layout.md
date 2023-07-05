@@ -4172,6 +4172,137 @@ To reset the spacing after this label back to the value of the spacing property 
 stackview.setCustomSpacing(UIStackView.spacingUseDefault, after: topLabel)
 ```
 
+### Baseline Relative Arrangement
+
+This property only makes sense when you’re working with text in a vertical
+stack view. Set it to true to space views based on the text baselines (last
+to first) rather than the view edges (bottom to top).
+Suppose we have a vertical stack view with three text labels and a standard amount of spacing. By default this spaces the labels 8 points apart
+measured from their edges:
+
+Setting the baseline relative arrangement property to true spaces the
+
+labels measured from the last baseline of a label to the first baseline of
+the label below:
+
+If you’re building a stack view in code set it directly on the stack view (the default is false):
+
+```swift
+stackView.isBaselineRelativeArrangement = true
+```
+
+### Stack View Margins
+A stack view has a layoutMargin property the same as any other view
+to add spacing between the edges of the stack view and its arranged
+subviews. By default, a stack view doesn’t use the margin. It creates a
+layout relative to its edges
+
+Set the layoutMarginsRelativeArrangement property to true to have
+the stack view layout relative to its margins. For example, to have 8 points
+of margin between the stack view edges and its arranged subviews:
+```swift
+// 8 point margins
+stackView.isLayoutMarginsRelativeArrangement = true
+stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 8.0, leading: 8.0, bottom: 8.0, trailing: 8.0)
+```
+If you’re using Interface Builder, there’s no direct way to set this property.
+Instead, you add an explicit margin for the stack view:
+
+### Stack Views And Layout Priorities
+
+Stack views are convenient. They save you from writing boilerplate constraint code. They don’t remove the need to understand and sometimes
+manage layout priorities. Use the fill, equal spacing or equal centering
+distributions and you may need to change the content hugging or compression resistance priorities of the managed views to get a working
+layout. Here’s an example layout for a user profile page:
+
+When creating the same layout in code, we can set the layout priorities
+when creating the image view and labels (see sample code: StackProfilev2):
+1. The default content hugging priority when creating image views
+and labels in code is defaultLow (250). When we create the name
+label property in the view controller we need to increase the vertical
+content hugging priority to 251:
+
+```swift
+private let nameLabel: UILabel = {
+let label = UILabel()
+label.font = UIFont.boldSystemFont(ofSize:
+ViewMetrics.nameFontSize)
+label.numberOfLines = 0
+label.setContentHuggingPriority(.defaultLow + 1, for:
+.vertical)
+return label
+}()
+```
+
+When creating the image view, we set the content mode and increase the horizontal content hugging priority to 251:
+```swift
+private let profileImageView: UIImageView = {
+let imageView = UIImageView()
+imageView.contentMode = .top
+imageView.setContentHuggingPriority(.defaultLow + 1,
+for: .horizontal)
+return imageView
+}()
+```
+
+The bio label uses the default priorities:
+
+```swift
+private let bioLabel: UILabel = {
+let label = UILabel()
+
+label.font = UIFont.systemFont(ofSize:
+ViewMetrics.bioFontSize)
+label.numberOfLines = 0
+return label
+}()
+```
+
+With the views created we can create the vertical label stack view:
+
+```swift
+private lazy var labelStackView: UIStackView = {
+let stackView = UIStackView(arrangedSubviews:
+[nameLabel, bioLabel])
+stackView.axis = .vertical
+stackView.spacing = UIStackView.spacingUseSystem
+return stackView
+}()
+```
+Then the horizontal profile stack view:
+```swift
+private lazy var profileStackView: UIStackView = {
+let stackView = UIStackView(arrangedSubviews:
+[profileImageView, labelStackView])
+stackView.translatesAutoresizingMaskIntoConstraints = false
+stackView.spacing = UIStackView.spacingUseSystem
+return stackView
+}()
+```
+Note that we need to disable the auto resizing mask constraints for the top stack view.
+Then from viewDidLoad we setup the root view margins and add the profile stack view to the view hierarchy:
+
+```swift
+view.directionalLayoutMargins = NSDirectionalEdgeInsets(
+top: ViewMetrics.margin, leading: ViewMetrics.margin,
+bottom: ViewMetrics.margin, trailing:
+ViewMetrics.margin)
+view.addSubview(profileStackView)
+```
+
+Finally, we can add the constraints when the view loads to pin the
+top stack view to the margins:
+```swift
+let margin = view.layoutMarginsGuide
+NSLayoutConstraint.activate([
+profileStackView.leadingAnchor.constraint(equalTo:
+margin.leadingAnchor),
+profileStackView.topAnchor.constraint(equalTo:
+margin.topAnchor),
+profileStackView.trailingAnchor.constraint(equalTo:
+margin.trailingAnchor)
+])
+```
 <img alt="image" src="images/auto layout97.jpeg" width = 50%/>
 
 <img alt="image" src="images/auto layout98.jpeg" width = 50%/>
@@ -4182,7 +4313,7 @@ stackview.setCustomSpacing(UIStackView.spacingUseDefault, after: topLabel)
 
 ```swift
 
-````
+```
 
 <img alt="image" src="images/.jpg"  width = 70%/>
 
