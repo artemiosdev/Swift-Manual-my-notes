@@ -4177,18 +4177,12 @@ To reset the spacing after this label back to the value of the spacing property 
 stackview.setCustomSpacing(UIStackView.spacingUseDefault, after: topLabel)
 ```
 
-### Baseline Relative Arrangement
+### Baseline Relative Arrangement / Базовое относительное расположение
 
-This property only makes sense when you’re working with text in a vertical
-stack view. Set it to true to space views based on the text baselines (last
-to first) rather than the view edges (bottom to top).
-Suppose we have a vertical stack view with three text labels and a standard amount of spacing. By default this spaces the labels 8 points apart
-measured from their edges:
+Это свойство имеет смысл только тогда, когда вы работаете с текстом vertical stack view. Установите значение true, чтобы пространство отображалось на основе базовых линий текста (last to first), а не к краям view (bottom to top).
+Предположим, у нас есть вертикальный стек с тремя текстовыми метками и стандартным интервалом. По умолчанию это размещает метки на расстоянии 8 пунктов друг от друга измеряется от их краев:
 
-Setting the baseline relative arrangement property to true spaces the
-
-labels measured from the last baseline of a label to the first baseline of
-the label below:
+If you’re using Interface Builder the setting is in the attributes inspector for a stack view just under the spacing: Baseline Relative.
 
 If you’re building a stack view in code set it directly on the stack view (the default is false):
 
@@ -4196,29 +4190,20 @@ If you’re building a stack view in code set it directly on the stack view (the
 stackView.isBaselineRelativeArrangement = true
 ```
 
-### Stack View Margins
-A stack view has a layoutMargin property the same as any other view
-to add spacing between the edges of the stack view and its arranged
-subviews. By default, a stack view doesn’t use the margin. It creates a
-layout relative to its edges
+### Stack View Margins (поля)
+A stack view has a `layoutMargin` property  такое же, как и любое другое представление чтобы добавить расстояние между краями stack view и его упорядоченным subviews.
+По умолчанию stack view не использует поля. Это создает
+расположение относительно его краев.
 
-Set the layoutMarginsRelativeArrangement property to true to have
-the stack view layout relative to its margins. For example, to have 8 points
-of margin between the stack view edges and its arranged subviews:
+Установите для свойства `layoutMarginsRelativeArrangement` значение true, чтобы макет stack view относительно его полей. Например, чтобы было 8 points поля между краями stack view и его arranged subviews:
+
 ```swift
 // 8 point margins
 stackView.isLayoutMarginsRelativeArrangement = true
 stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 8.0, leading: 8.0, bottom: 8.0, trailing: 8.0)
 ```
-If you’re using Interface Builder, there’s no direct way to set this property.
-Instead, you add an explicit margin for the stack view:
 
 ### Stack Views And Layout Priorities
-
-Stack views are convenient. They save you from writing boilerplate constraint code. They don’t remove the need to understand and sometimes
-manage layout priorities. Use the fill, equal spacing or equal centering
-distributions and you may need to change the content hugging or compression resistance priorities of the managed views to get a working
-layout. Here’s an example layout for a user profile page:
 
 When creating the same layout in code, we can set the layout priorities
 when creating the image view and labels (see sample code: StackProfilev2):
