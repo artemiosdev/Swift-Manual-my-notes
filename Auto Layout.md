@@ -4205,12 +4205,9 @@ stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 8.0, leading: 
 
 ### Stack Views And Layout Priorities
 
-When creating the same layout in code, we can set the layout priorities
-when creating the image view and labels (see sample code: StackProfilev2):
-1. The default content hugging priority when creating image views
-and labels in code is defaultLow (250). When we create the name
-label property in the view controller we need to increase the vertical
-content hugging priority to 251:
+layout in code
+
+1. The default content hugging priority when creating image views and labels in code is defaultLow (250). When we create the name label property in the view controller we need to increase the vertical content hugging priority to 251:
 
 ```swift
 private let nameLabel: UILabel = {
@@ -4218,29 +4215,27 @@ let label = UILabel()
 label.font = UIFont.boldSystemFont(ofSize:
 ViewMetrics.nameFontSize)
 label.numberOfLines = 0
-label.setContentHuggingPriority(.defaultLow + 1, for:
-.vertical)
+label.setContentHuggingPriority(.defaultLow + 1, for: .vertical)
 return label
 }()
 ```
 
-When creating the image view, we set the content mode and increase the horizontal content hugging priority to 251:
+2. When creating the image view, we set the content mode and increase the horizontal content hugging priority to 251:
+
 ```swift
 private let profileImageView: UIImageView = {
 let imageView = UIImageView()
 imageView.contentMode = .top
-imageView.setContentHuggingPriority(.defaultLow + 1,
-for: .horizontal)
+imageView.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
 return imageView
 }()
 ```
 
-The bio label uses the default priorities:
+3. The bio label uses the default priorities:
 
 ```swift
 private let bioLabel: UILabel = {
 let label = UILabel()
-
 label.font = UIFont.systemFont(ofSize:
 ViewMetrics.bioFontSize)
 label.numberOfLines = 0
@@ -4248,7 +4243,7 @@ return label
 }()
 ```
 
-With the views created we can create the vertical label stack view:
+4. With the views created we can create the vertical label stack view:
 
 ```swift
 private lazy var labelStackView: UIStackView = {
@@ -4259,7 +4254,9 @@ stackView.spacing = UIStackView.spacingUseSystem
 return stackView
 }()
 ```
-Then the horizontal profile stack view:
+
+5. Then the horizontal profile stack view:
+
 ```swift
 private lazy var profileStackView: UIStackView = {
 let stackView = UIStackView(arrangedSubviews:
@@ -4269,37 +4266,179 @@ stackView.spacing = UIStackView.spacingUseSystem
 return stackView
 }()
 ```
+
 Note that we need to disable the auto resizing mask constraints for the top stack view.
-Then from viewDidLoad we setup the root view margins and add the profile stack view to the view hierarchy:
+
+6. Then from viewDidLoad we setup the root view margins and add the profile stack view to the view hierarchy:
 
 ```swift
-view.directionalLayoutMargins = NSDirectionalEdgeInsets(
-top: ViewMetrics.margin, leading: ViewMetrics.margin,
-bottom: ViewMetrics.margin, trailing:
-ViewMetrics.margin)
+view.directionalLayoutMargins = NSDirectionalEdgeInsets( top: ViewMetrics.margin, 
+leading: ViewMetrics.margin, bottom: ViewMetrics.margin, 
+trailing: ViewMetrics.margin)
 view.addSubview(profileStackView)
 ```
 
-Finally, we can add the constraints when the view loads to pin the
-top stack view to the margins:
+7. Finally, we can add the constraints when the view loads to pin the top stack view to the margins:
+
 ```swift
 let margin = view.layoutMarginsGuide
 NSLayoutConstraint.activate([
-profileStackView.leadingAnchor.constraint(equalTo:
-margin.leadingAnchor),
+profileStackView.leadingAnchor.constraint(equalTo: margin.leadingAnchor),
 profileStackView.topAnchor.constraint(equalTo:
-margin.topAnchor),
+margin.topAnchor), 
 profileStackView.trailingAnchor.constraint(equalTo:
 margin.trailingAnchor)
 ])
 ```
 
-
-
-
-
-
 <img alt="image" src="images/auto layout100.jpeg" width = 50%/>
+
+Весь код:  
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+
+        let profile = Profile(name: "Sue Appleseed", bio: "Deep sea diver. Donut maker. Tea drinker.", avatar: nil)
+        let profileViewController = ProfileViewController()
+        profileViewController.profile = profile
+
+        let navigationController = UINavigationController(rootViewController: profileViewController)
+        window?.rootViewController = navigationController
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+```
+
+Profile.swift
+```swift
+import UIKit
+
+struct Profile {
+    let name: String
+    let bio: String
+    let avatar: UIImage?
+}
+```
+
+ProfileViewController.swift
+```swift
+import UIKit
+
+final class ProfileViewController: UIViewController {
+    private enum ViewMetrics {
+        static let margin: CGFloat = 20.0
+        static let nameFontSize: CGFloat = 18.0
+        static let bioFontSize: CGFloat = 17.0
+    }
+
+    var profile: Profile? {
+        didSet {
+            configureView()
+        }
+    }
+
+    private let nameLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: ViewMetrics.nameFontSize)
+        label.numberOfLines = 0
+        label.setContentHuggingPriority(.defaultLow + 1, for: .vertical)
+        return label
+    }()
+
+    private let bioLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: ViewMetrics.bioFontSize)
+        label.numberOfLines = 0
+        return label
+    }()
+
+    private let profileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .top
+        imageView.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
+        return imageView
+    }()
+
+    private lazy var labelStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [nameLabel, bioLabel])
+        stackView.axis = .vertical
+        stackView.spacing = UIStackView.spacingUseSystem
+        return stackView
+    }()
+
+    private lazy var profileStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [profileImageView, labelStackView])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = UIStackView.spacingUseSystem
+        return stackView
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+        configureView()
+    }
+
+    private func setupView() {
+        view.backgroundColor = UIColor(named: "sky")
+        view.directionalLayoutMargins = NSDirectionalEdgeInsets(top: ViewMetrics.margin, leading: ViewMetrics.margin, bottom: ViewMetrics.margin, trailing: ViewMetrics.margin)
+        view.addSubview(profileStackView)
+
+        let margin = view.layoutMarginsGuide
+        NSLayoutConstraint.activate([
+            profileStackView.leadingAnchor.constraint(equalTo: margin.leadingAnchor),
+            profileStackView.topAnchor.constraint(equalTo: margin.topAnchor),
+            profileStackView.trailingAnchor.constraint(equalTo: margin.trailingAnchor)
+        ])
+    }
+
+    private func configureView() {
+        if let image = profile?.avatar {
+            profileImageView.image = image
+        } else {
+            profileImageView.image = UIImage(named: "placeholder")
+        }
+
+        title = profile?.name
+        nameLabel.text = profile?.name
+        bioLabel.text = profile?.bio
+    }
+}
+```
+
+
+
+
+### Dynamically Updating Stack Views
+
+<img alt="image" src="images/auto layout101.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout102.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout103.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout104.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout105.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout106.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout107.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout108.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout109.jpeg" width = 50%/>
+
+<img alt="image" src="images/auto layout110.jpeg" width = 50%/>
 
 ```swift
 
