@@ -3960,7 +3960,7 @@ Now select all  buttons or another things and embed them in a stack view using t
 
 ### Embedding Stack Views In Stack Views
 
-<img alt="image" src="images/auto layout94.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout94.jpeg" width = 60%/>
 
 <img alt="image" src="images/auto layout95.jpeg" width = 70%/>
 
@@ -4099,7 +4099,7 @@ stack view. Для ограничений с полями stack view устан�
 Распределение упорядоченных subviews, чтобы
 заполнить пространство вдоль оси свойством `distribution`:
 
-<img alt="image" src="images/auto layout96.jpeg" width = 70%/>
+<img alt="image" src="images/auto layout96.jpeg" width = 60%/>
 
 - **`.fill`** (распределение по умолчанию): пытается заполнить доступное пространство, сохраняя размер просмотров на уровне их внутреннего содержимого. Если пространство не заполнено, это растягивает view с наименьшим приоритетом охвата содержимого (intrinsic content size). Если views слишком велики, он сжимает view с наименьшим приоритетом сопротивления сжатию.
 - **`.fillEqually`**: изменяет размеры всех views до одинакового размера, достаточного для заполнения
@@ -4212,8 +4212,7 @@ layout in code
 ```swift
 private let nameLabel: UILabel = {
 let label = UILabel()
-label.font = UIFont.boldSystemFont(ofSize:
-ViewMetrics.nameFontSize)
+label.font = UIFont.boldSystemFont(ofSize: ViewMetrics.nameFontSize)
 label.numberOfLines = 0
 label.setContentHuggingPriority(.defaultLow + 1, for: .vertical)
 return label
@@ -4302,7 +4301,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: 
+    [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
 
@@ -4390,7 +4390,8 @@ final class ProfileViewController: UIViewController {
 
     private func setupView() {
         view.backgroundColor = UIColor(named: "sky")
-        view.directionalLayoutMargins = NSDirectionalEdgeInsets(top: ViewMetrics.margin, leading: ViewMetrics.margin, bottom: ViewMetrics.margin, trailing: ViewMetrics.margin)
+        view.directionalLayoutMargins = NSDirectionalEdgeInsets(top: ViewMetrics.margin, 
+        leading: ViewMetrics.margin, bottom: ViewMetrics.margin, trailing: ViewMetrics.margin)
         view.addSubview(profileStackView)
 
         let margin = view.layoutMarginsGuide
@@ -4415,12 +4416,154 @@ final class ProfileViewController: UIViewController {
 }
 ```
 
-
-
-
 ### Dynamically Updating Stack Views
 
-<img alt="image" src="images/auto layout101.jpeg" width = 50%/>
+Stack views автоматически обновляют макет своих arranged subviews , когда вы вносите изменения. Это включает в себя:
+
+- Adding or removing an arranged subview.
+- Changing the isHidden property on any of the arranged subviews.
+- Changing the axis, alignment, distribution or spacing properties.  
+
+Более того, вы можете анимировать любое из этих изменений.
+
+### Animating Changes To A Stack View
+To animate changes you make to a stack view embed them in a UIView animation block. For example, to create an animation that takes 0.25 seconds to run:
+
+```swift
+UIView.animate(withDuration: 0.25) {
+// Change stack view properties here
+}
+```
+Or if using property animators introduced with iOS 10:
+
+```swift
+UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.25, delay: 0, options: [], animations: { 
+  // Change stack view properties here 
+}, completion: nil)
+```
+
+Приятной особенностью stack views является то, что они автоматически корректируют макет, когда вы скрываете или показываете arranged views.
+
+### Adding Background Views
+How would you give your stack view a background color? If you try to set the background color in Interface Builder or in code, and you’re not running on at least iOS 14, it may surprise you that it does nothing. The reason is that a stack view is a non-rendering subclass of UIView.  
+Его задача заключается в управлении макетом views, которые вы добавляете в arrangedSubviews.
+
+До iOS 14 stack view использовало CATransformLayer и
+игнорировало любые свойства, поддерживаемые CALayer. Apple перешла на использование CALayer в iOS 14, поэтому stack view теперь отображают цвет фона и другие свойства CALayer. See Stack View Background Color (iOS 14).
+
+### Adding A Background View
+
+1. Connect an outlet in the view controller to the root container stack view in the storyboard. Use the assistant editor to control-drag from the stack view into the controller:
+    `@IBOutlet private var containerStackView: UIStackView!`
+    
+2. Add a setupView() method to create and add the background view to the stack view. Add constraints to pin the background view to the edges of the stack view.
+
+```swift
+    private func setupView() {
+        let backgroundView = UIView()
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundView.backgroundColor = .purple
+        backgroundView.layer.cornerRadius = 10.0
+        
+// Мы делаем backgroundView первым view в subviews, 
+// чтобы он отображался позади других subviews.
+containerStackView.insertSubview(backgroundView, at: 0)
+        NSLayoutConstraint.activate([
+            containerStackView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor),
+            containerStackView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor),
+            containerStackView.topAnchor.constraint(equalTo: backgroundView.topAnchor),
+            containerStackView.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor)
+        ])
+    }
+```
+
+Adding a background view to a stack view to make it into an extension of UIStackView
+
+Let’s create a method to add an unarranged view to a stack view. This method creates the view, sets its color and radius, adds it to the subviews array at the specified index and then activates constraints to pin it to the edges of the stack view:
+
+UIStackView+Extension.swift
+```swift
+import UIKit
+
+public extension UIStackView {
+    @discardableResult
+    func addBackground(color: UIColor, radius: CGFloat = 0) -> UIView {
+        return addUnarrangedView(color: color, radius: radius, at: 0)
+    }
+
+    @discardableResult
+    func addForeground(color: UIColor, radius: CGFloat = 0) -> UIView {
+        let index = subviews.count
+        return addUnarrangedView(color: color, radius: radius, at: index)
+    }
+
+    @discardableResult
+    func addUnarrangedView(color: UIColor, radius: CGFloat = 0, at index: Int = 0) -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = color
+        view.layer.cornerRadius = radius
+        insertSubview(view, at: index)
+        NSLayoutConstraint.activate([
+            view.leadingAnchor.constraint(equalTo: leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: trailingAnchor),
+            view.topAnchor.constraint(equalTo: topAnchor),
+            view.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+        return view
+    }
+}
+```
+
+Это сокращает код настройки view до одной строки в нашем view controller:  `containerStackView.addBackground(color: .purple, radius: 10.0)`
+
+Весь файл:  
+ViewController.swift
+```swift
+import UIKit
+
+final class ViewController: UIViewController {
+    @IBOutlet private var containerStackView: UIStackView!
+    @IBOutlet private var imageStackView: UIStackView!
+    @IBOutlet private var axisSwitch: UISwitch!
+
+    @IBAction func axisChanged(_ sender: UISwitch) {
+        if #available(iOS 10, *) {
+            let animator = UIViewPropertyAnimator(duration: 2.0, dampingRatio: 0.2, animations: {
+                self.configureAxis()
+            })
+            animator.startAnimation()
+        } else {
+            UIView.animate(withDuration: 2.0, delay: 0, usingSpringWithDamping: 0.2, initialSpringVelocity: 0, options: [], animations: {
+                self.configureAxis()
+            }, completion: nil)
+        }
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+        configureAxis()
+    }
+
+    private func setupView() {
+        containerStackView.addBackground(color: .purple, radius: 10.0)
+    }
+
+    private func configureAxis() {
+        imageStackView?.axis = axisSwitch.isOn ? .vertical : .horizontal
+        if let lastImageView = imageStackView.arrangedSubviews.last {
+            lastImageView.isHidden = !axisSwitch.isOn
+        }
+    }
+}
+```
+
+<img alt="image" src="images/auto layout101.jpeg" width = 60%/>
+
+### Stack View Background Color (iOS 14)
+
+
 
 <img alt="image" src="images/auto layout102.jpeg" width = 50%/>
 
