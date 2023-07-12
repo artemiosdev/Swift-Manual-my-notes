@@ -4431,7 +4431,7 @@ To animate changes you make to a stack view embed them in a UIView animation blo
 
 ```swift
 UIView.animate(withDuration: 0.25) {
-// Change stack view properties here
+  // Change stack view properties here
 }
 ```
 Or if using property animators introduced with iOS 10:
@@ -4534,7 +4534,8 @@ final class ViewController: UIViewController {
             })
             animator.startAnimation()
         } else {
-            UIView.animate(withDuration: 2.0, delay: 0, usingSpringWithDamping: 0.2, initialSpringVelocity: 0, options: [], animations: {
+            UIView.animate(withDuration: 2.0, delay: 0, usingSpringWithDamping: 0.2, initialSpringVelocity: 0,
+            options: [], animations: {
                 self.configureAxis()
             }, completion: nil)
         }
@@ -4563,7 +4564,24 @@ final class ViewController: UIViewController {
 
 ### Stack View Background Color (iOS 14)
 
+Since in iOS 14 we now have a full CALayer we can also set other properties like the cornerRadius on the stack view layer. If you’re still supporting iOS 13 or earlier it’s best to do that inside an availability check to avoid runtime warnings when you have a CATransformLayer. Fallback to manually adding a background view for iOS 13 and earlier
 
+Поскольку в iOS 14 у нас теперь есть полноценный `CALayer`, мы также можем установить другие свойства, такие как `cornerRadius`, на слой stack view. Если вы все еще поддерживаете iOS 13 или более раннюю версию, лучше всего сделать это в рамках проверки доступности, чтобы избежать предупреждений во время выполнения, когда у вас есть старый `CATransformLayer`. Резервный
+вариант ручного добавления фонового просмотра для iOS 13 и более ранних версий:
+
+```swift
+if #available(iOS 14.0, *) {
+  // Our stack view has a CALayer so we can set a
+  // background color and use layer properties
+  containerStackView.backgroundColor = .purple
+  containerStackView.layer.cornerRadius = 10.0
+} else {
+  // Fallback to manually adding the background
+  containerStackView.addBackground(color: .purple, radius: 10.0)
+}
+```
+
+261
 
 <img alt="image" src="images/auto layout102.jpeg" width = 50%/>
 
