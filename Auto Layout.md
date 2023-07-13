@@ -4581,12 +4581,189 @@ if #available(iOS 14.0, *) {
 }
 ```
 
-261
+### Challenge 8.1 Fixed Width, Flexible Height
+
+A typical setup for a stack view is to fix its position and allow either the width or height to vary to fit the content. Center a label and three buttons vertically. The views fill the available width between the margins of the superview. The label text is center aligned with a 24pt system font. The buttons are using 18pt system font. There’s a standard amount of vertical spacing.
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        window?.rootViewController = RootViewController()
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+```
+
+RootViewController.swift
+```swift
+import UIKit
+
+final class RootViewController: UIViewController {
+    private enum ViewMetrics {
+        static let labelFontSize: CGFloat = 24.0
+        static let buttonFontSize: CGFloat = 18.0
+        static let spacing: CGFloat = 8.0
+    }
+
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = NSLocalizedString("Engine Power", comment: "Engine Power")
+        label.font = UIFont.systemFont(ofSize: ViewMetrics.labelFontSize)
+        label.textAlignment = .center
+        return label
+    }()
+
+    private let lowButton: UIButton = {
+        let title = NSLocalizedString("Low", comment: "Low")
+        let button = UIButton.makeButton(title: title, color: .red, fontSize: ViewMetrics.buttonFontSize)
+        return button
+    }()
+
+    private let mediumButton: UIButton = {
+        let title = NSLocalizedString("Medium", comment: "Medium")
+        let button = UIButton.makeButton(title: title, color: .yellow, fontSize: ViewMetrics.buttonFontSize)
+        return button
+    }()
+
+    private let highButton: UIButton = {
+        let title = NSLocalizedString("High", comment: "High")
+        let button = UIButton.makeButton(title: title, color: .green, fontSize: ViewMetrics.buttonFontSize)
+        return button
+    }()
+
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, lowButton, mediumButton, highButton])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = ViewMetrics.spacing
+        return stackView
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor)
+        ])
+    }
+}
+
+private extension UIButton {
+    static func makeButton(title: String, color: UIColor, fontSize: CGFloat) -> UIButton {
+        let button = UIButton(type: .custom)
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = color
+        button.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
+        return button
+    }
+}
+```
 
 <img alt="image" src="images/auto layout102.jpeg" width = 50%/>
 
+### Challenge 8.2 Stretch To Fill
+
+I pinned this layout to the margins of the root view on all sides forcing the content to stretch to fill the available space. The layout is a single image view, and a button arranged vertically separated by a standard amount of spacing.
+• The button is using a 24 point system font.
+• The image should fill the available space, keeping the button at its natural size.
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        window?.rootViewController = RootViewController()
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+```
+
+RootViewController.swift
+```swift
+import UIKit
+
+final class RootViewController: UIViewController {
+    private enum ViewMetrics {
+        static let fontSize: CGFloat = 24.0
+        static let spacing: CGFloat = 8.0
+    }
+
+    private let imageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "Sun"))
+        imageView.backgroundColor = .orange
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+
+    private let button: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle(NSLocalizedString("Share", comment: "Share"), for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: ViewMetrics.fontSize)
+        button.setContentHuggingPriority(.defaultLow + 1, for: .vertical)
+        return button
+    }()
+
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [imageView, button])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = ViewMetrics.spacing
+        return stackView
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+            stackView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor)
+        ])
+        
+        button.addTarget(self, action: #selector(shareAction(_:)), for: .touchUpInside)
+    }
+
+    @objc private func shareAction(_ sender: UIButton) {
+        print("share")
+    }
+}
+```
+
 <img alt="image" src="images/auto layout103.jpeg" width = 50%/>
 
+### Challenge 8.3 Show The Secret Code
+
+Key Points To Remember 
 <img alt="image" src="images/auto layout104.jpeg" width = 50%/>
 
 <img alt="image" src="images/auto layout105.jpeg" width = 50%/>
