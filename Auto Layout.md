@@ -3950,6 +3950,15 @@ final class ViewController: UIViewController {
 
 ###  <a id="chapter8" /> Глава №8. Stack Views
 
+### Key Points To Remember
+
+- Don’t forget you still need to adjust content-hugging and
+compression-resistance priorities any time the stack view can
+squeeze or stretch the arranged subviews to fit the available space
+- If you’re creating your stack views in code don’t forget to set
+`translatesAutoresizingMaskIntoConstraints` to false for the top stack view. The stack view does it for you for any arranged views (including other stack views) you add to the stack view.
+- A common mistake is to forget that a view stays in the subviews array of a stack view after you call removeArrangedSubview to remove it. You either need to use removeFromSuperview to remove the view yourself or hide it if you don’t want to see it on screen.
+
 A stack view doesn’t automatically scroll its contents like a table or collection view.
 
 Now select all  buttons or another things and embed them in a stack view using the **[Embed In]** tool in the toolbar at the bottom of the Interface Builder window. Or use the menu **Editor › Embed in › Stack View**.
@@ -4585,6 +4594,8 @@ if #available(iOS 14.0, *) {
 
 A typical setup for a stack view is to fix its position and allow either the width or height to vary to fit the content. Center a label and three buttons vertically. The views fill the available width between the margins of the superview. The label text is center aligned with a 24pt system font. The buttons are using 18pt system font. There’s a standard amount of vertical spacing.
 
+<img alt="image" src="images/auto layout102.jpeg" width = 60%/>
+
 AppDelegate.swift
 ```swift
 import UIKit
@@ -4593,7 +4604,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, 
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         window?.rootViewController = RootViewController()
@@ -4676,13 +4688,13 @@ private extension UIButton {
 }
 ```
 
-<img alt="image" src="images/auto layout102.jpeg" width = 50%/>
-
 ### Challenge 8.2 Stretch To Fill
 
 I pinned this layout to the margins of the root view on all sides forcing the content to stretch to fill the available space. The layout is a single image view, and a button arranged vertically separated by a standard amount of spacing.
 • The button is using a 24 point system font.
 • The image should fill the available space, keeping the button at its natural size.
+
+<img alt="image" src="images/auto layout103.jpeg" width = 60%/>
 
 AppDelegate.swift
 ```swift
@@ -4692,7 +4704,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, 
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         window?.rootViewController = RootViewController()
@@ -4759,12 +4772,165 @@ final class RootViewController: UIViewController {
 }
 ```
 
-<img alt="image" src="images/auto layout103.jpeg" width = 50%/>
-
 ### Challenge 8.3 Show The Secret Code
 
-Key Points To Remember 
-<img alt="image" src="images/auto layout104.jpeg" width = 50%/>
+<img alt="image" src="images/auto layout104.jpeg" width = 60%/>
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, 
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+        let rootViewController = RootViewController()
+        let navigationController = UINavigationController(rootViewController: rootViewController)
+        window?.rootViewController = navigationController
+        window?.makeKeyAndVisible()
+        return true
+    }
+}
+```
+
+UIStackView+Extension.swift
+```swift
+import UIKit
+
+public extension UIStackView {
+    @discardableResult
+    func addBackground(color: UIColor, radius: CGFloat = 0) -> UIView {
+        return addUnarrangedView(color: color, radius: radius, at: 0)
+    }
+
+    @discardableResult
+    func addForeground(color: UIColor, radius: CGFloat = 0) -> UIView {
+        let index = subviews.count
+        return addUnarrangedView(color: color, radius: radius, at: index)
+    }
+
+    @discardableResult
+    func addUnarrangedView(color: UIColor, radius: CGFloat = 0, at index: Int = 0) -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = color
+        view.layer.cornerRadius = radius
+        insertSubview(view, at: index)
+        NSLayoutConstraint.activate([
+            view.leadingAnchor.constraint(equalTo: leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: trailingAnchor),
+            view.topAnchor.constraint(equalTo: topAnchor),
+            view.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+        return view
+    }
+}
+```
+
+RootViewController.swift
+```swift
+import UIKit
+
+final class RootViewController: UIViewController {
+    private enum ViewMetrics {
+        static let codeFontSize: CGFloat = 40
+        static let codeSpacing: CGFloat = 16
+        static let codeBackgroundColor: UIColor = .yellow
+        static let codeColor: UIColor = .black
+        static let verticalSpacing: CGFloat = 16
+        static let margin: CGFloat = 16
+        static let backgroundColor: UIColor = .purple
+        static let coverColor: UIColor = .yellow
+        static let animationDuration: TimeInterval = 0.25
+    }
+
+    private let code1 = UILabel.makeLabel("1A", fontSize: ViewMetrics.codeFontSize, textColor: ViewMetrics.codeColor, backgroundColor: ViewMetrics.codeBackgroundColor)
+    private let code2 = UILabel.makeLabel("2BX", fontSize: ViewMetrics.codeFontSize, textColor: ViewMetrics.codeColor, backgroundColor: ViewMetrics.codeBackgroundColor)
+    private let code3 = UILabel.makeLabel("3Z", fontSize: ViewMetrics.codeFontSize, textColor: ViewMetrics.codeColor, backgroundColor: ViewMetrics.codeBackgroundColor)
+
+    private lazy var codeStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [code1, code2, code3])
+        stackView.distribution = .fillEqually
+        stackView.spacing = ViewMetrics.codeSpacing
+        return stackView
+    }()
+
+    private lazy var codeSwitch: UISwitch = {
+        let codeSwitch = UISwitch()
+        codeSwitch.addTarget(self, action: #selector(showCode(_:)), for: .valueChanged)
+        return codeSwitch
+    }()
+
+    private lazy var rootStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [codeSwitch, codeStackView])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = ViewMetrics.verticalSpacing
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: ViewMetrics.margin, leading: ViewMetrics.margin, bottom: ViewMetrics.margin, trailing: ViewMetrics.margin)
+        return stackView
+    }()
+
+    private var coverView: UIView?
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+        configureCover()
+    }
+
+    private func setupView() {
+        view.addSubview(rootStackView)
+        title = NSLocalizedString("Show Code", comment: "Show Code")
+        rootStackView.addBackground(color: ViewMetrics.backgroundColor)
+        coverView = codeStackView.addForeground(color: ViewMetrics.coverColor)
+        codeSwitch.isOn = false
+
+        NSLayoutConstraint.activate([
+            rootStackView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+            rootStackView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            rootStackView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor)
+        ])
+    }
+
+    @objc private func showCode(_ sender: UISwitch) {
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: ViewMetrics.animationDuration, delay: 0, options: [], animations: {
+            self.configureCover()
+        }, completion: nil)
+    }
+
+    private func configureCover() {
+        coverView?.alpha = codeSwitch.isOn ? 0 : 1.0
+    }
+}
+
+private extension UILabel {
+    static func makeLabel(_ text: String, fontSize: CGFloat, textColor: UIColor, backgroundColor: UIColor) -> UILabel {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: fontSize)
+        label.text = text
+        label.textAlignment = .center
+        label.backgroundColor = backgroundColor
+        label.textColor = textColor
+        return label
+    }
+}
+```
+
+---
+
+[К оглавлению](#contents)
+
+###  <a id="chapter9" /> Глава №9. Understanding The Layout Engine
+
+### Key Points To Remember
+
+
 
 <img alt="image" src="images/auto layout105.jpeg" width = 50%/>
 
