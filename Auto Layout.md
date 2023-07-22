@@ -10,7 +10,7 @@
 - [Глава №6. Safe Areas And Layout Margins.](#chapter6)
 - [Глава №7. Layout Priorities and Content Size.](#chapter7)
 - [Глава №8. Stack Views.](#chapter8)
-- [Глава №9. .](#chapter9)
+- [Глава №9. Understanding The Layout Engine.](#chapter9)
 - [Глава №10. .](#chapter10)
 - [Глава №11. .](#chapter11)
 - [Глава №12. .](#chapter12)
@@ -5010,7 +5010,181 @@ final class ViewController: UIViewController {
 }
 ```
 
-<img alt="image" src="images/auto layout107.jpeg" width = 50%/>
+### Custom Layouts
+
+Предположим, что мы не знаем, сколько у нас views или насколько велико каждое view до времени выполнения. Как мы можем показать как можно больше views в доступной ширине без прокрутки-scrolling?
+
+Относительно макета ниже. The trick is to let the layout engine do its layout pass to set the bounds of each view. We can then check the width of the stack view to see if it’s too big or too small and add or remove views as needed.
+
+<img alt="image" src="images/auto layout107.jpeg" width = 60%/>
+
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+}
+```
+
+PreviewViewController.swift
+```swift
+import UIKit
+
+final class PreviewViewController: UIViewController {
+    private let itemCount = 10
+
+    private lazy var previewPane: PreviewPane = {
+        let view = PreviewPane()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private lazy var refreshButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Refresh", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.addTarget(self, action: #selector(refresh(_:)), for: .touchUpInside)
+        return button
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+        refreshRandomViews()
+    }
+
+    private func setupView() {
+        view.backgroundColor = .yellow
+        view.addSubview(refreshButton)
+        view.addSubview(previewPane)
+
+        let guide = view.layoutMarginsGuide
+        NSLayoutConstraint.activate([
+            refreshButton.centerXAnchor.constraint(equalTo: guide.centerXAnchor),
+            refreshButton.topAnchor.constraint(equalToSystemSpacingBelow: guide.topAnchor, multiplier: 1.0),
+
+            previewPane.leadingAnchor.constraint(equalTo: guide.leadingAnchor),
+            previewPane.centerYAnchor.constraint(equalTo: guide.centerYAnchor),
+            previewPane.trailingAnchor.constraint(equalTo: guide.trailingAnchor)
+        ])
+    }
+
+    @objc private func refresh(_ sender: UIButton) {
+        refreshRandomViews()
+    }
+
+    // create the random views and show them in the preview pane
+    private func refreshRandomViews() {
+        var views = [UIView]()
+        for count in 0 ..< itemCount {
+            let view = UILabel()
+            view.text = "\(count)"
+            let size = CGFloat(arc4random_uniform(64)) + 64.0
+            view.font = UIFont.systemFont(ofSize: size)
+            view.backgroundColor = (count % 2 == 0) ? .red : .green
+            views.append(view)
+        }
+        previewPane.show(views)
+    }
+}
+```
+
+PreviewPane.swift
+```swift
+import UIKit
+
+final class PreviewPane: UIView {
+    // configure the stack view
+    var spacing: CGFloat = 16.0 {
+        didSet {
+            stackView.spacing = spacing
+        }
+    }
+
+    // accepts an array of views to show
+    func show(_ items: [UIView]) {
+        // This заменяет все views уже имеющиеся в stack view новым набором views
+        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        items.forEach { stackView.addArrangedSubview($0) }
+        // clear this when we get a new set of views to preview
+        overflow.removeAll()
+    }
+
+    // для хранения доп views, которые мы удаляем из stack view
+    private var overflow = [UIView]()
+
+    //  заботится о horizontal layout для нас
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = spacing
+        stackView.alignment = .center
+        return stackView
+    }()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        // we can modify subviews here
+        // обрабатываем добавление доп view обратно в stack views
+        while let nextItem = overflow.first,
+            stackView.bounds.width + spacing + nextItem.intrinsicContentSize.width <= bounds.width
+        {
+            stackView.addArrangedSubview(nextItem)
+            overflow.remove(at: 0)
+            updateConstraintsIfNeeded()
+            
+            // layout engine has updated the bounds and center of our subviews
+            // based on the views and constraints.
+            super.layoutSubviews()
+        }
+
+        // where the stack view is wider than
+        // the bounds of the superview. We want to remove last view in
+        // stack view and then ask the layout engine to update layout
+        while stackView.bounds.width > bounds.width,
+            let extraView = stackView.arrangedSubviews.last
+        {
+            // remove the extra view
+            extraView.removeFromSuperview()
+            overflow.insert(extraView, at: 0)
+            // layout engine to update its internal model
+            updateConstraintsIfNeeded()
+            //  updated layout model
+            super.layoutSubviews()
+        }
+        // мы перебираем views в stack view, удаляя
+        // их по одному за раз, прося механизм layout пересчитать макет
+        // до тех пор, пока stack view не поместится в границы superview
+    }
+
+    // заботится о of adding the stack view to the view hierarchy
+    private func setupView() {
+        addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+    }
+}
+```
+
+### Alignment Rectangles
 
 <img alt="image" src="images/auto layout108.jpeg" width = 50%/>
 
