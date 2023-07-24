@@ -11,7 +11,7 @@
 - [Глава №7. Layout Priorities and Content Size.](#chapter7)
 - [Глава №8. Stack Views.](#chapter8)
 - [Глава №9. Understanding The Layout Engine.](#chapter9)
-- [Глава №10. .](#chapter10)
+- [Глава №10. Debugging When It Goes Wrong.](#chapter10)
 - [Глава №11. .](#chapter11)
 - [Глава №12. .](#chapter12)
 - [Глава №13. .](#chapter13)
@@ -4930,6 +4930,14 @@ private extension UILabel {
 
 ### Key Points To Remember
 
+- Activating, changing or deactivating constraints напрямую не обновляет the frames of views. Вместо этого он обновляет модель механизма layout and schedules, которое выполняется позже в цикле запуска приложения run loop.
+- Существует два прохода layout по иерархии view. Первый проход позволяет вам обновить ограничения-constraints. Второй проход обновляет макет view layout, изменяя размер и положение views в соответствии со значениями из layout engine model (механизма компоновки).
+- Call `setNeedsLayout` чтобы вручную запланировать прохождение update layout. Call `layoutIfNeeded` необходим для принудительного немедленного обновления view frames from the model.
+- Вам редко приходится использовать `updateConstraints` или сопутствующий ему view controller `updateViewConstraints`. Система часто вызывает эти методы, поэтому они не являются лучшим выбором для первоначальной настройки constraint. Используйте их, когда изменение существующих constraint происходит слишком медленно.
+- To animate constraint changes call layoutIfNeeded inside a view animation block.
+- Override layoutSubviews to create more dynamic layouts.
+- The layout engine uses the alignment rectangle not the view frame when positioning views.
+
 Should You Use `updateConstraints` or `updateViewConstraints`? - No
 
 ### Animating Constraints
@@ -4968,7 +4976,8 @@ We need an outlet in the view controller that connects to the vertical constrain
 ```swift
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        animateButton(withDuration: AnimationMetrics.duration, damping: AnimationMetrics.damping, delay: AnimationMetrics.delay)
+        animateButton(withDuration: AnimationMetrics.duration, damping: AnimationMetrics.damping, 
+        delay: AnimationMetrics.delay)
     }
 ```
 
@@ -4997,7 +5006,8 @@ final class ViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        animateButton(withDuration: AnimationMetrics.duration, damping: AnimationMetrics.damping, delay: AnimationMetrics.delay)
+        animateButton(withDuration: AnimationMetrics.duration, damping: AnimationMetrics.damping, 
+        delay: AnimationMetrics.delay)
     }
 
     private func animateButton(withDuration duration: TimeInterval, damping: CGFloat, delay: TimeInterval = 0) {
@@ -5185,6 +5195,42 @@ final class PreviewPane: UIView {
 ```
 
 ### Alignment Rectangles
+
+Когда механизм layout выравнивает views, он не использует рамку-frame вида. Вместо этого он использует прямоугольник-rectangle выравнивания вида. Прямоугольник выравнивания по умолчанию соответствует frame view, поэтому вы можете игнорировать его.
+
+### Challenge 9.1 Animating Constraints
+
+```swift
+
+```
+
+```swift
+
+```
+
+```swift
+
+```
+
+### Challenge 9.2 Overriding The Layout Engine
+
+```swift
+
+```
+
+```swift
+
+```
+
+```swift
+
+```
+
+---
+
+[К оглавлению](#contents)
+
+###  <a id="chapter10" /> Глава №10. Debugging When It Goes Wrong
 
 <img alt="image" src="images/auto layout108.jpeg" width = 50%/>
 
