@@ -5200,12 +5200,69 @@ final class PreviewPane: UIView {
 
 ### Challenge 9.1 Animating Constraints
 
-```swift
+<img alt="image" src="images/auto layout108.jpeg" width = 50%/>
 
+AppDelegate.swift
+```swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+}
 ```
 
+ViewController.swift
 ```swift
+import UIKit
 
+final class ViewController: UIViewController {
+    @IBOutlet private var slowHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private var fastHeightConstraint: NSLayoutConstraint!
+
+    private enum Speed {
+        case slow
+        case fast
+    }
+
+    private var speed = Speed.slow {
+        didSet {
+            if speed != oldValue {
+                setConstraints(for: speed, animate: true)
+            }
+        }
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setConstraints(for: speed, animate: false)
+    }
+
+    @IBAction private func slow(_ sender: UIButton) {
+        speed = .slow
+    }
+
+    @IBAction private func fast(_ sender: UIButton) {
+        speed = .fast
+    }
+
+    private func setConstraints(for speed: Speed, animate: Bool) {
+        switch speed {
+        case .slow:
+            NSLayoutConstraint.deactivate([fastHeightConstraint])
+            NSLayoutConstraint.activate([slowHeightConstraint])
+        case .fast:
+            NSLayoutConstraint.deactivate([slowHeightConstraint])
+            NSLayoutConstraint.activate([fastHeightConstraint])
+        }
+
+        if animate {
+            let animator = UIViewPropertyAnimator(duration: 0.25, curve: .linear) {
+                self.view.layoutIfNeeded()
+            }
+            animator.startAnimation()
+        }
+    }
+}
 ```
 
 ```swift
@@ -5214,10 +5271,14 @@ final class PreviewPane: UIView {
 
 ### Challenge 9.2 Overriding The Layout Engine
 
+<img alt="image" src="images/auto layout109.jpeg" width = 50%/>
+
+AppDelegate.swift
 ```swift
 
 ```
 
+ViewController.swift
 ```swift
 
 ```
@@ -5232,9 +5293,8 @@ final class PreviewPane: UIView {
 
 ###  <a id="chapter10" /> Глава №10. Debugging When It Goes Wrong
 
-<img alt="image" src="images/auto layout108.jpeg" width = 50%/>
 
-<img alt="image" src="images/auto layout109.jpeg" width = 50%/>
+
 
 <img alt="image" src="images/auto layout110.jpeg" width = 50%/>
 
