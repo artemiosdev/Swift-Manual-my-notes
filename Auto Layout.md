@@ -5275,16 +5275,178 @@ final class ViewController: UIViewController {
 
 AppDelegate.swift
 ```swift
+import UIKit
 
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+}
 ```
 
-ViewController.swift
+SceneDelegate
 ```swift
+import UIKit
 
+final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    var window: UIWindow?
+
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        guard let scene = scene as? UIWindowScene else {
+            return
+        }
+
+        window = UIWindow(windowScene: scene)
+        window?.backgroundColor = .white
+        window?.rootViewController = RootViewController()
+        window?.makeKeyAndVisible()
+    }
+}
+``` 
+
+RootViewController.swift
+```swift
+import UIKit
+
+final class RootViewController: UIViewController {
+    private lazy var panicView: PanicView = {
+        let view = PanicView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .blue
+        view.delegate = self
+        return view
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        view.backgroundColor = .yellow
+        view.addSubview(panicView)
+
+        let margins = view.layoutMarginsGuide
+        NSLayoutConstraint.activate([
+            margins.leadingAnchor.constraint(equalTo: panicView.leadingAnchor),
+            margins.centerYAnchor.constraint(equalTo: panicView.centerYAnchor),
+            margins.trailingAnchor.constraint(equalTo: panicView.trailingAnchor)
+        ])
+    }
+}
+
+extension RootViewController: PanicViewDelegate {
+    func panic(_ sender: PanicView) {
+        print("Panic!")
+    }
+
+    func noPanic(_ sender: PanicView) {
+        print("Don't Panic!")
+    }
+}
 ```
 
+PanicView.swift
 ```swift
+import UIKit
 
+protocol PanicViewDelegate: AnyObject {
+    func panic(_ sender: PanicView)
+    func noPanic(_ sender: PanicView)
+}
+
+final class PanicView: UIView {
+    weak var delegate: PanicViewDelegate?
+
+    private enum ViewMetrics {
+        static let fontSize: CGFloat = 24.0
+        static let spacing: CGFloat = 16.0
+    }
+
+    private lazy var panicButton: UIButton = {
+        let title = NSLocalizedString("Panic", comment: "Panic")
+        let button = UIButton.makeButton(title: title, color: .red, fontSize: ViewMetrics.fontSize)
+        button.addTarget(self, action: #selector(panic(_:)), for: .touchUpInside)
+        return button
+    }()
+
+    private lazy var noPanicButton: UIButton = {
+        let title = NSLocalizedString("Don't Panic", comment: "Don't Panic")
+        let button = UIButton.makeButton(title: title, color: .green, fontSize: ViewMetrics.fontSize)
+        button.addTarget(self, action: #selector(noPanic(_:)), for: .touchUpInside)
+        return button
+    }()
+
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [noPanicButton, panicButton])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = ViewMetrics.spacing
+        stackView.distribution = .fillEqually
+        return stackView
+    }()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        // The minimum size of our buttons should be the
+        // largest intrinsic content size of any button
+        let minButtonWidth = max(noPanicButton.intrinsicContentSize.width, panicButton.intrinsicContentSize.width)
+
+        // The minimum width we need to show both buttons
+        // horizontally including the spacing
+        let minHorizontalWidth = minButtonWidth * 2 + ViewMetrics.spacing
+
+        // The space between the margins
+        let marginWidth = layoutMarginsGuide.layoutFrame.width
+
+        // If we do not have the space to show the buttons
+        // horizontally switch to vertical layout
+        if minHorizontalWidth > marginWidth {
+            stackView.axis = .vertical
+        } else {
+            stackView.axis = .horizontal
+        }
+    }
+
+    private func setupView() {
+        addSubview(stackView)
+        NSLayoutConstraint.activate([
+            layoutMarginsGuide.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            layoutMarginsGuide.topAnchor.constraint(equalTo: stackView.topAnchor),
+            layoutMarginsGuide.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            layoutMarginsGuide.bottomAnchor.constraint(equalTo: stackView.bottomAnchor)
+        ])
+    }
+
+    @objc private func panic(_ sender: UIButton) {
+        delegate?.panic(self)
+    }
+
+    @objc private func noPanic(_ sender: UIButton) {
+        delegate?.noPanic(self)
+    }
+}
+
+extension UIButton {
+    static func makeButton(title: String, color: UIColor, fontSize: CGFloat) -> UIButton {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(title, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
+        button.setTitleColor(.black, for: .normal)
+        button.contentEdgeInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
+        button.backgroundColor = color
+        return button
+    }
+}
 ```
 
 ---
