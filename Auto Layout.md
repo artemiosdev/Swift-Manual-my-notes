@@ -5455,85 +5455,34 @@ extension UIButton {
 
 ###  <a id="chapter10" /> Глава №10. Debugging When It Goes Wrong
 
-Interface Builder can catch the most obvious conflicts, but it cannot catch
-conflicts that happen at runtime or help when you create your layouts
-programmatically. Here’s a small view controller that shows an OK button
-in the center of the screen (see sample code: Conflict-v1):
-class ViewController: UIViewController {
-override func viewDidLoad() {
-super.viewDidLoad()
-setupView()
-}
-private func setupView() {
-let okButton = UIButton(type: .system)
-okButton.setTitle("OK", for: .normal)
-view.addSubview(okButton)
-NSLayoutConstraint.activate([
-okButton.centerXAnchor.constraint(equalTo:
-view.centerXAnchor),
-okButton.centerYAnchor.constraint(equalTo:
-view.centerYAnchor)
-])
-}
-}
+The golden rule to disable the automatic translation when creating the button: `okButton.translatesAutoresizingMaskIntoConstraints = false`
 
-This builds without error but if you run it the button doesn’t show up,
-and the layout engine logs a lot of text to the console:
+### Adding Identifiers To Views And Constraints
+All constraints have an identifier property that you can set in code or in Interface Builder.
 
-Reading The Log
-The log is not easy to read. The first line tells us what sort of a layout
-problem we have:
-Unable to simultaneously satisfy constraints.
-The log then shows the conflicting horizontal constraints, followed by the
-constraint the layout engine chose to break:
-Will attempt to recover by breaking constraint
-<NSLayoutConstraint:0x60c000284e20
-UIButton:0x7fe238609dd0'OK'.centerX ==
-UIView:0x7fe238613d70.centerX (active)>
-This is our centerX constraint for the button. This pattern repeats for the
-vertical constraints with the layout engine deciding to break the centerY
-constraint for the button:
-Will attempt to recover by breaking constraint
-<NSLayoutConstraint:0x60c000284f60
-UIButton:0x7fe238609dd0'OK'.centerY ==
-UIView:0x7fe238613d70.centerY (active)>
-We only added two constraints and the layout engine decided to break
+`okCenterYConstraint.identifier = "OKButtonCenter"`
 
-both of them because they were conflicting with other constraints! What
-are those other constraints? The list of conflicting constraints gives us a
-big clue:
-"<NSAutoresizingMaskLayoutConstraint:0x60000028b590 h=--&
-v=--& UIButton:0x7fe238609dd0'OK'.midY == 0 (active)>",
-This is an autoresizing mask. The syntax h=--& and v=--& tells us the
-horizontal and vertical mask values. The - indicates fixed and & is flexible
-so this reads as:
-• h=--&: fixed leading edge, fixed width, flexible trailing edge
-• v=--&: fixed top edge, fixed height, flexible bottom edge
-This is the default autoresizing mask for an object. The layout engine has
-translated the autoresizing mask for the button into constraints which
-conflict with my center constraints. I forgot the golden rule to disable the
-automatic translation when creating the button! Disable the translation
-and the layout works as expected:
-okButton.translatesAutoresizingMaskIntoConstraints = false
+All views and layout guides have an accessibility identifier идентификатор специальных возможностей:
 
-Setting A Breakpoint
-Let’s see another example (see sample code: Conflict-v2). This time I
-have a layout with two views and a button. When the layout loads the
-green view has a greater width than the red view (shown on the left).
-When the user taps the button the widths should switch (shown on the
-right):
+`okButton.accessibilityIdentifier = "OKButton"`
 
-Let’s try the first suggestion and add the symbolic breakpoint:
-UIViewAlertForUnsatisfiableConstraints
-Use the breakpoint navigator or Debug › Breakpoints › Create Symbolic
-Breakpoint to add the breakpoint
+`view.accessibilityIdentifier = "RootView"`
 
+### Using The View Debugger
 
+Then open the view debugger using the control on the debugger toolbar or from the Xcode Debug menu (**Debug › View Debugging › Capture View Hierarchy**).
 
 <img alt="image" src="images/auto layout110.jpeg" width = 50%/>
 
-```swift
+The default distribution for a stack view is `.fill`. To make my two buttons have equal width I need `.fillEqually`.
 
+```swift
+let stackView = UIStackView(arrangedSubviews: [cancelButton, okButton])
+stackView.translatesAutoresizingMaskIntoConstraints = false
+stackView.spacing = 16.0
+
+//
+stackView.distribution = .fillEqually
 ```
 
 <img alt="image" src="images/.jpg"  width = 70%/>
